@@ -1,0 +1,106 @@
+:root {
+    --primary-color: #FF4D15;
+}
+
+.navbar-nav .nav-link {
+    color: #333;
+    font-weight: 500;
+}
+
+.btn-demo {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 8px 24px;
+    border-radius: 4px;
+}
+
+.btn-trial {
+    background-color: black;
+    color: white;
+    padding: 8px 24px;
+    border-radius: 4px;
+}
+
+.hero-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.feature-icon {
+    background-color: var(--primary-color);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-image {
+    max-width: 100%;
+    height: auto;
+    transition: transform 0.4s ease-in-out, box-shadow 0.3s ease-in-out;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+.hero-image:hover {
+    transform: scale(1.02);
+    cursor: pointer;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.5);
+}
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 1.5rem;
+    }
+}
+/* Custom class for the h2 element */
+.custom-heading {
+    font-family: 'Poppins', Arial, sans-serif; /* Font family */
+    font-style: normal; /* Font style */
+    font-weight: 600; /* Font weight */
+    color: rgb(0, 0, 0); /* Text color */
+    font-size: 57px; /* Font size */
+    /* line-height: 101px;  */
+  }
+  
+  /* Responsive adjustments for smaller screens */
+  @media (max-width: 768px) {
+    .custom-heading {
+      font-size: 48px; /* Smaller font size for mobile */
+      line-height: 56px; /* Adjusted line height for mobile */
+    }
+  }
+  .custom-para {
+    font-family: "Inter", Arial, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    color: rgb(96, 96, 96);
+    font-size: 18px;
+    line-height: 27px;
+  }
+  
+  .para-text{
+    color: #333;
+  }
+  .span-text{
+    color: #F6470e;
+  }
+   @media (max-width: 576px) {
+    .hero-container{
+      padding: 0 !important;
+    }
+    .container{
+        padding: 10px !important;
+    }
+    .hero{
+        padding-top: 0 !important;
+    }
+   }

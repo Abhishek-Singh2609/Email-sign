@@ -1,0 +1,120 @@
+/* Custom styles for the payment page */
+.card {
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  }
+  
+  .card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+  }
+  
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+  }
+  
+  .btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 767.98px) {
+    .col-md-4 {
+      margin-top: 1.5rem;
+    }
+  }
+  
+  /* Accessibility improvements */
+  .form-control:focus,
+  .form-select:focus,
+  .btn:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+  
+  /* Custom styling for the promo code section */
+  .promo-code-input {
+    position: relative;
+  }
+  
+  .promo-code-input .btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+  }
+  
+  /* Improve readability of the order summary */
+  .list-group-item {
+    background-color: transparent;
+  }
+  
+  /* Success message */
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0fff4;
+  }
+  
+  .success-container {
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+    /* height: 100vh; */
+  }
+  
+  .success-card {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 400px;
+  }
+  
+  .success-icon {
+    font-size: 60px;
+    color: #28a745;
+    margin-bottom: 20px;
+  }
+  
+  .success-card h2 {
+    margin: 0;
+    color: #28a745;
+  }
+  
+  .success-card p {
+    color: #555;
+    margin-top: 10px;
+    margin-bottom: 30px;
+  }
+  
+  .success-card button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    border: none;
+    color: #fff;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .success-card button:hover {
+    background-color: #218838;
+  }
+  .subscription-text{
+    color: #F6470e;
+  }

@@ -1,0 +1,31 @@
+/* Action buttons */
+.action-buttons {
+  display: flex;
+  gap: 16px;
+}
+
+.btns {
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+}
+
+.btns-primary {
+  background-color: #111827;
+  color: white;
+}
+
+.btns-secondary {
+  background-color: white;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.btns-icon {
+  font-size: 18px;
+}

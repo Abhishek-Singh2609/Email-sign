@@ -1,0 +1,56 @@
+.trial-button {
+  padding-block: 5px !important;
+  border-radius: 32px !important;
+  background-color: black;
+  padding-inline: 12px;
+}
+.hero-h1 {
+  font-family: "Poppins", Arial, sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  color: rgb(0, 0, 0);
+  font-size: 57px;
+  /* line-height: 88px; */
+}
+.hero-p {
+    font-family: "Inter", Arial, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    color: rgb(87, 87, 87);
+    font-size: 17px;
+    line-height: 22px;
+  }
+  .hero-image-container {
+    margin: 0 auto; 
+    max-width: 900px; /* Set a maximum width for the image */
+    width: 100%; /* Ensure it takes full width up to the max-width */
+    transition: transform 0.4s ease-in-out, box-shadow 0.3s ease-in-out;
+    /* box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); */
+  }
+  .hero-image-container:hover{
+    transform: scale(1.04);
+    cursor: pointer;
+    box-shadow: 0px 8px 20px rgba(11, 11, 11, 0.3); /* Enhanced shadow on hover */
+
+  }
+  
+  /* Styling for the image */
+  .hero-image {
+    width: 100%; /* Make the image responsive */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 8px; /* Optional: Add rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
+  }
+
+  @media (max-width: 480px) {
+    .hero-h1 {
+      font-size: 48px;
+    }
+   
+  }
+  @media (max-width: 576px) {
+    .container{
+      padding: 0;
+    }
+  }
+  

@@ -1,0 +1,325 @@
+.banner-tab-form {
+  width: 100%;
+}
+
+.banner-tab-section {
+  margin-top: 10px;
+}
+
+.banner-tab-heading {
+  margin-bottom: 15px;
+  font-size: 18px;
+  color: #333;
+}
+
+.banner-tab-campaign-item {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: transparent;
+  transition: all 0.3s ease;
+}
+
+.banner-tab-campaign-item.active {
+  background-color: rgba(52, 152, 219, 0.1);
+  border-color: #3498db;
+}
+
+.banner-tab-campaign-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.banner-tab-form-group {
+  margin: 0;
+  flex: 1;
+  margin-right: 10px;
+}
+
+.banner-tab-form-group:last-child {
+  margin-right: 0;
+}
+
+.banner-tab-form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #555;
+}
+
+.banner-tab-form-group input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.banner-tab-image-section {
+  display: flex;
+  margin-top: 10px;
+  width: 40%;
+}
+
+.banner-tab-image-container {
+  /* width: 100%; */
+  position: relative;
+}
+
+.banner-tab-image-preview {
+  position: relative;
+  width: 100%;
+}
+
+.banner-tab-image {
+  width: 100%;
+  max-height: 150px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.banner-tab-remove-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: rgba(0,0,0,0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.banner-tab-upload-placeholder {
+ 
+  height: 100px;
+  border: 2px dashed #ddd;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: #f9f9f9;
+}
+
+.banner-tab-upload-icon {
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.banner-tab-links-section {
+  margin-top: 15px;
+}
+
+.banner-tab-links-header {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #555;
+}
+
+.banner-tab-link-item {
+  margin-bottom: 10px;
+  padding: 8px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  border: 1px solid #eee;
+}
+
+.banner-tab-link-content {
+  display: flex;
+  align-items: center;
+}
+
+.banner-tab-link-number {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.banner-tab-link-number.link-1 {
+  background-color: #ff6b6b;
+}
+
+.banner-tab-link-number.link-2 {
+  background-color: #51cf66;
+}
+
+.banner-tab-link-number.link-3 {
+  background-color: #339af0;
+}
+
+.banner-tab-link-text-input {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.banner-tab-link-url-input {
+  flex: 2;
+}
+
+.banner-tab-link-text-input input,
+.banner-tab-link-url-input input {
+  width: 100%;
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  font-size: 13px;
+}
+
+.banner-tab-link-area-label {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #666;
+  display: flex;
+  align-items: center;
+  margin-left: 28px;
+}
+
+.banner-tab-footer {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.banner-tab-status {
+  font-size: 14px;
+  color: #666;
+}
+
+.banner-tab-status-expired {
+  color: red;
+}
+
+.banner-tab-toggle-btn {
+  padding: 6px 12px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.banner-tab-toggle-btn.active {
+  background-color: #2ecc71;
+}
+
+.banner-tab-toggle-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Responsive styles for BannerTab */
+@media (max-width: 1200px) {
+  .banner-tab-image-section {
+    width: 50%;
+  }
+}
+
+@media (max-width: 992px) {
+  .banner-tab-image-section {
+    width: 60%;
+  }
+}
+
+@media (max-width: 768px) {
+  .banner-tab-campaign-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .banner-tab-form-group {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+  
+  .banner-tab-image-section {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .banner-tab-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .banner-tab-status {
+    margin-bottom: 10px;
+  }
+  
+  .banner-tab-toggle-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .banner-tab-campaign-item {
+    padding: 10px;
+  }
+  
+  .banner-tab-link-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .banner-tab-link-number {
+    margin-bottom: 5px;
+    display: none;
+  }
+  
+  .banner-tab-link-text-input,
+  .banner-tab-link-url-input {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 5px;
+  }
+  
+  .banner-tab-link-area-label {
+    margin-left: 0;
+    margin-top: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .banners-outside-preview {
+    margin-top: -38px !important;
+  }
+  .banner-tab-heading {
+    font-size: 16px;
+  }
+  
+  .banner-tab-upload-placeholder {
+    height: 80px;
+  }
+  
+  .banner-tab-upload-icon {
+    font-size: 20px;
+  }
+  
+  .banner-tab-form-group label {
+    font-size: 13px;
+  }
+  
+  .banner-tab-form-group input {
+    padding: 6px;
+    font-size: 13px;
+  }
+} 

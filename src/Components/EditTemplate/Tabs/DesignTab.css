@@ -1,0 +1,44 @@
+.design-tab-container {
+  width: 100%;
+}
+
+.design-tab-intro {
+  margin-bottom: 16px;
+  color: #555;
+}
+
+.design-tab-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+}
+
+.design-tab-card {
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  padding: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.design-tab-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.design-tab-card.selected {
+  border-width: 2px;
+}
+
+.design-tab-preview {
+  height: 40px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.design-tab-name {
+  font-size: 14px;
+  text-align: center;
+  color: #333;
+  margin: 0;
+} 

@@ -1,0 +1,91 @@
+.personal-info-form {
+  width: 100%;
+}
+
+.personal-info-form-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.personal-info-label {
+  /* flex: 1; */
+  font-weight: 500;
+  color: #333;
+  width: 12%;
+}
+
+.personal-info-input {
+  width: 50%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+/* Responsive styles for PersonalInfoTab */
+@media (max-width: 1200px) {
+  .personal-info-label {
+    width: 15%;
+  }
+  
+  .personal-info-input {
+    width: 60%;
+  }
+}
+
+@media (max-width: 992px) {
+  .personal-info-label {
+    width: 20%;
+  }
+  
+  .personal-info-input {
+    width: 70%;
+  }
+}
+
+@media (max-width: 768px) {
+  .personal-info-form-group {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .personal-info-label {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+  
+  .personal-info-input {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .personal-info-form-group {
+    margin-bottom: 12px;
+  }
+  
+  .personal-info-label {
+    font-size: 14px;
+  }
+  
+  .personal-info-input {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .personal-info-form-group {
+    margin-bottom: 10px;
+  }
+  
+  .personal-info-label {
+    font-size: 13px;
+  }
+  
+  .personal-info-input {
+    padding: 7px 8px;
+    font-size: 13px;
+  }
+} 

@@ -1,0 +1,24 @@
+.disclaimer-tab-form {
+  width: 100%;
+}
+
+.disclaimer-tab-section {
+  margin-top: 20px;
+}
+
+.disclaimer-tab-label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 500;
+  color: #333;
+  font-size: 16px;
+}
+
+/* Styles for the disclaimer preview in the signature */
+.disclaimer-preview {
+  margin-top: 20px;
+  font-size: 12px;
+  color: #666;
+  /* padding: 15px; */
+  border-radius: 4px;
+}

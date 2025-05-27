@@ -1,0 +1,41 @@
+/* template-cards */
+.signature-script {
+    font-family: 'Brush Script MT', cursive;
+    font-size: 1.5rem;
+  }
+  .card {
+    transition: transform 0.2s;
+    border: 1px solid rgba(0,0,0,0.1);
+  }
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  .contact-info p {
+    color: #666;
+  }
+  .hover-opacity-100:hover {
+    opacity: 1 !important;
+  }
+  .bg-purple {
+    background-color: #6a1b9a;
+  }
+  .img-height{
+    height: 70px;
+  }
+  .template-heading{
+    font-family: "Poppins", Arial, sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    color: rgb(0, 0, 0);
+    font-size: 57px;
+    /* line-height: 88px; */
+  }
+  @media (max-width: 480px) {
+    .template-heading{
+        overflow: hidden;
+      font-size: 48px;
+      line-height: 48px;
+    }
+    
+  }

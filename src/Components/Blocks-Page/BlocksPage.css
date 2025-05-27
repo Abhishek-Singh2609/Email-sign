@@ -1,0 +1,52 @@
+:root {
+    --sidebar-width: 60px;
+    --sidebar-expanded-width: 200px;
+    --header-height: 60px;
+}
+
+body {
+    background-color: #f8f9fa;
+}
+
+/* Header */
+.header {
+    height: var(--header-height);
+    background-color: black;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1000;
+    padding: 0 1rem;
+}
+
+.block-heading{
+    cursor: pointer;
+    color: white;
+    padding-left: 1rem;
+}
+/* template-cards */
+.signature-script {
+    font-family: 'Brush Script MT', cursive;
+    font-size: 1.5rem;
+  }
+  .card {
+    transition: transform 0.2s;
+    border: 1px solid rgba(0,0,0,0.1);
+  }
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  .contact-info p {
+    color: #666;
+  }
+  .hover-opacity-100:hover {
+    opacity: 1 !important;
+  }
+  .bg-purple {
+    background-color: #6a1b9a;
+  }
+  .img-height{
+    height: 70px;
+  }
