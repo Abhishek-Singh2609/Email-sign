@@ -25,6 +25,7 @@ import {
 } from "./utils/signatureUtils";
 
 const apiUrl = import.meta.env.VITE_AZURE_KEY;
+console.log(apiUrl);
 
 const EmailSignatureCreator = () => {
   const navigate = useNavigate();
