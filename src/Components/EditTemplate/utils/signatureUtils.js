@@ -78,27 +78,139 @@ const renderSocialIcons = (formData) => {
 };
 
 // Function to generate HTML content of the signature
-export const generateSignatureHTML = (formData) => {
+// export const generateSignatureHTML = (formData) => {
+//   return `
+//     <div style="font-family: Arial, sans-serif; color: #ffffff; background-color: #0c0c0c; padding: 20px; max-width: 600px;">
+//       <p style="margin-bottom: 10px;">Thanks & Regards,</p>
+//       <table style="width: 100%; border-spacing: 0; color: #ffffff;">
+//         <tr>
+//           <td style="padding-right: 20px; vertical-align: top;">
+//             <p style="margin: 0; font-size: 16px; font-weight: bold; color: #3db2ff;">${
+//               formData.name || "Employee Name"
+//             }</p>
+//             <p style="margin: 2px 0; font-size: 14px; color: #3db2ff;">${
+//               formData.jobTitle || "Employee Title"
+//             }</p>
+//             <p style="margin: 4px 0 0 0; font-size: 14px; font-weight: bold; color: #ffffff;">${
+//               formData.company || "AgileWorld Technology Ltd."
+//             }</p>
+//             <p style="margin: 2px 0 0 0; font-size: 14px;">${
+//               formData.location || "Gurgaon, Haryana"
+//             }</p>
+//           </td>
+//           <td style="border-left: 1px solid #ffffff; padding-left: 20px; vertical-align: top;">
+//             <p style="margin: 0; font-size: 14px;">📞 ${
+//               formData.phone || "+91 9876543210"
+//             }</p>
+//             <p style="margin: 2px 0; font-size: 14px;">📧 <a href="mailto:${
+//               formData.email
+//             }" style="color: #3db2ff; text-decoration: none;">${
+//     formData.email || "email@example.com"
+//   }</a></p>
+//             <p style="margin: 2px 0; font-size: 14px;">🌐 <a href="https://${
+//               formData.website
+//             }" style="color: #3db2ff; text-decoration: none;">www.${
+//     formData.website || "agileworldtechnologies.com"
+//   }</a></p>
+//             ${renderSocialIcons(formData)}
+//           </td>
+//         </tr>
+//       </table>
+//       ${
+//         formData.banner
+//           ? `<div style="margin-top: 20px;"><img src="${formData.banner}" alt="Banner" style="width: 100%; height: auto; border-radius: 8px;"></div>`
+//           : ""
+//       }
+//       ${
+//         formData.disclaimer
+//           ? `
+//         <div style="margin-top: 20px; font-size: 11px; color: #cccccc;">
+//           <p><strong>DISCLAIMER</strong></p>
+//           <p style="margin-top: 5px;">${formData.disclaimer}</p>
+//         </div>
+//       `
+//           : ""
+//       }
+//     </div>
+//   `;
+// };
+
+// Function to generate HTML content of the signature
+export const generateSignatureHTML = (
+  formData,
+  selectedDesign = "default",
+  designStyle = {}
+) => {
+  // Apply different styles based on selectedDesign
+  const getDesignSpecificStyles = () => {
+    switch (selectedDesign) {
+      case "modern":
+        return {
+          containerStyle:
+            'font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; color: #333333; background-color: #f8f9fa; padding: 20px; max-width: 600px; border-left: 4px solid #007bff;',
+          nameStyle:
+            "margin: 0; font-size: 18px; font-weight: bold; color: #007bff;",
+          titleStyle: "margin: 2px 0; font-size: 14px; color: #6c757d;",
+          companyStyle:
+            "margin: 4px 0 0 0; font-size: 14px; font-weight: bold; color: #333333;",
+        };
+      case "corporate":
+        return {
+          containerStyle:
+            'font-family: "Times New Roman", serif; color: #2c3e50; background-color: #ecf0f1; padding: 25px; max-width: 600px; border: 2px solid #34495e;',
+          nameStyle:
+            "margin: 0; font-size: 16px; font-weight: bold; color: #2c3e50;",
+          titleStyle: "margin: 2px 0; font-size: 14px; color: #7f8c8d;",
+          companyStyle:
+            "margin: 4px 0 0 0; font-size: 14px; font-weight: bold; color: #2c3e50;",
+        };
+      case "creative":
+        return {
+          containerStyle:
+            'font-family: "Comic Sans MS", cursive; color: #e74c3c; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; max-width: 600px; border-radius: 15px;',
+          nameStyle:
+            "margin: 0; font-size: 20px; font-weight: bold; color: #ffffff;",
+          titleStyle: "margin: 2px 0; font-size: 14px; color: #f39c12;",
+          companyStyle:
+            "margin: 4px 0 0 0; font-size: 14px; font-weight: bold; color: #ffffff;",
+        };
+      default: // 'default' design
+        return {
+          containerStyle:
+            "font-family: Arial, sans-serif; color: #ffffff; background-color: #0c0c0c; padding: 20px; max-width: 600px;",
+          nameStyle:
+            "margin: 0; font-size: 16px; font-weight: bold; color: #3db2ff;",
+          titleStyle: "margin: 2px 0; font-size: 14px; color: #3db2ff;",
+          companyStyle:
+            "margin: 4px 0 0 0; font-size: 14px; font-weight: bold; color: #ffffff;",
+        };
+    }
+  };
+
+  const styles = getDesignSpecificStyles();
+
   return `
-    <div style="font-family: Arial, sans-serif; color: #ffffff; background-color: #0c0c0c; padding: 20px; max-width: 600px;">
+    <div style="${styles.containerStyle}">
       <p style="margin-bottom: 10px;">Thanks & Regards,</p>
-      <table style="width: 100%; border-spacing: 0; color: #ffffff;">
+      <table style="width: 100%; border-spacing: 0;">
         <tr>
           <td style="padding-right: 20px; vertical-align: top;">
-            <p style="margin: 0; font-size: 16px; font-weight: bold; color: #3db2ff;">${
-              formData.name || "Employee Name"
-            }</p>
-            <p style="margin: 2px 0; font-size: 14px; color: #3db2ff;">${
-              formData.jobTitle || "Employee Title"
-            }</p>
-            <p style="margin: 4px 0 0 0; font-size: 14px; font-weight: bold; color: #ffffff;">${
-              formData.company || "AgileWorld Technology Ltd."
-            }</p>
+            <p style="${styles.nameStyle}">${
+    formData.name || "Employee Name"
+  }</p>
+            <p style="${styles.titleStyle}">${
+    formData.jobTitle || "Employee Title"
+  }</p>
+            <p style="${styles.companyStyle}">${
+    formData.company || "AgileWorld Technology Ltd."
+  }</p>
             <p style="margin: 2px 0 0 0; font-size: 14px;">${
               formData.location || "Gurgaon, Haryana"
             }</p>
           </td>
-          <td style="border-left: 1px solid #ffffff; padding-left: 20px; vertical-align: top;">
+          <td style="border-left: 1px solid ${
+            selectedDesign === "default" ? "#ffffff" : "#cccccc"
+          }; padding-left: 20px; vertical-align: top;">
             <p style="margin: 0; font-size: 14px;">📞 ${
               formData.phone || "+91 9876543210"
             }</p>

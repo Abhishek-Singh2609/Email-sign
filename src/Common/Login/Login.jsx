@@ -5,12 +5,9 @@ import { Link } from "react-router-dom";
 
 function Login() {
   const handleMicrosoftLogin = () => {
-    // Redirect to backend auth endpoint
     window.location.href =
       // "https://agile-email-signature-dydmacbfh4e6cmf0.canadacentral-01.azurewebsites.net/auth/login";
       "https://email-signature-ewasbjbvendvfwck.canadacentral-01.azurewebsites.net/auth/login";
-
-    // Note: Removed the navigate("/employees") here as it was premature
   };
 
   return (

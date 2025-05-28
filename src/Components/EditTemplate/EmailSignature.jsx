@@ -166,7 +166,11 @@ const EmailSignatureCreator = () => {
     setIsSending(true);
     try {
       const organization = "agileworldtechnologies.com";
-      const signatureHTML = generateSignatureHTML(formData); // Make sure to pass formData
+      const signatureHTML = generateSignatureHTML(
+        formData,
+        selectedDesign,
+        designStyle
+      ); // Pass all required parameters including selectedDesign and designStyle
       console.log(signatureHTML);
 
       const response = await axios.post(
