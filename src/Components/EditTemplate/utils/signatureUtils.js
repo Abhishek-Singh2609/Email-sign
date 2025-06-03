@@ -1,9 +1,10 @@
+import { designTemplates } from "../Tabs/DesignTab";
+
 // Function to ensure 5 campaigns exist
 export const ensureFiveCampaigns = (formDataToUpdate) => {
   if (!formDataToUpdate.campaigns || formDataToUpdate.campaigns.length < 5) {
     const updatedCampaigns = [...(formDataToUpdate.campaigns || [])];
 
-    // Add campaigns until we have 5
     while (updatedCampaigns.length < 5) {
       const newId = updatedCampaigns.length + 1;
       updatedCampaigns.push({
@@ -53,353 +54,418 @@ export const getActiveCampaigns = (campaigns) => {
   );
 };
 
-// Function to render social icons
+// Utility function to convert style object to CSS string
+const styleToString = (styleObj) => {
+  return Object.entries(styleObj)
+    .map(([key, value]) => {
+      const cssKey = key.replace(/([A-Z])/g, "-$1").toLowerCase();
+      return `${cssKey}: ${value}`;
+    })
+    .join("; ");
+};
+
+// Generate social icons HTML
 const renderSocialIcons = (formData) => {
-  const socialLinks = [];
-  if (formData.linkedin) {
-    socialLinks.push(
-      `<a href="${formData.linkedin}" style="margin-right: 10px;"><img src="https://cdn-icons-png.flaticon.com/24/145/145807.png" alt="LinkedIn" style="vertical-align: middle;"></a>`
+  const socialIcons = [
+    {
+      key: "linkedin",
+      icon: "https://cdn-icons-png.flaticon.com/24/145/145807.png",
+      alt: "LinkedIn",
+    },
+    {
+      key: "youtube",
+      icon: "https://cdn-icons-png.flaticon.com/24/1384/1384060.png",
+      alt: "YouTube",
+    },
+    {
+      key: "instagram",
+      icon: "https://cdn-icons-png.flaticon.com/24/2111/2111463.png",
+      alt: "Instagram",
+    },
+  ];
+
+  const socialLinks = socialIcons
+    .filter((social) => formData[social.key])
+    .map(
+      (social, index, array) =>
+        `<a href="${formData[social.key]}" style="margin-right: ${
+          index === array.length - 1 ? "0" : "10px"
+        };"><img src="${social.icon}" alt="${
+          social.alt
+        }" style="vertical-align: middle;"></a>`
     );
-  }
-  if (formData.youtube) {
-    socialLinks.push(
-      `<a href="${formData.youtube}" style="margin-right: 10px;"><img src="https://cdn-icons-png.flaticon.com/24/1384/1384060.png" alt="YouTube" style="vertical-align: middle;"></a>`
-    );
-  }
-  if (formData.instagram) {
-    socialLinks.push(
-      `<a href="${formData.instagram}"><img src="https://cdn-icons-png.flaticon.com/24/2111/2111463.png" alt="Instagram" style="vertical-align: middle;"></a>`
-    );
-  }
 
   return socialLinks.length > 0
     ? `<p style="margin-top: 8px;">${socialLinks.join("")}</p>`
     : "";
 };
 
-// Generate HTML for different layout types
-const generateStandardLayout = (formData, designStyle) => {
-  const bgColor = designStyle.backgroundColor || "#f0f0f0";
-  const textColor = designStyle.textColor || "#333";
-  const nameColor = designStyle.nameColor || "#3498db";
-  const accentColor = designStyle.accentColor || "#3498db";
+// Generate common content sections
+const generateContentSections = (formData, designStyle) => {
+  const {
+    textColor = "#333",
+    nameColor = "#3498db",
+    accentColor = "#3498db",
+  } = designStyle;
 
-  return `
-    <div style="font-family: Arial, sans-serif; color: ${textColor}; background-color: ${bgColor}; padding: 20px; max-width: 600px; border-radius: 8px; ${
-    designStyle.borderStyle ? `border: ${designStyle.borderStyle};` : ""
-  } ${designStyle.boxShadow ? `box-shadow: ${designStyle.boxShadow};` : ""}">
-      <p style="margin-bottom: 10px;">Thanks & Regards,</p>
-      <table style="width: 100%; border-spacing: 0; color: ${textColor};">
-        <tr>
-          <td style="padding-right: 20px; vertical-align: top;">
-            <p style="margin: 0; font-size: 16px; font-weight: bold; color: ${nameColor};">${
-    formData.name || "Employee Name"
-  }</p>
-            <p style="margin: 2px 0; font-size: 14px; color: ${accentColor};">${
-    formData.jobTitle || "Employee Title"
-  }</p>
-            <p style="margin: 4px 0 0 0; font-size: 14px; font-weight: bold; color: ${textColor};">${
-    formData.company || "AgileWorld Technology Ltd."
-  }</p>
-            <p style="margin: 2px 0 0 0; font-size: 14px;">${
-              formData.location || "Gurgaon, Haryana"
-            }</p>
-          </td>
-          <td style="border-left: 1px solid ${accentColor}; padding-left: 20px; vertical-align: top;">
-            <p style="margin: 0; font-size: 14px;">📞 ${
-              formData.phone || "+91 9876543210"
-            }</p>
-            <p style="margin: 2px 0; font-size: 14px;">📧 <a href="mailto:${
-              formData.email
-            }" style="color: ${accentColor}; text-decoration: none;">${
-    formData.email || "email@example.com"
-  }</a></p>
-            <p style="margin: 2px 0; font-size: 14px;">🌐 <a href="https://${
-              formData.website
-            }" style="color: ${accentColor}; text-decoration: none;">www.${
-    formData.website || "agileworldtechnologies.com"
-  }</a></p>
-            ${renderSocialIcons(formData)}
-          </td>
-        </tr>
-      </table>
-      ${
-        formData.banner
-          ? `<div style="margin-top: 20px;"><img src="${formData.banner}" alt="Banner" style="width: 100%; height: auto; border-radius: 8px;"></div>`
-          : ""
-      }
-      ${
-        formData.disclaimer
-          ? `<div style="margin-top: 20px; font-size: 11px; color: #cccccc;"><p><strong>DISCLAIMER</strong></p><p style="margin-top: 5px;">${formData.disclaimer}</p></div>`
-          : ""
-      }
-    </div>
-  `;
-};
+  return {
+    greeting: `<p style="margin-bottom: 10px;">Thanks & Regards,</p>`,
 
-const generateSplitLayout = (formData, designStyle) => {
-  const accentColor = designStyle.accentColor || "#3498db";
-  const bgColor = designStyle.backgroundColor || "#f0f0f0";
-  const textColor = designStyle.textColor || "#333";
-
-  return `
-    <div style="font-family: Arial, sans-serif; display: flex; max-width: 600px; border-radius: 8px; overflow: hidden; ${
-      designStyle.boxShadow ? `box-shadow: ${designStyle.boxShadow};` : ""
-    }">
-      <div style="width: 120px; background-color: ${accentColor}; padding: 20px; display: flex; flex-direction: column; align-items: center; color: white;">
-        <div style="text-align: center;">
-          <p style="margin: 0; font-size: 14px; font-weight: bold;">${
-            formData.name || "Employee Name"
-          }</p>
-          <p style="margin: 5px 0; font-size: 12px;">${
-            formData.jobTitle || "Employee Title"
-          }</p>
-        </div>
-      </div>
-      <div style="flex: 1; padding: 20px; background-color: ${bgColor}; color: ${textColor};">
-        <p style="margin-bottom: 10px;">Thanks & Regards,</p>
-        <p style="margin: 4px 0 0 0; font-size: 14px; font-weight: bold;">${
-          formData.company || "AgileWorld Technology Ltd."
-        }</p>
-        <p style="margin: 2px 0 0 0; font-size: 14px;">${
-          formData.location || "Gurgaon, Haryana"
-        }</p>
-        <div style="margin-top: 10px;">
-          <p style="margin: 0; font-size: 14px;">📞 ${
-            formData.phone || "+91 9876543210"
-          }</p>
-          <p style="margin: 2px 0; font-size: 14px;">📧 <a href="mailto:${
-            formData.email
-          }" style="color: ${accentColor}; text-decoration: none;">${
-    formData.email || "email@example.com"
-  }</a></p>
-          <p style="margin: 2px 0; font-size: 14px;">🌐 <a href="https://${
-            formData.website
-          }" style="color: ${accentColor}; text-decoration: none;">www.${
-    formData.website || "agileworldtechnologies.com"
-  }</a></p>
-          ${renderSocialIcons(formData)}
-        </div>
-      </div>
-    </div>
-  `;
-};
-
-const generateCenteredLayout = (formData, designStyle) => {
-  const accentColor = designStyle.accentColor || "#3498db";
-  const bgColor = designStyle.backgroundColor || "#f0f0f0";
-  const textColor = designStyle.textColor || "#333";
-  const nameColor = designStyle.nameColor || "#3498db";
-
-  return `
-    <div style="font-family: Arial, sans-serif; text-align: center; background-color: ${bgColor}; color: ${textColor}; padding: 20px; max-width: 600px; border-radius: 8px; ${
-    designStyle.boxShadow ? `box-shadow: ${designStyle.boxShadow};` : ""
-  }">
-      <p style="margin-bottom: 10px;">Thanks & Regards,</p>
+    personalInfo: `
       <p style="margin: 0; font-size: 16px; font-weight: bold; color: ${nameColor};">${
-    formData.name || "Employee Name"
-  }</p>
+      formData.name || "Employee Name"
+    }</p>
       <p style="margin: 2px 0; font-size: 14px; color: ${accentColor};">${
-    formData.jobTitle || "Employee Title"
-  }</p>
-      <div style="width: 60%; margin: 12px auto; height: 2px; background: ${accentColor};"></div>
+      formData.jobTitle || "Employee Title"
+    }</p>
+      <p style="margin: 4px 0 0 0; font-size: 14px; font-weight: bold; color: ${textColor};">${
+      formData.company || "AgileWorld Technology Ltd."
+    }</p>
+      <p style="margin: 2px 0 0 0; font-size: 14px;">${
+        formData.location || "Gurgaon, Haryana"
+      }</p>
+    `,
+
+    // Special sections for split layout
+    sidebarInfo: `
+      <p style="margin: 0; font-size: 14px; font-weight: bold;">${
+        formData.name || "Employee Name"
+      }</p>
+      <p style="margin: 5px 0; font-size: 12px;">${
+        formData.jobTitle || "Employee Title"
+      }</p>
+    `,
+
+    companyInfo: `
       <p style="margin: 4px 0 0 0; font-size: 14px; font-weight: bold;">${
         formData.company || "AgileWorld Technology Ltd."
       }</p>
       <p style="margin: 2px 0 0 0; font-size: 14px;">${
         formData.location || "Gurgaon, Haryana"
       }</p>
-      <div style="margin-top: 10px;">
-        <p style="margin: 0; font-size: 14px;">📞 ${
-          formData.phone || "+91 9876543210"
-        }</p>
-        <p style="margin: 2px 0; font-size: 14px;">📧 <a href="mailto:${
-          formData.email
-        }" style="color: ${accentColor}; text-decoration: none;">${
-    formData.email || "email@example.com"
-  }</a></p>
-        <p style="margin: 2px 0; font-size: 14px;">🌐 <a href="https://${
-          formData.website
-        }" style="color: ${accentColor}; text-decoration: none;">www.${
-    formData.website || "agileworldtechnologies.com"
-  }</a></p>
-        ${renderSocialIcons(formData)}
-      </div>
-      ${
-        formData.banner
-          ? `<div style="margin-top: 20px;"><img src="${formData.banner}" alt="Banner" style="width: 100%; height: auto; border-radius: 8px;"></div>`
-          : ""
-      }
-      ${
-        formData.disclaimer
-          ? `<div style="margin-top: 20px; font-size: 11px; color: #cccccc;"><p><strong>DISCLAIMER</strong></p><p style="margin-top: 5px;">${formData.disclaimer}</p></div>`
-          : ""
-      }
-    </div>
-  `;
+    `,
+
+    contactInfo: `
+      <p style="margin: 0; font-size: 14px;">📞 ${
+        formData.phone || "+91 9876543210"
+      }</p>
+      <p style="margin: 2px 0; font-size: 14px;">📧 <a href="mailto:${
+        formData.email
+      }" style="color: ${accentColor}; text-decoration: none;">${
+      formData.email || "email@example.com"
+    }</a></p>
+      <p style="margin: 2px 0; font-size: 14px;">🌐 <a href="https://${
+        formData.website
+      }" style="color: ${accentColor}; text-decoration: none;">www.${
+      formData.website || "agileworldtechnologies.com"
+    }</a></p>
+      ${renderSocialIcons(formData)}
+    `,
+
+    banner: formData.banner
+      ? `<div style="margin-top: 20px;"><img src="${formData.banner}" alt="Banner" style="width: 100%; height: auto; border-radius: 8px;"></div>`
+      : "",
+
+    disclaimer: formData.disclaimer
+      ? `<div style="margin-top: 20px; font-size: 11px; color: #cccccc;"><p><strong>DISCLAIMER</strong></p><p style="margin-top: 5px;">${formData.disclaimer}</p></div>`
+      : "",
+  };
 };
 
-const generateHorizontalLayout = (formData, designStyle) => {
-  const accentColor = designStyle.accentColor || "#3498db";
-  const bgColor = designStyle.backgroundColor || "#f0f0f0";
-  const textColor = designStyle.textColor || "#333";
-  const nameColor = designStyle.nameColor || "#3498db";
+// Layout configuration object - Updated with Professional Layout
+const layoutConfigs = {
+  standard: (designStyle, sections) => {
+    const containerStyle = {
+      fontFamily: "Arial, sans-serif",
+      color: designStyle.textColor || "#333",
+      backgroundColor: designStyle.backgroundColor || "#f0f0f0",
+      padding: "20px",
+      maxWidth: "600px",
+      borderRadius: "8px",
+      ...(designStyle.borderStyle && { border: designStyle.borderStyle }),
+      ...(designStyle.boxShadow && { boxShadow: designStyle.boxShadow }),
+    };
 
-  return `
-    <div style="font-family: Arial, sans-serif; background-color: ${bgColor}; color: ${textColor}; max-width: 600px; border-radius: 8px; overflow: hidden; ${
-    designStyle.boxShadow ? `box-shadow: ${designStyle.boxShadow};` : ""
-  }">
-      <div style="padding: 20px;">
-        <p style="margin-bottom: 10px;">Thanks & Regards,</p>
-        <table style="width: 100%; border-spacing: 0;">
+    return `
+      <div style="${styleToString(containerStyle)}">
+        ${sections.greeting}
+        <table style="width: 100%; border-spacing: 0; color: ${
+          designStyle.textColor || "#333"
+        };">
           <tr>
             <td style="padding-right: 20px; vertical-align: top;">
-              <p style="margin: 0; font-size: 16px; font-weight: bold; color: ${nameColor};">${
-    formData.name || "Employee Name"
-  }</p>
-              <p style="margin: 2px 0; font-size: 14px; color: ${accentColor};">${
-    formData.jobTitle || "Employee Title"
-  }</p>
-              <p style="margin: 4px 0 0 0; font-size: 14px; font-weight: bold;">${
-                formData.company || "AgileWorld Technology Ltd."
-              }</p>
-              <p style="margin: 2px 0 0 0; font-size: 14px;">${
-                formData.location || "Gurgaon, Haryana"
-              }</p>
+              ${sections.personalInfo}
             </td>
-            <td style="vertical-align: top;">
-              <p style="margin: 0; font-size: 14px;">📞 ${
-                formData.phone || "+91 9876543210"
-              }</p>
-              <p style="margin: 2px 0; font-size: 14px;">📧 <a href="mailto:${
-                formData.email
-              }" style="color: ${accentColor}; text-decoration: none;">${
-    formData.email || "email@example.com"
-  }</a></p>
-              <p style="margin: 2px 0; font-size: 14px;">🌐 <a href="https://${
-                formData.website
-              }" style="color: ${accentColor}; text-decoration: none;">www.${
-    formData.website || "agileworldtechnologies.com"
-  }</a></p>
-              ${renderSocialIcons(formData)}
+            <td style="border-left: 1px solid ${
+              designStyle.accentColor || "#3498db"
+            }; padding-left: 20px; vertical-align: top;">
+              ${sections.contactInfo}
             </td>
           </tr>
         </table>
+        ${sections.banner}
+        ${sections.disclaimer}
       </div>
-      <div style="background-color: ${accentColor}; padding: 12px; color: white;">
-        <p style="margin: 0; font-size: 12px; text-align: center;">Contact us for more information</p>
+    `;
+  },
+
+  split: (designStyle, sections) => {
+    const containerStyle = {
+      fontFamily: "Arial, sans-serif",
+      display: "flex",
+      maxWidth: "600px",
+      borderRadius: "8px",
+      overflow: "hidden",
+      ...(designStyle.boxShadow && { boxShadow: designStyle.boxShadow }),
+    };
+
+    const sidebarStyle = {
+      width: "120px",
+      backgroundColor: designStyle.accentColor || "#3498db",
+      padding: "20px",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      color: "white",
+    };
+
+    const contentStyle = {
+      flex: 1,
+      padding: "20px",
+      backgroundColor: designStyle.backgroundColor || "#f0f0f0",
+      color: designStyle.textColor || "#333",
+    };
+
+    return `
+      <div style="${styleToString(containerStyle)}">
+        <div style="${styleToString(sidebarStyle)}">
+          <div style="text-align: center;">
+            ${sections.sidebarInfo}
+          </div>
+        </div>
+        <div style="${styleToString(contentStyle)}">
+          ${sections.greeting}
+          ${sections.companyInfo}
+          <div style="margin-top: 10px;">
+            ${sections.contactInfo}
+          </div>
+        </div>
       </div>
-      ${
-        formData.banner
-          ? `<div><img src="${formData.banner}" alt="Banner" style="width: 100%; height: auto;"></div>`
-          : ""
-      }
-      ${
-        formData.disclaimer
-          ? `<div style="padding: 20px; font-size: 11px; color: #cccccc;"><p><strong>DISCLAIMER</strong></p><p style="margin-top: 5px;">${formData.disclaimer}</p></div>`
-          : ""
-      }
-    </div>
-  `;
+    `;
+  },
+
+  centered: (designStyle, sections) => {
+    const containerStyle = {
+      fontFamily: "Arial, sans-serif",
+      textAlign: "center",
+      backgroundColor: designStyle.backgroundColor || "#f0f0f0",
+      color: designStyle.textColor || "#333",
+      padding: "20px",
+      maxWidth: "600px",
+      borderRadius: "8px",
+      ...(designStyle.boxShadow && { boxShadow: designStyle.boxShadow }),
+    };
+
+    return `
+      <div style="${styleToString(containerStyle)}">
+        ${sections.greeting}
+        ${sections.personalInfo}
+        <div style="width: 60%; margin: 12px auto; height: 2px; background: ${
+          designStyle.accentColor || "#3498db"
+        };"></div>
+        <div style="margin-top: 10px;">
+          ${sections.contactInfo}
+        </div>
+        ${sections.banner}
+        ${sections.disclaimer}
+      </div>
+    `;
+  },
+
+  horizontal: (designStyle, sections) => {
+    const containerStyle = {
+      fontFamily: "Arial, sans-serif",
+      backgroundColor: designStyle.backgroundColor || "#f0f0f0",
+      color: designStyle.textColor || "#333",
+      maxWidth: "600px",
+      borderRadius: "8px",
+      overflow: "hidden",
+      ...(designStyle.boxShadow && { boxShadow: designStyle.boxShadow }),
+    };
+
+    return `
+      <div style="${styleToString(containerStyle)}">
+        <div style="padding: 20px;">
+          ${sections.greeting}
+          <table style="width: 100%; border-spacing: 0;">
+            <tr>
+              <td style="padding-right: 20px; vertical-align: top;">
+                ${sections.personalInfo}
+              </td>
+              <td style="vertical-align: top;">
+                ${sections.contactInfo}
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div style="background-color: ${
+          designStyle.accentColor || "#3498db"
+        }; padding: 12px; color: white;">
+          <p style="margin: 0; font-size: 12px; text-align: center;">Contact us for more information</p>
+        </div>
+        ${sections.banner}
+        ${sections.disclaimer}
+      </div>
+    `;
+  },
+
+  bordered: (designStyle, sections) => {
+    const containerStyle = {
+      fontFamily: "Arial, sans-serif",
+      backgroundColor: designStyle.backgroundColor || "#f0f0f0",
+      color: designStyle.textColor || "#333",
+      padding: "20px",
+      maxWidth: "600px",
+      border: `3px solid ${designStyle.accentColor || "#3498db"}`,
+      borderRadius: "8px",
+      ...(designStyle.boxShadow && { boxShadow: designStyle.boxShadow }),
+    };
+
+    return `
+      <div style="${styleToString(containerStyle)}">
+        <div style="padding: 16px;">
+          ${sections.greeting}
+          <table style="width: 100%; border-spacing: 0;">
+            <tr>
+              <td style="padding-right: 20px; vertical-align: top;">
+                ${sections.personalInfo}
+              </td>
+              <td style="border-left: 1px solid ${
+                designStyle.accentColor || "#3498db"
+              }; padding-left: 20px; vertical-align: top;">
+                ${sections.contactInfo}
+              </td>
+            </tr>
+          </table>
+          ${sections.banner}
+          ${sections.disclaimer}
+        </div>
+      </div>
+    `;
+  },
+
+  // NEW PROFESSIONAL LAYOUT ADDED HERE
+  professional: (designStyle, sections) => {
+    const containerStyle = {
+      fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+      maxWidth: "600px",
+      margin: "0",
+      padding: "20px",
+      backgroundColor: "#ffffff",
+      border: "1px solid #e0e0e0",
+      borderRadius: "8px",
+    };
+
+    return `
+      <div style="${styleToString(containerStyle)}">
+        <!-- Header Section with Company Branding -->
+        <div style="background-color: #f8f9fa; padding: 15px 20px; margin-bottom: 20px; border-radius: 6px; border-left: 4px solid ${designStyle.accentColor || "#007bff"};">
+          <p style="font-size: 16px; font-weight: 600; color: #333333; margin: 0; line-height: 1.2;">
+            ${sections.companyInfo}
+          </p>
+        </div>
+        
+        <!-- Main Content Section -->
+        <div style="display: flex; gap: 20px; align-items: flex-start;">
+          <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
+            <div>
+              ${sections.personalInfo}
+            </div>
+          </div>
+        </div>
+        
+        <!-- Contact Information -->
+        <div style="margin-top: 20px; padding: 15px 0; border-top: 2px solid ${designStyle.accentColor || "#007bff"};">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; align-items: start;">
+            ${sections.contactInfo}
+          </div>
+        </div>
+        
+        <!-- Social Icons -->
+        <div style="margin-top: 15px; display: flex; align-items: center; gap: 10px; padding-top: 10px;">
+          <span style="font-size: 12px; color: #888888; margin-right: 5px;">
+            Please note the quality of the support you received:
+          </span>
+          ${renderSocialIcons(formData)}
+        </div>
+        
+        <!-- Bottom Banner -->
+        <div style="margin-top: 20px; background: linear-gradient(135deg, ${designStyle.accentColor || "#007bff"}, #0056b3); padding: 12px 20px; border-radius: 6px; color: white; text-align: center;">
+          <div style="font-size: 16px; font-weight: 700; margin-bottom: 5px;">
+            Get IT done faster than ever
+          </div>
+          <div style="font-size: 12px; opacity: 0.9;">
+            LEARN MORE
+          </div>
+        </div>
+        
+        <!-- Footer Links -->
+        <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #888888; border-top: 1px solid #eeeeee; padding-top: 10px;">
+          <div style="display: flex; gap: 15px;">
+            <span>example.com</span>
+            <span>newsletter subscription</span>
+            <span>join our community</span>
+            <span>visit our store</span>
+            <span>resources</span>
+          </div>
+          <div style="display: flex; gap: 5px;">
+            <span style="width: 16px; height: 16px; border-radius: 50%; background-color: #ffc107; display: inline-block;"></span>
+            <span style="width: 16px; height: 16px; border-radius: 50%; background-color: #28a745; display: inline-block;"></span>
+            <span style="width: 16px; height: 16px; border-radius: 50%; background-color: #dc3545; display: inline-block;"></span>
+            <span style="width: 16px; height: 16px; border-radius: 50%; background-color: #17a2b8; display: inline-block;"></span>
+          </div>
+        </div>
+        
+        <!-- Disclaimer -->
+        ${sections.disclaimer || `
+        <div style="margin-top: 10px; font-size: 10px; color: #999999; line-height: 1.3;">
+          This email and any files transmitted with it are confidential and intended solely for the use of the individual or entity to whom they
+          are addressed. If you have received this email in error, please notify us immediately and delete the message from your system.
+        </div>
+        `}
+      </div>
+    `;
+  },
 };
 
-const generateBorderedLayout = (formData, designStyle) => {
-  const accentColor = designStyle.accentColor || "#3498db";
-  const bgColor = designStyle.backgroundColor || "#f0f0f0";
-  const textColor = designStyle.textColor || "#333";
-  const nameColor = designStyle.nameColor || "#3498db";
-
-  return `
-    <div style="font-family: Arial, sans-serif; background-color: ${bgColor}; color: ${textColor}; padding: 20px; max-width: 600px; border: 3px solid ${accentColor}; border-radius: 8px; ${
-    designStyle.boxShadow ? `box-shadow: ${designStyle.boxShadow};` : ""
-  }">
-      <div style="padding: 16px;">
-        <p style="margin-bottom: 10px;">Thanks & Regards,</p>
-        <table style="width: 100%; border-spacing: 0;">
-          <tr>
-            <td style="padding-right: 20px; vertical-align: top;">
-              <p style="margin: 0; font-size: 16px; font-weight: bold; color: ${nameColor};">${
-    formData.name || "Employee Name"
-  }</p>
-              <p style="margin: 2px 0; font-size: 14px; color: ${accentColor};">${
-    formData.jobTitle || "Employee Title"
-  }</p>
-              <p style="margin: 4px 0 0 0; font-size: 14px; font-weight: bold;">${
-                formData.company || "AgileWorld Technology Ltd."
-              }</p>
-              <p style="margin: 2px 0 0 0; font-size: 14px;">${
-                formData.location || "Gurgaon, Haryana"
-              }</p>
-            </td>
-            <td style="border-left: 1px solid ${accentColor}; padding-left: 20px; vertical-align: top;">
-              <p style="margin: 0; font-size: 14px;">📞 ${
-                formData.phone || "+91 9876543210"
-              }</p>
-              <p style="margin: 2px 0; font-size: 14px;">📧 <a href="mailto:${
-                formData.email
-              }" style="color: ${accentColor}; text-decoration: none;">${
-    formData.email || "email@example.com"
-  }</a></p>
-              <p style="margin: 2px 0; font-size: 14px;">🌐 <a href="https://${
-                formData.website
-              }" style="color: ${accentColor}; text-decoration: none;">www.${
-    formData.website || "agileworldtechnologies.com"
-  }</a></p>
-              ${renderSocialIcons(formData)}
-            </td>
-          </tr>
-        </table>
-        ${
-          formData.banner
-            ? `<div style="margin-top: 20px;"><img src="${formData.banner}" alt="Banner" style="width: 100%; height: auto; border-radius: 8px;"></div>`
-            : ""
-        }
-        ${
-          formData.disclaimer
-            ? `<div style="margin-top: 20px; font-size: 11px; color: #cccccc;"><p><strong>DISCLAIMER</strong></p><p style="margin-top: 5px;">${formData.disclaimer}</p></div>`
-            : ""
-        }
-      </div>
-    </div>
-  `;
-};
-
-// Updated function to generate HTML content of the signature based on design
+// Main function - FIXED to call layout functions correctly!
 export const generateSignatureHTML = (
   formData,
   selectedDesign,
   designStyle
 ) => {
-  // Import design templates to get layout info
-  const designTemplates = [
-    { id: "default", layout: "standard" },
-    { id: "dark", layout: "standard" },
-    { id: "minimal", layout: "standard" },
-    { id: "vibrant", layout: "standard" },
-    { id: "green", layout: "standard" },
-    { id: "modern", layout: "split" },
-    { id: "elegant", layout: "centered" },
-    { id: "clean", layout: "horizontal" },
-    { id: "gradient", layout: "standard" },
-    { id: "bordered", layout: "bordered" },
-    { id: "banner", layout: "banner" },
-  ];
+  console.log("🎯 Generating signature for design:", selectedDesign);
+  console.log("🎨 Design style:", designStyle);
 
+  // Find the design template
   const design =
     designTemplates.find((d) => d.id === selectedDesign) || designTemplates[0];
+  console.log("📋 Using layout:", design.layout, "for design:", selectedDesign);
 
-  switch (design.layout) {
-    case "split":
-      return generateSplitLayout(formData, designStyle);
-    case "centered":
-      return generateCenteredLayout(formData, designStyle);
-    case "horizontal":
-      return generateHorizontalLayout(formData, designStyle);
-    case "bordered":
-      return generateBorderedLayout(formData, designStyle);
-    default:
-      return generateStandardLayout(formData, designStyle);
-  }
+  // Generate reusable content sections
+  const sections = generateContentSections(formData, designStyle);
+  console.log("📝 Generated sections:", Object.keys(sections));
+
+  // Get the layout function and generate HTML - NOW CALLED CORRECTLY!
+  const layoutFunction = layoutConfigs[design.layout] || layoutConfigs.standard;
+
+  // Call with correct parameters: layoutFunction(designStyle, sections)
+  const html = layoutFunction(designStyle, sections);
+
+  console.log("✅ Generated HTML length:", html.length);
+  console.log("🔍 HTML preview (first 200 chars):", html.substring(0, 200));
+
+  return html;
 };
 
 // Function to load data from localStorage
@@ -407,22 +473,25 @@ export const loadFromLocalStorage = () => {
   try {
     const savedState = localStorage.getItem("emailSignatureState");
     if (savedState) {
-      return JSON.parse(savedState);
+      const parsed = JSON.parse(savedState);
+      console.log("📥 Loaded from localStorage:", {
+        selectedDesign: parsed.selectedDesign,
+        activeTab: parsed.activeTab,
+      });
+      return parsed;
     }
   } catch (error) {
-    console.error("Error loading from localStorage:", error);
+    console.error("❌ Error loading from localStorage:", error);
   }
   return null;
 };
 
-// Function to save state to localStorage and handle form data updates
+// Function to save state to localStorage
 export const saveToLocalStorage = (stateToSave, currentState = null) => {
   try {
     let updatedState = stateToSave;
 
-    // If we're just updating form data with a new form data object
     if (stateToSave.formData && currentState) {
-      // Ensure the formData has 5 campaigns
       const updatedFormData = ensureFiveCampaigns(stateToSave.formData);
 
       updatedState = {
@@ -432,7 +501,6 @@ export const saveToLocalStorage = (stateToSave, currentState = null) => {
           stateToSave.selectedDesign || currentState.selectedDesign,
       };
     } else {
-      // Ensure we preserve the activeTab when saving state
       updatedState = {
         ...stateToSave,
         activeTab:
@@ -441,10 +509,14 @@ export const saveToLocalStorage = (stateToSave, currentState = null) => {
       };
     }
 
+    console.log("💾 Saving to localStorage:", {
+      selectedDesign: updatedState.selectedDesign,
+      activeTab: updatedState.activeTab,
+    });
     localStorage.setItem("emailSignatureState", JSON.stringify(updatedState));
     return updatedState.formData;
   } catch (error) {
-    console.error("Error saving to localStorage:", error);
+    console.error("❌ Error saving to localStorage:", error);
     return stateToSave.formData;
   }
 };

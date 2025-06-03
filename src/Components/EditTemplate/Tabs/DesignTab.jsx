@@ -70,6 +70,12 @@ const designTemplates = [
     color: "#34495e",
     layout: "banner",
   },
+   {
+    id: "professional",
+    name: "Professional CodeTwo",
+    color: "#007bff",
+    layout: "professional",
+  },
 ];
 
 // Get style based on selected design
@@ -108,6 +114,25 @@ const getDesignStyle = (selectedDesign) => {
       contentStyle: {
         flex: 1,
         padding: "20px",
+      },
+    };
+  }
+
+if (design.layout === "professional") {
+    return {
+      ...baseStyle,
+      primaryColor: "#f8f9fa",
+      accentColor: design.color || "#007bff",
+      textColor: "#333333",
+      backgroundColor: "#ffffff",
+      containerStyle: {
+        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+        maxWidth: "600px",
+        margin: "0",
+        padding: "20px",
+        backgroundColor: "#ffffff",
+        border: "1px solid #e0e0e0",
+        borderRadius: "8px",
       },
     };
   }
