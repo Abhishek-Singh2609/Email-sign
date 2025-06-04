@@ -58,13 +58,15 @@
 }
 
 .social-icon {
-  width: 30px;
-  height: 30px;
+  /* width: 30px;
+  height: 30px; */
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 4px;
-  color: white;
+  /* color: white; */
+  background-color: transparent;
+  color: inherit;
   font-weight: bold;
   text-decoration: none;
   cursor: pointer;
@@ -74,7 +76,7 @@
   opacity: 0.9;
 }
 
-.linkedin {
+/* .linkedin {
   background-color: #0077b5;
 }
 
@@ -96,10 +98,34 @@
 
 .portfolio {
   background-color: #0077b5;
-} 
+} */
+
+.social-icon.linkedin {
+  color: #0077b5;
+}
+
+.social-icon.twitter {
+  color: #000;
+}
+
+.social-icon.instagram {
+  color: #e1306c;
+}
+
+.social-icon.facebook {
+  color: #1877f2;
+}
+
+.social-icon.youtube {
+  color: #ff0000;
+}
+
+.social-icon.portfolio {
+  color: #0077b5;
+}
 
 @media (max-width: 576px) {
- .social-input{
-  flex: 1;  
- }
+  .social-input {
+    flex: 1;
+  }
 }

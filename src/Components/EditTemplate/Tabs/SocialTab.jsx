@@ -28,7 +28,7 @@ const renderSocialIcons = (formData) => {
           rel="noopener noreferrer"
           className="social-icon linkedin"
         >
-          <FaLinkedin />
+          <FaLinkedin size={20} />
         </a>
       )}
       {formData.twitter && (
@@ -48,7 +48,7 @@ const renderSocialIcons = (formData) => {
           rel="noopener noreferrer"
           className="social-icon instagram"
         >
-          <FaInstagram />
+          <FaInstagram size={20} />
         </a>
       )}
       {formData.facebook && (
@@ -58,7 +58,7 @@ const renderSocialIcons = (formData) => {
           rel="noopener noreferrer"
           className="social-icon facebook"
         >
-          <FaFacebook />
+          <FaFacebook size={20} />
         </a>
       )}
       {formData.youtube && (
@@ -68,7 +68,7 @@ const renderSocialIcons = (formData) => {
           rel="noopener noreferrer"
           className="social-icon youtube"
         >
-          <FaYoutube />
+          <FaYoutube size={20} />
         </a>
       )}
       {formData.portfolio && (

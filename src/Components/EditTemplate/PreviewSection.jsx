@@ -35,7 +35,7 @@ const PreviewSection = ({
                   src={campaign.image}
                   alt={campaign.name}
                   style={{
-                    width: "75%",
+                    width: "83%",
                     height: "auto",
                     maxHeight: "100px",
                     borderRadius: "4px",

@@ -76,6 +76,24 @@ const designTemplates = [
     color: "#007bff",
     layout: "professional",
   },
+   {
+    id: "text",
+    name: "text layout",
+    color: "#008cff",
+    layout: "text",
+  },
+   {
+    id: "logo",
+    name: "logo layout",
+    color: "#0034df",
+    layout: "logo",
+  },
+   {
+    id: "withoutProfile",
+    name: "Profile layout",
+    color: "#0544df",
+    layout: "withoutProfile",
+  },
 ];
 
 // Get style based on selected design
@@ -119,6 +137,63 @@ const getDesignStyle = (selectedDesign) => {
   }
 
 if (design.layout === "professional") {
+    return {
+      ...baseStyle,
+      primaryColor: "#f8f9fa",
+      accentColor: design.color || "#007bff",
+      textColor: "#333333",
+      backgroundColor: "#ffffff",
+      containerStyle: {
+        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+        maxWidth: "600px",
+        margin: "0",
+        padding: "20px",
+        backgroundColor: "#ffffff",
+        border: "1px solid #e0e0e0",
+        borderRadius: "8px",
+      },
+    };
+  }
+ 
+  if (design.layout === "text") {
+    return {
+      ...baseStyle,
+      primaryColor: "#f8f9fa",
+      accentColor: design.color || "#007bff",
+      textColor: "#333333",
+      backgroundColor: "#ffffff",
+      containerStyle: {
+        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+        maxWidth: "600px",
+        margin: "0",
+        padding: "20px",
+        backgroundColor: "#ffffff",
+        border: "1px solid #e0e0e0",
+        borderRadius: "8px",
+      },
+    };
+  }
+
+  if (design.layout === "logo") {
+    return {
+      ...baseStyle,
+      primaryColor: "#f8f9fa",
+      accentColor: design.color || "#007bff",
+      textColor: "#333333",
+      backgroundColor: "#ffffff",
+      containerStyle: {
+        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+        maxWidth: "600px",
+        margin: "0",
+        padding: "20px",
+        backgroundColor: "#ffffff",
+        border: "1px solid #e0e0e0",
+        borderRadius: "8px",
+      },
+    };
+  }
+
+  if (design.layout === "withoutProfile") {
     return {
       ...baseStyle,
       primaryColor: "#f8f9fa",

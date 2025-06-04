@@ -81,7 +81,7 @@
   width: 100px !important;
   height: 100px !important;
   object-fit: cover !important;
-  border-radius: 50% !important;
+  /* border-radius: 50% !important; */
   max-width: 100px !important;
   max-height: 100px !important;
 }
@@ -109,4 +109,4 @@
   display: flex;
   align-items: center;
   justify-content: center;
-} 
+}

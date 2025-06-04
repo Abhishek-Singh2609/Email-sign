@@ -436,6 +436,181 @@ const layoutConfigs = {
       </div>
     `;
   },
+   text: (designStyle, sections) => {
+    const containerStyle = {
+      fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+      width: "600px",
+      minHeight: "180px",
+      margin: "0",
+      backgroundColor: "#ffffff",
+      border: "1px solid #e0e0e0",
+      borderRadius: "8px",
+      overflow: "hidden",
+    };
+
+    return `
+      <div style="${styleToString(containerStyle)}">
+        <!-- Header Section -->
+        <div style="display: flex; align-items: center; padding: 20px; background-color: #ffffff; min-height: 140px;">
+          <!-- Contact Information -->
+          <div style="width: 70%; padding-right: 20px;">
+            <div style="font-size: 18px; font-weight: 700; color: #333333; margin-bottom: 2px;">
+              ${formData.name || "Employee Name"}
+            </div>
+            <div style="font-size: 14px; color: ${designStyle.accentColor || "#0066cc"}; margin-bottom: 8px;">
+              ${formData.jobTitle || "Job Title"}
+            </div>
+            <div style="font-size: 12px; color: #666666; line-height: 1.4;">
+              ${sections.contactInfo}
+            </div>
+          </div>
+          
+          <!-- Company Name -->
+          <div style="width: 30%; display: flex; align-items: center; justify-content: center; text-align: center;">
+            <div style="font-size: 16px; font-weight: 700; color: #666666; padding: 10px; display: flex; align-items: center;">
+              ${formData.company || "Company Name"}
+            </div>
+          </div>
+        </div>
+        
+        <!-- Social Section -->
+        <div style="padding: 15px 20px; display: flex; align-items: center; justify-content: flex-start;">
+          ${renderSocialIcons(formData)}
+        </div>
+        
+        ${sections.disclaimer}
+      </div>
+    `;
+  },
+
+   logo: (designStyle, sections, formData) => {
+    const containerStyle = {
+      fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+      width: "600px",
+      minHeight: "180px",
+      margin: "0",
+      backgroundColor: "#ffffff",
+      border: "1px solid #e0e0e0",
+      borderRadius: "8px",
+      overflow: "hidden",
+    };
+
+    return `
+      <div style="${styleToString(containerStyle)}">
+        <!-- Header Section -->
+        <div style="display: flex; align-items: center; padding: 20px; background-color: #ffffff; min-height: 140px;">
+          <!-- Logo Section - Maintains space even if empty -->
+          <div style="width: 140px; min-width: 140px; display: flex; flex-direction: column; align-items: center; margin-right: 15px; ${!formData.logo ? 'visibility: hidden;' : ''}">
+            ${formData.logo ? 
+              `<img src="${formData.logo}" alt="Company Logo" style="width: 100px; height: 83px; object-fit: contain; margin-right: 15px; border-radius: 4px;" />` :
+              `<div style="width: 80px; height: 60px; background: linear-gradient(135deg, ${designStyle.accentColor || "#0066cc"}, ${designStyle.accentColor || "#004499"}); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 24px; margin-right: 15px; border-radius: 4px;">
+                ${formData.company ? formData.company.substring(0, 3).toUpperCase() : "IDC"}
+              </div>`
+            }
+          </div>
+
+          <!-- Contact Information -->
+          <div style="flex: 1;">
+            <div style="font-size: 18px; font-weight: 700; color: #333333; margin-bottom: 2px;">
+              ${formData.name || "Employee Name"}
+            </div>
+            <div style="font-size: 14px; color: ${designStyle.accentColor || "#0066cc"}; margin-bottom: 8px;">
+              ${formData.jobTitle || "Job Title"}
+            </div>
+            <div style="font-size: 12px; color: #666666; line-height: 1.4;">
+              ${(formData.mobilePhone || formData.phone) ? 
+                `<strong>mobile:</strong> ${formData.mobilePhone || formData.phone}${formData.phone && formData.mobilePhone ? ` | <strong>tel:</strong> ${formData.phone}` : ''}<br/>` : 
+                ''
+              }
+              ${formData.email ? `<strong>email:</strong> ${formData.email}<br/>` : ''}
+              ${formData.website ? `<strong>website:</strong> ${formData.website}<br/>` : ''}
+              <strong>location:</strong> ${formData.location || ""}
+            </div>
+          </div>
+
+          <!-- Company Name (replaces profile image) -->
+          <div style="width: 80px; min-width: 80px; height: 80px; margin-left: 20px; display: flex; align-items: center; justify-content: center; text-align: center;">
+            <div style="font-size: 16px; font-weight: 700; color: #666666;">
+              ${formData.company || "Company Name"}
+            </div>
+          </div>
+        </div>
+
+        <!-- Social Section -->
+        <div style="padding: 15px 20px; display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            ${renderSocialIcons(formData)}
+          </div>
+        </div>
+        
+        ${sections.disclaimer}
+      </div>
+    `;
+  },
+    // NEW WITHOUT LOGO LAYOUT - Clean layout without logo prominence
+  withoutProfile: (designStyle, sections, formData) => {
+    const containerStyle = {
+      fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+      width: "600px",
+      minHeight: "180px",
+      margin: "0",
+      backgroundColor: "#ffffff",
+      border: "1px solid #e0e0e0",
+      borderRadius: "8px",
+      overflow: "hidden",
+    };
+
+    return `
+      <div style="${styleToString(containerStyle)}">
+        <!-- Header Section with Company Logo and Contact Info -->
+        <div style="display: flex; align-items: center; padding: 20px; background-color: #ffffff; min-height: 140px;">
+          <!-- Logo Section - Always takes space even if empty (but hidden when no logo) -->
+          <div style="width: 140px; min-width: 140px; display: flex; flex-direction: column; align-items: center; margin-right: 15px; ${!formData.logo ? 'visibility: hidden;' : ''}">
+            ${formData.logo ? 
+              `<img src="${formData.logo}" alt="Company Logo" style="width: 100px; height: 83px; object-fit: contain; margin-right: 15px; border-radius: 4px;" />` :
+              `<div style="width: 80px; height: 60px; background: linear-gradient(135deg, ${designStyle.accentColor || "#0066cc"}, ${designStyle.accentColor || "#004499"}); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 24px; margin-right: 15px; border-radius: 4px;">
+                ${formData.company ? formData.company.substring(0, 3).toUpperCase() : "IDC"}
+              </div>`
+            }
+            <div style="color: #666666; font-size: 14px; font-weight: 500;">
+              <div style="font-size: 13px; font-weight: 700; line-height: 1.2; color: #333333; text-align: center;">
+                ${formData.company || "Company"}
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Information -->
+          <div style="flex: 1;">
+            <div style="font-size: 18px; font-weight: 700; color: #333333; margin-bottom: 2px;">
+              ${formData.name || "Employee Name"}
+            </div>
+            <div style="font-size: 14px; color: ${designStyle.accentColor || "#0066cc"}; margin-bottom: 8px;">
+              ${formData.jobTitle || "Job Title"}
+            </div>
+            <div style="font-size: 12px; color: #666666; line-height: 1.4;">
+              ${(formData.mobilePhone || formData.phone) ? 
+                `<strong>mobile:</strong> ${formData.mobilePhone || formData.phone}${formData.phone && formData.mobilePhone ? ` | <strong>tel:</strong> ${formData.phone}` : ''}<br/>` : 
+                ''
+              }
+              ${formData.email ? `<strong>email:</strong> ${formData.email}<br/>` : ''}
+              ${formData.website ? `<strong>website:</strong> ${formData.website}<br/>` : ''}
+              <strong>location:</strong> ${formData.location || ""}
+            </div>
+          </div>
+        </div>
+
+        <!-- Social Section -->
+        <div style="padding: 15px 20px; display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            ${renderSocialIcons(formData)}
+          </div>
+        </div>
+        
+        ${sections.disclaimer}
+      </div>
+    `;
+  },
+
 };
 
 // Main function - FIXED to call layout functions correctly!

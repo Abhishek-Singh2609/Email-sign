@@ -6,6 +6,9 @@ import BorderedLayout from "./BorderedLayout";
 import StandardLayout from "./StandardLayout";
 import { designTemplates } from "../Tabs/DesignTab";
 import ProfessionalLayout from "./ProfessionalLayout";
+import TextLayout from "./TextLayout";
+import LogoLayout from "./LogoLayout";
+import WithoutProfile from "./WithoutProfile";
 
 const SignatureLayout = ({ formData, selectedDesign, designStyle }) => {
   const design = designTemplates.find((d) => d.id === selectedDesign);
@@ -21,6 +24,12 @@ const SignatureLayout = ({ formData, selectedDesign, designStyle }) => {
       return <BorderedLayout formData={formData} designStyle={designStyle} />;
     case "professional":
       return <ProfessionalLayout formData={formData} designStyle={designStyle} />;
+    case "text":
+      return <TextLayout formData={formData} designStyle={designStyle} />;
+    case "logo":
+      return <LogoLayout formData={formData} designStyle={designStyle} />;
+    case "withoutProfile":
+      return <WithoutProfile formData={formData} designStyle={designStyle} />;
     default:
       return (
         <StandardLayout

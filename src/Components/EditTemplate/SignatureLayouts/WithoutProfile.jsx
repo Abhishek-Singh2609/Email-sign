@@ -1,7 +1,7 @@
 import React from "react";
 import { renderSocialIcons } from "../Tabs/SocialTab";
 
-const ProfessionalLayout = ({ formData, designStyle }) => {
+const WithoutLogo = ({ formData, designStyle }) => {
   return (
     <>
       <div
@@ -157,32 +157,6 @@ const ProfessionalLayout = ({ formData, designStyle }) => {
               <strong>location:</strong> {formData.location || ""}
             </div>
           </div>
-
-          {/* Profile Image - Always takes space even if empty */}
-          <div
-            style={{
-              width: "80px",
-              minWidth: "80px", // Ensure fixed width
-              height: "80px",
-              marginLeft: "20px",
-              visibility: formData.profileImage ? "visible" : "hidden", // Keep space reserved
-            }}
-          >
-            {formData.profileImage && (
-              <img
-                src={formData.profileImage}
-                alt={formData.name || "Profile"}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  borderRadius: "6px",
-                  objectFit: "cover",
-                  border: "2px solid #e0e0e0",
-                }}
-                className="profile-image"
-              />
-            )}
-          </div>
         </div>
 
         {/* Social Section */}
@@ -206,5 +180,4 @@ const ProfessionalLayout = ({ formData, designStyle }) => {
   );
 };
 
-export default ProfessionalLayout;
-
+export default WithoutLogo;

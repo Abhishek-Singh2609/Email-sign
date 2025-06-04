@@ -1,14 +1,14 @@
 import React from "react";
 import { renderSocialIcons } from "../Tabs/SocialTab";
 
-const ProfessionalLayout = ({ formData, designStyle }) => {
+const LogoLayout = ({ formData, designStyle }) => {
   return (
     <>
       <div
         style={{
           fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-          width: "600px", // Changed from maxWidth to fixed width
-          minHeight: "180px", 
+          width: "600px",
+          minHeight: "180px",
           margin: "0",
           backgroundColor: "#ffffff",
           border: "1px solid #e0e0e0",
@@ -16,28 +16,28 @@ const ProfessionalLayout = ({ formData, designStyle }) => {
           overflow: "hidden",
           ...designStyle.containerStyle,
         }}
-        className="signature-preview professional-layout"
+        className="signature-preview professional-layout-v2"
       >
-        {/* Header Section with Company Logo and Contact Info */}
+        {/* Header Section */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
             padding: "20px",
             backgroundColor: "#ffffff",
-            minHeight: "140px", // Ensure consistent height for this section
+            minHeight: "140px",
           }}
         >
-          {/* Logo Section - Always takes space even if empty */}
+          {/* Logo Section - Maintains space even if empty */}
           <div
             style={{
               width: "140px",
-              minWidth: "140px", // Ensure fixed width
+              minWidth: "140px",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               marginRight: "15px",
-              visibility: formData.logo ? "visible" : "hidden", // Keep space reserved
+              visibility: formData.logo ? "visible" : "hidden",
             }}
           >
             {formData.logo ? (
@@ -77,25 +77,7 @@ const ProfessionalLayout = ({ formData, designStyle }) => {
                   : "IDC"}
               </div>
             )}
-            <div
-              style={{
-                color: "#666666",
-                fontSize: "14px",
-                fontWeight: "500",
-              }}
-            >
-              <div
-                style={{
-                  fontSize: "13px",
-                  fontWeight: "700",
-                  lineHeight: "1.2",
-                  color: "#333333",
-                  textAlign: "center",
-                }}
-              >
-                {formData.company}
-              </div>
-            </div>
+            
           </div>
 
           {/* Contact Information */}
@@ -158,30 +140,29 @@ const ProfessionalLayout = ({ formData, designStyle }) => {
             </div>
           </div>
 
-          {/* Profile Image - Always takes space even if empty */}
+          {/* Company Name (replaces profile image) */}
           <div
             style={{
               width: "80px",
-              minWidth: "80px", // Ensure fixed width
+              minWidth: "80px",
               height: "80px",
               marginLeft: "20px",
-              visibility: formData.profileImage ? "visible" : "hidden", // Keep space reserved
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center",
             }}
           >
-            {formData.profileImage && (
-              <img
-                src={formData.profileImage}
-                alt={formData.name || "Profile"}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  borderRadius: "6px",
-                  objectFit: "cover",
-                  border: "2px solid #e0e0e0",
-                }}
-                className="profile-image"
-              />
-            )}
+            <div
+              style={{
+                fontSize: "16px",
+                fontWeight: "700",
+                color: "#666666",
+                
+              }}
+            >
+              {formData.company || "Company Name"}
+            </div>
           </div>
         </div>
 
@@ -206,5 +187,4 @@ const ProfessionalLayout = ({ formData, designStyle }) => {
   );
 };
 
-export default ProfessionalLayout;
-
+export default LogoLayout;
