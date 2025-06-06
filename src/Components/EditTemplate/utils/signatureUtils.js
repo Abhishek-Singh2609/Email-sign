@@ -100,6 +100,73 @@ const renderSocialIcons = (formData) => {
     : "";
 };
 
+// Generate social icons HTML for Orange Layout (with special styling)
+const renderOrangeSocialIcons = (formData) => {
+  const socialIcons = [
+    {
+      key: "linkedin",
+      icon: "https://cdn-icons-png.flaticon.com/24/145/145807.png",
+      alt: "LinkedIn",
+    },
+    {
+      key: "youtube",
+      icon: "https://cdn-icons-png.flaticon.com/24/1384/1384060.png",
+      alt: "YouTube",
+    },
+    {
+      key: "instagram",
+      icon: "https://cdn-icons-png.flaticon.com/24/2111/2111463.png",
+      alt: "Instagram",
+    },
+    {
+      key: "facebook",
+      icon: "https://cdn-icons-png.flaticon.com/24/145/145802.png",
+      alt: "Facebook",
+    },
+    {
+      key: "twitter",
+      icon: "https://cdn-icons-png.flaticon.com/24/145/145812.png",
+      alt: "Twitter",
+    },
+    {
+      key: "github",
+      icon: "https://cdn-icons-png.flaticon.com/24/733/733553.png",
+      alt: "GitHub",
+    },
+  ];
+
+  const socialLinks = socialIcons
+    .filter((social) => formData[social.key])
+    .map((social, index) => {
+      // Calculate position for 3 per row layout
+      const row = Math.floor(index / 3);
+      const col = index % 3;
+      
+      return `
+        <a href="${formData[social.key]}" 
+           style="background-color: #FF6B35 !important;
+                  border-radius: 50% !important;
+                  width: 25px !important;
+                  height: 25px !important;
+                  display: inline-flex !important;
+                  align-items: center !important;
+                  justify-content: center !important;
+                  text-decoration: none !important;
+                  transition: all 0.3s ease !important;
+                  margin-right: ${col === 2 ? '0' : '8px'} !important;
+                  margin-bottom: ${row > 0 ? '0' : '8px'} !important;"
+           onmouseover="this.style.backgroundColor='#E55A2B !important'; this.style.transform='scale(1.1) !important';"
+           onmouseout="this.style.backgroundColor='#FF6B35 !important'; this.style.transform='scale(1) !important';">
+          <img src="${social.icon}" 
+               alt="${social.alt}" 
+               style="width: 12px; height: 12px; filter: brightness(0) invert(1) !important;">
+        </a>
+      `;
+    });
+
+  return socialLinks.length > 0 ? socialLinks.join("") : "";
+};
+
 // Generate common content sections
 const generateContentSections = (formData, designStyle) => {
   const {
@@ -172,8 +239,419 @@ const generateContentSections = (formData, designStyle) => {
   };
 };
 
-// Layout configuration object - Updated with Professional Layout
+// Layout configuration object - Updated with Orange Layout
 const layoutConfigs = {
+  // NEW ORANGE LAYOUT ADDED HERE
+  orange: (designStyle, sections, formData) => {
+    const defaultData = {
+      name: "Sally Williams",
+      jobTitle: "SALES MANAGER", 
+      phone: "+1 234 56789",
+      email: "s.williams@crossware365.com",
+      website: "www.crossware365.com",
+      company: "Crossware Inc.",
+      location: "New York, USA",
+      profileImage: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face&auto=format",
+      ...formData
+    };
+
+    return `
+      <style>
+        .orange-signature-layout .social-icons-container {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          max-width: 100px;
+        }
+        
+        .orange-signature-layout .social-icons-container a {
+          background-color: #FF6B35 !important;
+          border-radius: 50% !important;
+          width: 25px !important;
+          height: 25px !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          text-decoration: none !important;
+          transition: all 0.3s ease !important;
+        }
+        
+        .orange-signature-layout .social-icons-container a:hover {
+          background-color: #E55A2B !important;
+          transform: scale(1.1) !important;
+        }
+        
+        .orange-signature-layout .social-icons-container svg {
+          fill: white !important;
+          color: white !important;
+        }
+        
+        .orange-signature-layout .social-icons-container img {
+          filter: brightness(0) invert(1) !important;
+        }
+      </style>
+
+      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 600px; background-color: #ffffff; border: none; margin: 0; padding: 0;" class="signature-preview orange-signature-layout">
+        <!-- Orange top border -->
+        <div style="height: 4px; background: linear-gradient(90deg, #FF6B35 0%, #F7931E 100%); width: 100%;"></div>
+
+        <!-- Main content section -->
+        <div style="display: flex; align-items: center; padding: 20px; background-color: #ffffff;">
+          <!-- Profile Image -->
+          <div style="margin-right: 20px;">
+            ${defaultData.profileImage ? 
+              `<img src="${defaultData.profileImage}" alt="${defaultData.name || 'Profile'}" style="width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 3px solid #FF6B35;">` :
+              `<div style="width: 110px; height: 110px; border-radius: 50%; background-color: #FF6B35; display: flex; align-items: center; justify-content: center; color: white; font-size: 36px; font-weight: bold;">
+                ${defaultData.name ? defaultData.name.charAt(0) : "U"}
+              </div>`
+            }
+          </div>
+
+          <!-- Left Section - Name, Title, Social Icons -->
+          <div style="flex: 1;">
+            <!-- Name -->
+            <div style="font-size: 24px; font-weight: 700; color: #333333; margin-bottom: 2px; line-height: 1.2;">
+              ${defaultData.name || "Your Name"}
+            </div>
+
+            <!-- Job Title -->
+            <div style="font-size: 14px; font-weight: 600; color: #FF6B35; margin-bottom: 15px; letter-spacing: 0.5px;">
+              ${defaultData.jobTitle || "YOUR JOB TITLE"}
+            </div>
+
+            <!-- Social Icons - 3 per line -->
+            <div class="social-icons-container" style="display: flex; flex-wrap: wrap; gap: 8px; max-width: 100px;">
+              ${renderOrangeSocialIcons(defaultData)}
+            </div>
+          </div>
+
+          <!-- Right Section - Contact Info, Company, Location -->
+          <div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-start; margin-left: 20px; width: 200px;">
+            <!-- Phone -->
+            ${defaultData.phone ? `
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; display: flex; align-items: center; justify-content: center;">
+                  <span style="color: white; font-size: 10px;">📞</span>
+                </div>
+                <span style="font-size: 12px; color: #333333;">${defaultData.phone}</span>
+              </div>
+            ` : ''}
+
+            <!-- Email -->
+            ${defaultData.email ? `
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; display: flex; align-items: center; justify-content: center;">
+                  <span style="color: white; font-size: 10px;">✉</span>
+                </div>
+                <span style="font-size: 12px; color: #333333;">${defaultData.email}</span>
+              </div>
+            ` : ''}
+
+            <!-- Website -->
+            ${defaultData.website ? `
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; display: flex; align-items: center; justify-content: center;">
+                  <span style="color: white; font-size: 10px;">🌐</span>
+                </div>
+                <span style="font-size: 12px; color: #333333;">${defaultData.website}</span>
+              </div>
+            ` : ''}
+
+            <!-- Company -->
+            ${defaultData.company ? `
+              <div style="display: flex; align-items: center; gap: 8px; margin-top: 10px;">
+                <div style="width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; display: flex; align-items: center; justify-content: center;">
+                  <span style="color: white; font-size: 10px;">🏢</span>
+                </div>
+                <span style="font-size: 12px; color: #333333;">${defaultData.company}</span>
+              </div>
+            ` : ''}
+
+            <!-- Location -->
+            ${defaultData.location ? `
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; display: flex; align-items: center; justify-content: center;">
+                  <span style="color: white; font-size: 10px;">📍</span>
+                </div>
+                <span style="font-size: 12px; color: #333333;">${defaultData.location}</span>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+  },
+
+orangecenter: (designStyle, sections, formData) => {
+    const defaultData = {
+      name: "Sally Williams",
+      jobTitle: "SALES MANAGER", 
+      phone: "+1 234 56789",
+      email: "s.williams@crossware365.com",
+      website: "www.crossware365.com",
+      company: "Crossware Inc.",
+      location: "New York, USA",
+      profileImage: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face&auto=format",
+      ...formData
+    };
+
+    return `
+      <style>
+        .orange-signature-layout .social-icons-container {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          max-width: 100px;
+        }
+        
+        .orange-signature-layout .social-icons-container a {
+          background-color: #FF6B35 !important;
+          border-radius: 50% !important;
+          width: 25px !important;
+          height: 25px !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          text-decoration: none !important;
+          transition: all 0.3s ease !important;
+        }
+        
+        .orange-signature-layout .social-icons-container a:hover {
+          background-color: #E55A2B !important;
+          transform: scale(1.1) !important;
+        }
+        
+        .orange-signature-layout .social-icons-container svg {
+          fill: white !important;
+          color: white !important;
+        }
+        
+        .orange-signature-layout .social-icons-container img {
+          filter: brightness(0) invert(1) !important;
+        }
+      </style>
+
+      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 600px; background-color: #ffffff; border: none; margin: 0; padding: 0;" class="signature-preview orange-signature-layout">
+        <!-- Orange top border -->
+        <div style="height: 4px; background: linear-gradient(90deg, #FF6B35 0%, #F7931E 100%); width: 100%;"></div>
+
+        <!-- Main content section -->
+        <div style="display: flex; align-items: center; padding: 20px; background-color: #ffffff;">
+          <!-- Profile Image -->
+          <div style="margin-right: 20px;">
+            ${defaultData.profileImage ? 
+              `<img src="${defaultData.profileImage}" alt="${defaultData.name || 'Profile'}" style="width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 3px solid #FF6B35;">` :
+              `<div style="width: 110px; height: 110px; border-radius: 50%; background-color: #FF6B35; display: flex; align-items: center; justify-content: center; color: white; font-size: 36px; font-weight: bold;">
+                ${defaultData.name ? defaultData.name.charAt(0) : "U"}
+              </div>`
+            }
+          </div>
+
+          <!-- Left Section - Name, Title, Social Icons -->
+          <div style="flex: 1;">
+            <!-- Name -->
+            <div style="font-size: 24px; font-weight: 700; color: #333333; margin-bottom: 2px; line-height: 1.2;">
+              ${defaultData.name || "Your Name"}
+            </div>
+
+            <!-- Job Title -->
+            <div style="font-size: 14px; font-weight: 600; color: #FF6B35; margin-bottom: 15px; letter-spacing: 0.5px;">
+              ${defaultData.jobTitle || "YOUR JOB TITLE"}
+            </div>
+
+            <!-- Social Icons - 3 per line -->
+            <div class="social-icons-container" style="display: flex; flex-wrap: wrap; gap: 8px; max-width: 100px;">
+              ${renderOrangeSocialIcons(defaultData)}
+            </div>
+          </div>
+
+          <!-- Right Section - Contact Info, Company, Location -->
+          <div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-start; margin-left: 20px; width: 200px;">
+            <!-- Phone -->
+            ${defaultData.phone ? `
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; display: flex; align-items: center; justify-content: center;">
+                  <span style="color: white; font-size: 10px;">📞</span>
+                </div>
+                <span style="font-size: 12px; color: #333333;">${defaultData.phone}</span>
+              </div>
+            ` : ''}
+
+            <!-- Email -->
+            ${defaultData.email ? `
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; display: flex; align-items: center; justify-content: center;">
+                  <span style="color: white; font-size: 10px;">✉</span>
+                </div>
+                <span style="font-size: 12px; color: #333333;">${defaultData.email}</span>
+              </div>
+            ` : ''}
+
+            <!-- Website -->
+            ${defaultData.website ? `
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; display: flex; align-items: center; justify-content: center;">
+                  <span style="color: white; font-size: 10px;">🌐</span>
+                </div>
+                <span style="font-size: 12px; color: #333333;">${defaultData.website}</span>
+              </div>
+            ` : ''}
+
+            <!-- Company -->
+            ${defaultData.company ? `
+              <div style="display: flex; align-items: center; gap: 8px; margin-top: 10px;">
+                <div style="width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; display: flex; align-items: center; justify-content: center;">
+                  <span style="color: white; font-size: 10px;">🏢</span>
+                </div>
+                <span style="font-size: 12px; color: #333333;">${defaultData.company}</span>
+              </div>
+            ` : ''}
+
+            <!-- Location -->
+            ${defaultData.location ? `
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; display: flex; align-items: center; justify-content: center;">
+                  <span style="color: white; font-size: 10px;">📍</span>
+                </div>
+                <span style="font-size: 12px; color: #333333;">${defaultData.location}</span>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+  },
+
+
+  orangetext: (designStyle, sections, formData) => {
+    const defaultData = {
+      name: "Sally Williams",
+      jobTitle: "SALES MANAGER", 
+      phone: "+1 234 56789",
+      email: "s.williams@crossware365.com",
+      website: "www.crossware365.com",
+      company: "Crossware Inc.",
+      location: "New York, USA",
+      profileImage: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face&auto=format",
+      ...formData
+    };
+
+    return `
+      <style>
+        .orange-signature-layout .social-icons-container {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          max-width: 100px;
+        }
+        
+        .orange-signature-layout .social-icons-container a {
+          background-color: #FF6B35 !important;
+          border-radius: 50% !important;
+          width: 25px !important;
+          height: 25px !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          text-decoration: none !important;
+          transition: all 0.3s ease !important;
+        }
+        
+        .orange-signature-layout .social-icons-container a:hover {
+          background-color: #E55A2B !important;
+          transform: scale(1.1) !important;
+        }
+        
+        .orange-signature-layout .social-icons-container svg {
+          fill: white !important;
+          color: white !important;
+        }
+        
+        .orange-signature-layout .social-icons-container img {
+          filter: brightness(0) invert(1) !important;
+        }
+      </style>
+
+      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 600px; background-color: #ffffff; border: none; margin: 0; padding: 0;" class="signature-preview orange-signature-layout">
+        <!-- Orange top border -->
+        <div style="height: 4px; background: linear-gradient(90deg, #FF6B35 0%, #F7931E 100%); width: 100%;"></div>
+
+
+          <!-- Left Section - Name, Title, Social Icons -->
+          <div style="flex: 1;">
+            <!-- Name -->
+            <div style="font-size: 24px; font-weight: 700; color: #333333; margin-bottom: 2px; line-height: 1.2;">
+              ${defaultData.name || "Your Name"}
+            </div>
+
+            <!-- Job Title -->
+            <div style="font-size: 14px; font-weight: 600; color: #FF6B35; margin-bottom: 15px; letter-spacing: 0.5px;">
+              ${defaultData.jobTitle || "YOUR JOB TITLE"}
+            </div>
+
+            <!-- Social Icons - 3 per line -->
+            <div class="social-icons-container" style="display: flex; flex-wrap: wrap; gap: 8px; max-width: 100px;">
+              ${renderOrangeSocialIcons(defaultData)}
+            </div>
+          </div>
+
+          <!-- Right Section - Contact Info, Company, Location -->
+          <div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-start; margin-left: 20px; width: 200px;">
+            <!-- Phone -->
+            ${defaultData.phone ? `
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; display: flex; align-items: center; justify-content: center;">
+                  <span style="color: white; font-size: 10px;">📞</span>
+                </div>
+                <span style="font-size: 12px; color: #333333;">${defaultData.phone}</span>
+              </div>
+            ` : ''}
+
+            <!-- Email -->
+            ${defaultData.email ? `
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; display: flex; align-items: center; justify-content: center;">
+                  <span style="color: white; font-size: 10px;">✉</span>
+                </div>
+                <span style="font-size: 12px; color: #333333;">${defaultData.email}</span>
+              </div>
+            ` : ''}
+
+            <!-- Website -->
+            ${defaultData.website ? `
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; display: flex; align-items: center; justify-content: center;">
+                  <span style="color: white; font-size: 10px;">🌐</span>
+                </div>
+                <span style="font-size: 12px; color: #333333;">${defaultData.website}</span>
+              </div>
+            ` : ''}
+
+            <!-- Company -->
+            ${defaultData.company ? `
+              <div style="display: flex; align-items: center; gap: 8px; margin-top: 10px;">
+                <div style="width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; display: flex; align-items: center; justify-content: center;">
+                  <span style="color: white; font-size: 10px;">🏢</span>
+                </div>
+                <span style="font-size: 12px; color: #333333;">${defaultData.company}</span>
+              </div>
+            ` : ''}
+
+            <!-- Location -->
+            ${defaultData.location ? `
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; display: flex; align-items: center; justify-content: center;">
+                  <span style="color: white; font-size: 10px;">📍</span>
+                </div>
+                <span style="font-size: 12px; color: #333333;">${defaultData.location}</span>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+  },
+
   standard: (designStyle, sections) => {
     const containerStyle = {
       fontFamily: "Arial, sans-serif",
@@ -354,7 +832,6 @@ const layoutConfigs = {
     `;
   },
 
-  // NEW PROFESSIONAL LAYOUT ADDED HERE
   professional: (designStyle, sections) => {
     const containerStyle = {
       fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
@@ -436,7 +913,8 @@ const layoutConfigs = {
       </div>
     `;
   },
-   text: (designStyle, sections) => {
+
+  text: (designStyle, sections) => {
     const containerStyle = {
       fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
       width: "600px",
@@ -483,7 +961,7 @@ const layoutConfigs = {
     `;
   },
 
-   logo: (designStyle, sections, formData) => {
+  logo: (designStyle, sections, formData) => {
     const containerStyle = {
       fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
       width: "600px",
@@ -547,7 +1025,8 @@ const layoutConfigs = {
       </div>
     `;
   },
-    // NEW WITHOUT LOGO LAYOUT - Clean layout without logo prominence
+
+  // NEW WITHOUT LOGO LAYOUT - Clean layout without logo prominence
   withoutProfile: (designStyle, sections, formData) => {
     const containerStyle = {
       fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
@@ -634,8 +1113,8 @@ export const generateSignatureHTML = (
   // Get the layout function and generate HTML - NOW CALLED CORRECTLY!
   const layoutFunction = layoutConfigs[design.layout] || layoutConfigs.standard;
 
-  // Call with correct parameters: layoutFunction(designStyle, sections)
-  const html = layoutFunction(designStyle, sections);
+  // Call with correct parameters: layoutFunction(designStyle, sections, formData)
+  const html = layoutFunction(designStyle, sections, formData);
 
   console.log("✅ Generated HTML length:", html.length);
   console.log("🔍 HTML preview (first 200 chars):", html.substring(0, 200));

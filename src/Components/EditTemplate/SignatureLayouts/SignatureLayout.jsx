@@ -9,6 +9,10 @@ import ProfessionalLayout from "./ProfessionalLayout";
 import TextLayout from "./TextLayout";
 import LogoLayout from "./LogoLayout";
 import WithoutProfile from "./WithoutProfile";
+import OrangeLayout from "./OrangeLayout";
+import OrangeText from "./OrangeText";
+import OrangeCenter from "./OrangeCenter";
+import OrangeRight from "./OrangeRight";
 
 const SignatureLayout = ({ formData, selectedDesign, designStyle }) => {
   const design = designTemplates.find((d) => d.id === selectedDesign);
@@ -30,6 +34,14 @@ const SignatureLayout = ({ formData, selectedDesign, designStyle }) => {
       return <LogoLayout formData={formData} designStyle={designStyle} />;
     case "withoutProfile":
       return <WithoutProfile formData={formData} designStyle={designStyle} />;
+    case "orange":
+      return <OrangeLayout formData={formData} designStyle={designStyle} />;
+    case "orangetext":
+      return <OrangeText formData={formData} designStyle={designStyle} />;
+    case "orangecenter":
+      return <OrangeCenter formData={formData} designStyle={designStyle} />;
+    case "orangeright":
+      return <OrangeRight formData={formData} designStyle={designStyle} />;
     default:
       return (
         <StandardLayout

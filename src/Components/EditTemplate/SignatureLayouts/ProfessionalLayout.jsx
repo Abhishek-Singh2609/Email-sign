@@ -188,7 +188,7 @@ const ProfessionalLayout = ({ formData, designStyle }) => {
         {/* Social Section */}
         <div
           style={{
-            padding: "15px 20px",
+            padding: "0 20px",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -207,4 +207,3 @@ const ProfessionalLayout = ({ formData, designStyle }) => {
 };
 
 export default ProfessionalLayout;
-

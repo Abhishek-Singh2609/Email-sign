@@ -94,6 +94,30 @@ const designTemplates = [
     color: "#0544df",
     layout: "withoutProfile",
   },
+   {
+    id: "orange-modern",
+  name: "Orange Modern",
+  color: "#f39c12",
+  layout: "orange", // This maps to the orange layout function
+   },
+   {
+    id: "orange-text",
+  name: "Orange text",
+  color: "#f34f14",
+  layout: "orangetext", // This maps to the orange layout function
+   },
+   {
+    id: "orange-center",
+  name: "Orange center",
+  color: "#f34f34",
+  layout: "orangecenter", // This maps to the orange layout function
+   },
+   {
+    id: "orange-right",
+  name: "Orange right",
+  color: "#f31f04",
+  layout: "orangeright", // This maps to the orange layout function
+   }
 ];
 
 // Get style based on selected design
@@ -211,7 +235,7 @@ if (design.layout === "professional") {
       },
     };
   }
-
+ 
   if (design.layout === "bordered") {
     return {
       ...baseStyle,

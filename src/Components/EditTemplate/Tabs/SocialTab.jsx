@@ -4,9 +4,9 @@ import {
   FaInstagram,
   FaLinkedin,
   FaYoutube,
-  FaTwitter,
 } from "react-icons/fa";
 import "./SocialTab.css";
+import { FaSquareFacebook,FaXTwitter,FaLink } from "react-icons/fa6"; 
 
 // Render social icons if URLs are provided - exported as a standalone function
 const renderSocialIcons = (formData) => {
@@ -38,7 +38,7 @@ const renderSocialIcons = (formData) => {
           rel="noopener noreferrer"
           className="social-icon twitter"
         >
-          𝕏
+          <FaXTwitter size={20} />
         </a>
       )}
       {formData.instagram && (
@@ -58,7 +58,7 @@ const renderSocialIcons = (formData) => {
           rel="noopener noreferrer"
           className="social-icon facebook"
         >
-          <FaFacebook size={20} />
+          <FaSquareFacebook size={20} />
         </a>
       )}
       {formData.youtube && (
@@ -78,7 +78,7 @@ const renderSocialIcons = (formData) => {
           rel="noopener noreferrer"
           className="social-icon portfolio"
         >
-          🔗
+          <FaLink size={20} />
         </a>
       )}
     </div>
