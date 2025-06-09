@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./EmailSignature.css";
@@ -52,6 +51,7 @@ const EmailSignatureCreator = () => {
     // Then check localStorage
     const localStorageState = loadFromLocalStorage();
     if (localStorageState) {
+      // If email was passed, override the stored email
       const formDataWithEmail = location.state?.email
         ? { ...localStorageState.formData, email: location.state.email }
         : localStorageState.formData;
@@ -64,14 +64,14 @@ const EmailSignatureCreator = () => {
 
     return {
       formData: ensureFiveCampaigns({
-        name: location.state?.displayName || "{{name}}",
-        jobTitle: location.state?.jobTitle || "{{title}}",
-        company: location.state?.organization || "{{company}}",
-        email: location.state?.email || "{{email}}",
-        phone: location.state?.businessPhones?.[0] || "{{phone}}",
-        mobilePhone: "{{mobilePhone}}",
-        location: location.state?.officeLocation || "{{location}}",
-        website: "{{website}}",
+        name: location.state?.displayName || "John Doe",
+        jobTitle: location.state?.jobTitle || "Product Designer",
+        company: location.state?.organization || "Agilesignature.com",
+        email: location.state?.email || "john.doe@agile.com",
+        phone: location.state?.businessPhones?.[0] || "+1 (555) 123-4567",
+        mobilePhone: "",
+        location: location.state?.officeLocation || "San Francisco, CA",
+        website: "www.agilesignature.com",
         linkedin: "",
         twitter: "",
         instagram: "",
@@ -94,22 +94,21 @@ const EmailSignatureCreator = () => {
   );
   const [formData, setFormData] = useState(initialState.formData);
 
-  // Handle bulk apply if needed
+  // Handle bulk apply if needed - Use real data from first employee for preview
   useEffect(() => {
     if (isBulkApply && selectedEmployees?.length > 0) {
-      // For bulk apply, use placeholder values in the template
-      const templateFormData = {
+      // Use the first employee's data for preview, but keep static data like social links, logos etc.
+      const firstEmployee = selectedEmployees[0];
+      const newFormData = {
         ...formData,
-        name: "{{name}}",
-        jobTitle: "{{title}}",
-        email: "{{email}}",
-        phone: "{{phone}}",
-        location: "{{location}}",
-        company: "{{company}}",
-        website: formData.website || "{{website}}",
-        mobilePhone: "{{mobilePhone}}",
+        name: firstEmployee.displayName || "John Doe",
+        jobTitle: firstEmployee.jobTitle || "Product Designer", 
+        email: firstEmployee.mail || "john.doe@agile.com",
+        phone: firstEmployee.businessPhones?.[0] || "+1 (555) 123-4567",
+        location: firstEmployee.officeLocation || "San Francisco, CA",
+        company: "agileworldtechnologies.com", // Keep static company info
       };
-      setFormData(templateFormData);
+      setFormData(newFormData);
     }
   }, [isBulkApply, selectedEmployees]);
 
@@ -133,6 +132,7 @@ const EmailSignatureCreator = () => {
     const newFormData = { ...formData, ...updatedFormData };
     setFormData(newFormData);
 
+    // Only save to localStorage if not in bulk apply mode
     if (!isBulkApply) {
       const saved = saveToLocalStorage(
         {
@@ -224,31 +224,34 @@ const EmailSignatureCreator = () => {
     try {
       const organization = "agileworldtechnologies.com";
       
+      // Create template form data with placeholders for the backend
+      const templateFormData = {
+        ...formData,
+        name: "{{name}}",
+        jobTitle: "{{title}}", 
+        email: "{{email}}",
+        phone: "{{phone}}",
+        location: "{{location}}",
+        company: "{{company}}",
+        mobilePhone: "{{mobilePhone}}",
+        website: formData.website || "{{website}}"
+      };
+      
       // Generate the signature HTML template with placeholders
       const signatureHTMLTemplate = generateSignatureHTML(
-        formData,
+        templateFormData,
         selectedDesign,
         designStyle
       );
 
       console.log("Sending bulk apply request with template:", signatureHTMLTemplate);
 
-      // Send single request with template containing placeholders
+      // Send request matching your curl format
       const response = await axios.post(
         "https://email-signature-function-app.azurewebsites.net/api/ApplySignature",
         {
           organization,
           html: signatureHTMLTemplate,
-          // You might want to include employee list or let the backend handle it
-          employees: selectedEmployees.map(emp => ({
-            email: emp.mail,
-            name: emp.displayName,
-            title: emp.jobTitle,
-            phone: emp.businessPhones?.[0] || "",
-            location: emp.officeLocation || "",
-            company: organization,
-            department: emp.department || "",
-          }))
         },
         {
           headers: {
@@ -373,18 +376,18 @@ const EmailSignatureCreator = () => {
       </h2>
       {isBulkApply && (
         <div style={{ textAlign: "center", marginBottom: "20px" }}>
-          <p>Applying template to {selectedEmployees?.length || 0} employees</p>
+          <p>Applying to {selectedEmployees?.length || 0} employees</p>
           <div style={{ 
-            background: "#f0f8ff", 
+            background: "#e3f2fd", 
             padding: "10px", 
             borderRadius: "5px", 
             margin: "10px auto", 
-            maxWidth: "600px" 
+            maxWidth: "600px",
+            fontSize: "14px",
+            color: "#1565c0"
           }}>
-            <small>
-              <strong>Note:</strong> This will create a template with placeholders like {{name}}, {{email}}, etc. 
-              The backend will replace these with actual employee data.
-            </small>
+            <strong>Preview Mode:</strong> Showing template with sample data from the first selected employee. 
+            The actual signatures will be personalized for each employee.
           </div>
         </div>
       )}

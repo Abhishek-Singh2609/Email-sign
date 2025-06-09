@@ -147,30 +147,41 @@ const PreviewSection = ({
   navigateToPreview,
   handleSendData,
   isSending,
-  isBulkApply = false, // Add this prop
+  isBulkApply = false,
 }) => {
   return (
     <div className="preview-section">
       <h2 className="preview-title">Preview</h2>
       <p className="preview-subtitle">
         {isBulkApply 
-          ? "Template preview with placeholders (will be replaced with actual employee data)"
+          ? "Template preview with sample data (will be personalized for each employee)"
           : "Here's how your signature will appear in emails"
         }
       </p>
       
       {isBulkApply && (
         <div style={{ 
-          background: "#fff3cd", 
-          border: "1px solid #ffeaa7", 
-          borderRadius: "5px", 
-          padding: "10px", 
-          marginBottom: "15px" 
+          background: "#f8f9fa", 
+          border: "1px solid #dee2e6", 
+          borderRadius: "8px", 
+          padding: "12px", 
+          marginBottom: "15px",
+          fontSize: "13px",
+          color: "#495057"
         }}>
-          <small>
-            <strong>Template Mode:</strong> Values like {{name}}, {{email}} will be automatically 
-            replaced with each employee's actual information when applied.
-          </small>
+          <div style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
+            <span style={{ 
+              color: "#28a745", 
+              marginRight: "8px", 
+              fontSize: "16px" 
+            }}>ℹ️</span>
+            <strong>Template Preview</strong>
+          </div>
+          <p style={{ margin: "0", lineHeight: "1.4" }}>
+            This preview shows the signature template using sample data from your selected employees. 
+            When applied, each employee will get their personalized signature with their own name, 
+            email, job title, and contact information.
+          </p>
         </div>
       )}
       
@@ -294,7 +305,13 @@ const PreviewSection = ({
             backgroundColor: isBulkApply ? "#28a745" : "#007bff",
             padding: "12px 24px",
             fontSize: "16px",
-            fontWeight: "600"
+            fontWeight: "600",
+            border: "none",
+            borderRadius: "6px",
+            color: "white",
+            cursor: isSending ? "not-allowed" : "pointer",
+            opacity: isSending ? 0.7 : 1,
+            transition: "all 0.3s ease"
           }}
         >
           {isSending 
