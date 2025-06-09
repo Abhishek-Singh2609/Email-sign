@@ -248,7 +248,7 @@ const EmailSignatureCreator = () => {
 
       // Send request matching your curl format
       const response = await axios.post(
-        "https://email-signature-function-app.azurewebsites.net/api/ApplySignature",
+        "https://email-signature-function-app.azurewebsites.net/api/v2/apply-signature",
         {
           organization,
           html: signatureHTMLTemplate,

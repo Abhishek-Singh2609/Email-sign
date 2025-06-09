@@ -36,7 +36,7 @@ const WithoutLogo = ({ formData, designStyle }) => {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              marginRight: "15px",
+              marginRight: "21px",
               visibility: formData.logo ? "visible" : "hidden", // Keep space reserved
             }}
           >

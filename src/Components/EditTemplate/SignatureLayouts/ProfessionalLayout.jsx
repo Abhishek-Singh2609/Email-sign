@@ -23,7 +23,6 @@ const ProfessionalLayout = ({ formData, designStyle }) => {
           style={{
             display: "flex",
             alignItems: "center",
-            padding: "20px",
             backgroundColor: "#ffffff",
             minHeight: "140px", // Ensure consistent height for this section
           }}
@@ -188,7 +187,6 @@ const ProfessionalLayout = ({ formData, designStyle }) => {
         {/* Social Section */}
         <div
           style={{
-            padding: "0 20px",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",

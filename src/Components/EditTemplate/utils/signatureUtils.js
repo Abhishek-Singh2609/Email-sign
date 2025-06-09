@@ -1051,7 +1051,7 @@ orangecenter: (designStyle, sections, formData) => {
         <!-- Header Section with Company Logo and Contact Info -->
         <div style="display: flex; align-items: center; padding: 20px; background-color: #ffffff; min-height: 140px;">
           <!-- Logo Section - Always takes space even if empty (but hidden when no logo) -->
-          <div style="width: 140px; min-width: 140px; display: flex; flex-direction: column; align-items: center; margin-right: 15px; ${!formData.logo ? 'visibility: hidden;' : ''}">
+          <div style="width: 140px; min-width: 140px; display: flex; flex-direction: column; align-items: center; margin-right: 21px; ${!formData.logo ? 'visibility: hidden;' : ''}">
             ${formData.logo ? 
               `<img src="${formData.logo}" alt="Company Logo" style="width: 100px; height: 83px; object-fit: contain; margin-right: 15px; border-radius: 4px;" />` :
               `<div style="width: 80px; height: 60px; background: linear-gradient(135deg, ${designStyle.accentColor || "#0066cc"}, ${designStyle.accentColor || "#004499"}); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 24px; margin-right: 15px; border-radius: 4px;">
