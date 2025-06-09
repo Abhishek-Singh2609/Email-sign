@@ -377,18 +377,6 @@ const EmailSignatureCreator = () => {
       {isBulkApply && (
         <div style={{ textAlign: "center", marginBottom: "20px" }}>
           <p>Applying to {selectedEmployees?.length || 0} employees</p>
-          <div style={{ 
-            background: "#e3f2fd", 
-            padding: "10px", 
-            borderRadius: "5px", 
-            margin: "10px auto", 
-            maxWidth: "600px",
-            fontSize: "14px",
-            color: "#1565c0"
-          }}>
-            <strong>Preview Mode:</strong> Showing template with sample data from the first selected employee. 
-            The actual signatures will be personalized for each employee.
-          </div>
         </div>
       )}
       <div className="editor-container">

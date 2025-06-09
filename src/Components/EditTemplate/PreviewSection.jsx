@@ -153,38 +153,9 @@ const PreviewSection = ({
     <div className="preview-section">
       <h2 className="preview-title">Preview</h2>
       <p className="preview-subtitle">
-        {isBulkApply 
-          ? "Template preview with sample data (will be personalized for each employee)"
-          : "Here's how your signature will appear in emails"
-        }
-      </p>
-      
-      {isBulkApply && (
-        <div style={{ 
-          background: "#f8f9fa", 
-          border: "1px solid #dee2e6", 
-          borderRadius: "8px", 
-          padding: "12px", 
-          marginBottom: "15px",
-          fontSize: "13px",
-          color: "#495057"
-        }}>
-          <div style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
-            <span style={{ 
-              color: "#28a745", 
-              marginRight: "8px", 
-              fontSize: "16px" 
-            }}>ℹ️</span>
-            <strong>Template Preview</strong>
-          </div>
-          <p style={{ margin: "0", lineHeight: "1.4" }}>
-            This preview shows the signature template using sample data from your selected employees. 
-            When applied, each employee will get their personalized signature with their own name, 
-            email, job title, and contact information.
-          </p>
-        </div>
-      )}
-      
+        Here's how your signature will appear in emails
+        </p>
+    
       <SignatureLayout
         formData={formData}
         selectedDesign={selectedDesign}
