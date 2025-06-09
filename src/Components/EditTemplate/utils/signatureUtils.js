@@ -832,7 +832,7 @@ orangecenter: (designStyle, sections, formData) => {
     `;
   },
 
-  professional: (designStyle, sections) => {
+  professional: (designStyle, sections,formData) => {
     const containerStyle = {
       fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
       maxWidth: "600px",
