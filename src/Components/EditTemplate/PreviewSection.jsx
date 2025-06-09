@@ -121,9 +121,6 @@ const PreviewSection = ({
       </div>
       <Buttons />
       <div className="preview-actions">
-        {/* <button onClick={navigateToPreview} className="preview-button">
-          Preview Signature
-        </button> */}
         <button
           onClick={handleSendData}
           className="send-data-button"

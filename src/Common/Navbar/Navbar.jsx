@@ -16,7 +16,6 @@ const Navbar = () => {
 
     try {
       const response = await fetch(
-        // "https://agile-email-signature-dydmacbfh4e6cmf0.canadacentral-01.azurewebsites.net/auth/logout",
         "https://email-signature-ewasbjbvendvfwck.canadacentral-01.azurewebsites.net/auth/logout",
 
         {
@@ -32,7 +31,7 @@ const Navbar = () => {
         // Show success toast
         toast.success("Logged out successfully", {
           position: "top-right",
-          autoClose: 3000,
+          autoClose: 1000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
