@@ -832,89 +832,96 @@ orangecenter: (designStyle, sections, formData) => {
     `;
   },
 
-  professional: (designStyle, sections,formData) => {
-    const containerStyle = {
-      fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-      maxWidth: "600px",
-      margin: "0",
-      padding: "20px",
-      backgroundColor: "#ffffff",
-      border: "1px solid #e0e0e0",
-      borderRadius: "8px",
-    };
+ professional: (designStyle, sections, formData) => {
+  const defaultData = {
+    name: "Employee Name",
+    jobTitle: "Job Title",
+    company: "Company Name",
+    location: "Location",
+    phone: "",
+    mobilePhone: "",
+    email: "",
+    website: "",
+    logo: null,
+    profileImage: null,
+    ...formData
+  };
 
-    return `
-      <div style="${styleToString(containerStyle)}">
-        <!-- Header Section with Company Branding -->
-        <div style="background-color: #f8f9fa; padding: 15px 20px; margin-bottom: 20px; border-radius: 6px; border-left: 4px solid ${designStyle.accentColor || "#007bff"};">
-          <p style="font-size: 16px; font-weight: 600; color: #333333; margin: 0; line-height: 1.2;">
-            ${sections.companyInfo}
-          </p>
-        </div>
+  const containerStyle = {
+    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+    width: "600px",
+    minHeight: "180px",
+    margin: "0",
+    backgroundColor: "#ffffff",
+    border: "1px solid #e0e0e0",
+    borderRadius: "8px",
+    overflow: "hidden",
+    ...(designStyle.containerStyle || {})
+  };
+
+  return `
+    <div style="${styleToString(containerStyle)}" class="signature-preview professional-layout">
+      <!-- Header Section with Company Logo and Contact Info -->
+      <div style="display: flex; align-items: center; padding: 20px; background-color: #ffffff; min-height: 140px;">
         
-        <!-- Main Content Section -->
-        <div style="display: flex; gap: 20px; align-items: flex-start;">
-          <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
-            <div>
-              ${sections.personalInfo}
+        <!-- Logo Section - Always takes space even if empty -->
+        <div style="width: 140px; min-width: 140px; display: flex; flex-direction: column; align-items: center; margin-right: 15px; ${!defaultData.logo ? 'visibility: hidden;' : ''}">
+          ${defaultData.logo ? 
+            `<img src="${defaultData.logo}" alt="Company Logo" style="width: 100px; height: 83px; object-fit: contain; margin-right: 15px; border-radius: 4px;" class="company-logo" />` :
+            `<div style="width: 80px; height: 60px; background: linear-gradient(135deg, ${designStyle.accentColor || "#0066cc"}, ${designStyle.accentColor || "#004499"}); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 24px; margin-right: 15px; border-radius: 4px;" class="company-logo-placeholder">
+              ${defaultData.company ? defaultData.company.substring(0, 3).toUpperCase() : "IDC"}
+            </div>`
+          }
+          <div style="color: #666666; font-size: 14px; font-weight: 500;">
+            <div style="font-size: 13px; font-weight: 700; line-height: 1.2; color: #333333; text-align: center;">
+              ${defaultData.company || ""}
             </div>
           </div>
         </div>
-        
-        <!-- Contact Information -->
-        <div style="margin-top: 20px; padding: 15px 0; border-top: 2px solid ${designStyle.accentColor || "#007bff"};">
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; align-items: start;">
-            ${sections.contactInfo}
-          </div>
-        </div>
-        
-        <!-- Social Icons -->
-        <div style="margin-top: 15px; display: flex; align-items: center; gap: 10px; padding-top: 10px;">
-          <span style="font-size: 12px; color: #888888; margin-right: 5px;">
-            Please note the quality of the support you received:
-          </span>
-          ${renderSocialIcons(formData)}
-        </div>
-        
-        <!-- Bottom Banner -->
-        <div style="margin-top: 20px; background: linear-gradient(135deg, ${designStyle.accentColor || "#007bff"}, #0056b3); padding: 12px 20px; border-radius: 6px; color: white; text-align: center;">
-          <div style="font-size: 16px; font-weight: 700; margin-bottom: 5px;">
-            Get IT done faster than ever
-          </div>
-          <div style="font-size: 12px; opacity: 0.9;">
-            LEARN MORE
-          </div>
-        </div>
-        
-        <!-- Footer Links -->
-        <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #888888; border-top: 1px solid #eeeeee; padding-top: 10px;">
-          <div style="display: flex; gap: 15px;">
-            <span>example.com</span>
-            <span>newsletter subscription</span>
-            <span>join our community</span>
-            <span>visit our store</span>
-            <span>resources</span>
-          </div>
-          <div style="display: flex; gap: 5px;">
-            <span style="width: 16px; height: 16px; border-radius: 50%; background-color: #ffc107; display: inline-block;"></span>
-            <span style="width: 16px; height: 16px; border-radius: 50%; background-color: #28a745; display: inline-block;"></span>
-            <span style="width: 16px; height: 16px; border-radius: 50%; background-color: #dc3545; display: inline-block;"></span>
-            <span style="width: 16px; height: 16px; border-radius: 50%; background-color: #17a2b8; display: inline-block;"></span>
-          </div>
-        </div>
-        
-        <!-- Disclaimer -->
-        ${sections.disclaimer || `
-        <div style="margin-top: 10px; font-size: 10px; color: #999999; line-height: 1.3;">
-          This email and any files transmitted with it are confidential and intended solely for the use of the individual or entity to whom they
-          are addressed. If you have received this email in error, please notify us immediately and delete the message from your system.
-        </div>
-        `}
-      </div>
-    `;
-  },
 
-  text: (designStyle, sections) => {
+        <!-- Contact Information -->
+        <div style="flex: 1;">
+          <div style="font-size: 18px; font-weight: 700; color: #333333; margin-bottom: 2px;" class="preview-name">
+            ${defaultData.name}
+          </div>
+          <div style="font-size: 14px; color: ${designStyle.accentColor || "#0066cc"}; margin-bottom: 8px;" class="preview-job">
+            ${defaultData.jobTitle}
+          </div>
+          <div style="font-size: 12px; color: #666666; line-height: 1.4;" class="contact-details">
+            ${(defaultData.mobilePhone || defaultData.phone) ? 
+              `<strong>mobile:</strong> ${defaultData.mobilePhone || defaultData.phone}${defaultData.phone && defaultData.mobilePhone ? ` | <strong>tel:</strong> ${defaultData.phone}` : ''}<br/>` : 
+              ''
+            }
+            ${defaultData.email ? `<strong>email:</strong> ${defaultData.email}<br/>` : ''}
+            ${defaultData.website ? `<strong>website:</strong> ${defaultData.website}<br/>` : ''}
+            <strong>location:</strong> ${defaultData.location || ""}
+          </div>
+        </div>
+
+        <!-- Profile Image - Always takes space even if empty -->
+        <div style="width: 80px; min-width: 80px; height: 80px; margin-left: 20px; ${!defaultData.profileImage ? 'visibility: hidden;' : ''}">
+          ${defaultData.profileImage ? 
+            `<img src="${defaultData.profileImage}" alt="${defaultData.name || 'Profile'}" style="width: 100%; height: 100%; border-radius: 6px; object-fit: cover; border: 2px solid #e0e0e0;" class="profile-image" />` :
+            ''
+          }
+        </div>
+      </div>
+
+      <!-- Social Section -->
+      <div style="padding: 0 20px; display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <!-- Social Icons -->
+          <div class="social-icons-container">
+            ${renderSocialIcons(defaultData || {})}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+},
+
+
+  text: (designStyle, sections,formData) => {
     const containerStyle = {
       fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
       width: "600px",
@@ -1092,7 +1099,75 @@ orangecenter: (designStyle, sections, formData) => {
 
 };
 
-// Main function - FIXED to call layout functions correctly!
+export const generateSignatureTemplate = (selectedDesign, designStyle, staticFormData = {}) => {
+  console.log("🎯 Generating signature template for design:", selectedDesign);
+  
+  // Create template form data with placeholders
+  const templateFormData = {
+    name: "{{name}}",
+    jobTitle: "{{title}}",
+    company: "{{company}}",
+    email: "{{email}}",
+    phone: "{{phone}}",
+    mobilePhone: "{{mobilePhone}}",
+    location: "{{location}}",
+    website: staticFormData.website || "{{website}}",
+    linkedin: staticFormData.linkedin || "",
+    twitter: staticFormData.twitter || "",
+    instagram: staticFormData.instagram || "",
+    facebook: staticFormData.facebook || "",
+    youtube: staticFormData.youtube || "",
+    portfolio: staticFormData.portfolio || "",
+    profileImage: staticFormData.profileImage || null,
+    logo: staticFormData.logo || null,
+    banner: staticFormData.banner || null,
+    disclaimer: staticFormData.disclaimer || "",
+    campaigns: staticFormData.campaigns || [],
+    ...staticFormData
+  };
+
+  // Use the existing generateSignatureHTML function
+  return generateSignatureHTML(templateFormData, selectedDesign, designStyle);
+};
+
+// Function to validate template placeholders
+export const validateTemplatePlaceholders = (htmlTemplate) => {
+  const requiredPlaceholders = ['{{name}}', '{{email}}', '{{title}}', '{{company}}'];
+  const missingPlaceholders = requiredPlaceholders.filter(placeholder => 
+    !htmlTemplate.includes(placeholder)
+  );
+  
+  if (missingPlaceholders.length > 0) {
+    console.warn('Missing required placeholders:', missingPlaceholders);
+  }
+  
+  return missingPlaceholders.length === 0;
+};
+
+// Function to replace placeholders with actual employee data (for preview purposes)
+export const replacePlaceholders = (template, employeeData) => {
+  let result = template;
+  
+  const placeholderMap = {
+    '{{name}}': employeeData.displayName || employeeData.name || '',
+    '{{title}}': employeeData.jobTitle || employeeData.title || '',
+    '{{email}}': employeeData.mail || employeeData.email || '',
+    '{{phone}}': employeeData.businessPhones?.[0] || employeeData.phone || '',
+    '{{mobilePhone}}': employeeData.mobilePhone || '',
+    '{{location}}': employeeData.officeLocation || employeeData.location || '',
+    '{{company}}': employeeData.company || 'agileworldtechnologies.com',
+    '{{website}}': employeeData.website || 'www.agileworldtechnologies.com',
+    '{{department}}': employeeData.department || ''
+  };
+  
+  Object.entries(placeholderMap).forEach(([placeholder, value]) => {
+    result = result.replace(new RegExp(placeholder.replace(/[{}]/g, '\\$&'), 'g'), value);
+  });
+  
+  return result;
+};
+
+// Updated generateSignatureHTML function to better handle template mode
 export const generateSignatureHTML = (
   formData,
   selectedDesign,
@@ -1110,7 +1185,7 @@ export const generateSignatureHTML = (
   const sections = generateContentSections(formData, designStyle);
   console.log("📝 Generated sections:", Object.keys(sections));
 
-  // Get the layout function and generate HTML - NOW CALLED CORRECTLY!
+  // Get the layout function and generate HTML
   const layoutFunction = layoutConfigs[design.layout] || layoutConfigs.standard;
 
   // Call with correct parameters: layoutFunction(designStyle, sections, formData)
