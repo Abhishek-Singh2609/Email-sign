@@ -832,7 +832,7 @@ orangecenter: (designStyle, sections, formData) => {
     `;
   },
 
- professional: (designStyle, sections, formData) => {
+professional: (designStyle, sections, formData) => {
   const defaultData = {
     name: "Employee Name",
     jobTitle: "Job Title",
@@ -847,13 +847,33 @@ orangecenter: (designStyle, sections, formData) => {
     ...formData
   };
 
+  // Function to get user initials
+  const getUserInitials = () => {
+    if (!defaultData.name) return "ID";
+    
+    const nameParts = defaultData.name.trim().split(/\s+/);
+    if (nameParts.length === 0) return "ID";
+    
+    const firstNameInitial = nameParts[0].charAt(0).toUpperCase();
+    
+    if (nameParts.length === 1) return firstNameInitial;
+    
+    const lastNameInitial = nameParts[nameParts.length - 1].charAt(0).toUpperCase();
+    return `${firstNameInitial}${lastNameInitial}`;
+  };
+
+  // Helper function to convert style object to string
+  const styleToString = (styleObj) => {
+    return Object.entries(styleObj)
+      .map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}: ${value}`)
+      .join('; ');
+  };
+
   const containerStyle = {
     fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
     width: "600px",
     minHeight: "180px",
     margin: "0",
-    backgroundColor: "#ffffff",
-    border: "1px solid #e0e0e0",
     borderRadius: "8px",
     overflow: "hidden",
     ...(designStyle.containerStyle || {})
@@ -862,21 +882,24 @@ orangecenter: (designStyle, sections, formData) => {
   return `
     <div style="${styleToString(containerStyle)}" class="signature-preview professional-layout">
       <!-- Header Section with Company Logo and Contact Info -->
-      <div style="display: flex; align-items: center; padding: 20px; background-color: #ffffff; min-height: 140px;">
+      <div style="display: flex; align-items: center; background-color: #ffffff; min-height: 140px;">
         
         <!-- Logo Section - Always takes space even if empty -->
-        <div style="width: 140px; min-width: 140px; display: flex; flex-direction: column; align-items: center; margin-right: 15px; ${!defaultData.logo ? 'visibility: hidden;' : ''}">
+        <div style="width: 140px; min-width: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
           ${defaultData.logo ? 
-            `<img src="${defaultData.logo}" alt="Company Logo" style="width: 100px; height: 83px; object-fit: contain; margin-right: 15px; border-radius: 4px;" class="company-logo" />` :
-            `<div style="width: 80px; height: 60px; background: linear-gradient(135deg, ${designStyle.accentColor || "#0066cc"}, ${designStyle.accentColor || "#004499"}); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 24px; margin-right: 15px; border-radius: 4px;" class="company-logo-placeholder">
-              ${defaultData.company ? defaultData.company.substring(0, 3).toUpperCase() : "IDC"}
+            `<img src="${defaultData.logo}" alt="Company Logo" style="width: 100px; height: 83px; object-fit: contain; border-radius: 4px;" class="company-logo" />
+            <div style="font-size: 12px; font-weight: 650; line-height: 1.2; color: #333333; text-align: center;">
+              ${defaultData.company}
+            </div>` :
+            `<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+              <div style="width: 80px; height: 60px; background: linear-gradient(135deg, ${designStyle.accentColor || "#0066cc"}, ${designStyle.accentColor || "#004499"}); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 24px; border-radius: 4px; margin-bottom: 8px;" class="company-logo-placeholder">
+                ${getUserInitials()}
+              </div>
+              <div style="font-size: 12px; font-weight: 650; line-height: 1.2; color: #333333; text-align: center;">
+                ${defaultData.company}
+              </div>
             </div>`
           }
-          <div style="color: #666666; font-size: 14px; font-weight: 500;">
-            <div style="font-size: 13px; font-weight: 700; line-height: 1.2; color: #333333; text-align: center;">
-              ${defaultData.company || ""}
-            </div>
-          </div>
         </div>
 
         <!-- Contact Information -->
@@ -892,14 +915,20 @@ orangecenter: (designStyle, sections, formData) => {
               `<strong>mobile:</strong> ${defaultData.mobilePhone || defaultData.phone}${defaultData.phone && defaultData.mobilePhone ? ` | <strong>tel:</strong> ${defaultData.phone}` : ''}<br/>` : 
               ''
             }
-            ${defaultData.email ? `<strong>email:</strong> ${defaultData.email}<br/>` : ''}
-            ${defaultData.website ? `<strong>website:</strong> ${defaultData.website}<br/>` : ''}
+            ${defaultData.email ? 
+              `<strong>email:</strong> <a href="mailto:${defaultData.email}" style="color: #666666; text-decoration: none;">${defaultData.email}</a><br/>` : 
+              ''
+            }
+            ${defaultData.website ? 
+              `<strong>website:</strong> <a href="${defaultData.website.startsWith('http') ? defaultData.website : `https://${defaultData.website}`}" target="_blank" rel="noopener noreferrer" style="color: #666666; text-decoration: none;">${defaultData.website.replace(/^https?:\/\//, '')}</a><br/>` : 
+              ''
+            }
             <strong>location:</strong> ${defaultData.location || ""}
           </div>
         </div>
 
         <!-- Profile Image - Always takes space even if empty -->
-        <div style="width: 80px; min-width: 80px; height: 80px; margin-left: 20px; ${!defaultData.profileImage ? 'visibility: hidden;' : ''}">
+        <div style="min-width: 80px; height: 80px; ${!defaultData.profileImage ? 'visibility: hidden;' : ''}">
           ${defaultData.profileImage ? 
             `<img src="${defaultData.profileImage}" alt="${defaultData.name || 'Profile'}" style="width: 100%; height: 100%; border-radius: 6px; object-fit: cover; border: 2px solid #e0e0e0;" class="profile-image" />` :
             ''
@@ -908,11 +937,11 @@ orangecenter: (designStyle, sections, formData) => {
       </div>
 
       <!-- Social Section -->
-      <div style="padding: 0 20px; display: flex; align-items: center; justify-content: space-between;">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
         <div>
           <!-- Social Icons -->
           <div class="social-icons-container">
-            ${renderSocialIcons(defaultData || {})}
+            ${renderSocialIcons ? renderSocialIcons(defaultData) : ''}
           </div>
         </div>
       </div>

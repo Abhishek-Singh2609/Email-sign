@@ -106,7 +106,7 @@ const EmailSignatureCreator = () => {
         email: firstEmployee.mail || "john.doe@agile.com",
         phone: firstEmployee.businessPhones?.[0] || "+1 (555) 123-4567",
         location: firstEmployee.officeLocation || "San Francisco, CA",
-        company: "agileworldtechnologies.com", // Keep static company info
+        company: "Agile World Technologies LLC", // Keep static company info
       };
       setFormData(newFormData);
     }

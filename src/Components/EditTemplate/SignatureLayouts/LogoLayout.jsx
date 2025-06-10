@@ -23,7 +23,6 @@ const LogoLayout = ({ formData, designStyle }) => {
           style={{
             display: "flex",
             alignItems: "center",
-            padding: "20px",
             backgroundColor: "#ffffff",
             minHeight: "140px",
           }}
@@ -36,7 +35,7 @@ const LogoLayout = ({ formData, designStyle }) => {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              marginRight: "15px",
+        
               visibility: formData.logo ? "visible" : "hidden",
             }}
           >
@@ -169,7 +168,7 @@ const LogoLayout = ({ formData, designStyle }) => {
         {/* Social Section */}
         <div
           style={{
-           padding: "0 20px",
+          
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",

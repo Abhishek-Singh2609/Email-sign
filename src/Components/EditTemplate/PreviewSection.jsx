@@ -239,10 +239,8 @@ const PreviewSection = ({
         <div
           className="disclaimer-preview"
           style={{
-            marginTop: "20px",
             fontSize: "12px",
             color: "#666",
-            paddingTop: "15px",
             borderRadius: "4px",
           }}
         >
