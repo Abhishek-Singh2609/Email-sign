@@ -224,7 +224,7 @@ const generateContentSections = (formData, designStyle) => {
       <p style="margin: 2px 0; font-size: 14px;">🌐 <a href="https://${
         formData.website
       }" style="color: ${accentColor}; text-decoration: none;">www.${
-      formData.website || "agileworldtechnologies.com"
+      formData.website || "Agile World Technologies LLC"
     }</a></p>
       ${renderSocialIcons(formData)}
     `,
@@ -1184,8 +1184,8 @@ export const replacePlaceholders = (template, employeeData) => {
     '{{phone}}': employeeData.businessPhones?.[0] || employeeData.phone || '',
     '{{mobilePhone}}': employeeData.mobilePhone || '',
     '{{location}}': employeeData.officeLocation || employeeData.location || '',
-    '{{company}}': employeeData.company || 'agileworldtechnologies.com',
-    '{{website}}': employeeData.website || 'www.agileworldtechnologies.com',
+    '{{company}}': employeeData.company || 'Agile World Technologies LLC',
+    '{{website}}': employeeData.website || 'www.Agile World Technologies LLC',
     '{{department}}': employeeData.department || ''
   };
   

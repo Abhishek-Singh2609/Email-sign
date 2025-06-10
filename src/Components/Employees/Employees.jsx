@@ -86,7 +86,7 @@ const EmployeeSignatureGenerator = () => {
     navigate("/edittemplate", {
       state: {
         email: emp.mail,
-        organization: "agileworldtechnologies.com",
+        organization: "Agile World Technologies LLC",
         businessPhones: emp.businessPhones,
         displayName: emp.displayName,
         jobTitle: emp.jobTitle,
@@ -117,7 +117,7 @@ const EmployeeSignatureGenerator = () => {
       state: {
         isBulkApply: true,
         selectedEmployees: filteredEmployees,
-        organization: "agileworldtechnologies.com"
+        organization: "Agile World Technologies LLC"
       },
     });
 
