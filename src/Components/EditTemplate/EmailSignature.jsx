@@ -181,7 +181,7 @@ const EmailSignatureCreator = () => {
 
     setIsSending(true);
     try {
-      const organization = "Agile World Technologies LLC";
+      const organization = "agileworldtechnologies.com";
       const signatureHTML = generateSignatureHTML(
         formData,
         selectedDesign,
@@ -222,7 +222,7 @@ const EmailSignatureCreator = () => {
 
     setIsSending(true);
     try {
-      const organization = "Agile World Technologies LLC";
+      const organization = "agileworldtechnologies.com";
       
       // Create template form data with placeholders for the backend
       const templateFormData = {
