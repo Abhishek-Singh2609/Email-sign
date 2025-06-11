@@ -1,4 +1,5 @@
 import { designTemplates } from "../Tabs/DesignTab";
+import { generateProfessionalLayoutHTML } from "./ProfessionalLayoutHTML";
 
 // Function to ensure 5 campaigns exist
 export const ensureFiveCampaigns = (formDataToUpdate) => {
@@ -224,7 +225,7 @@ const generateContentSections = (formData, designStyle) => {
       <p style="margin: 2px 0; font-size: 14px;">🌐 <a href="https://${
         formData.website
       }" style="color: ${accentColor}; text-decoration: none;">www.${
-      formData.website || "Agile World Technologies LLC"
+      formData.website || "agileworldtechnologies.com"
     }</a></p>
       ${renderSocialIcons(formData)}
     `,
@@ -832,122 +833,126 @@ orangecenter: (designStyle, sections, formData) => {
     `;
   },
 
-professional: (designStyle, sections, formData) => {
-  const defaultData = {
-    name: "Employee Name",
-    jobTitle: "Job Title",
-    company: "Company Name",
-    location: "Location",
-    phone: "",
-    mobilePhone: "",
-    email: "",
-    website: "",
-    logo: null,
-    profileImage: null,
-    ...formData
-  };
+  professional: (designStyle, sections, formData) => {
+    return generateProfessionalLayoutHTML(formData, designStyle);
+  },
 
-  // Function to get user initials
-  const getUserInitials = () => {
-    if (!defaultData.name) return "ID";
-    
-    const nameParts = defaultData.name.trim().split(/\s+/);
-    if (nameParts.length === 0) return "ID";
-    
-    const firstNameInitial = nameParts[0].charAt(0).toUpperCase();
-    
-    if (nameParts.length === 1) return firstNameInitial;
-    
-    const lastNameInitial = nameParts[nameParts.length - 1].charAt(0).toUpperCase();
-    return `${firstNameInitial}${lastNameInitial}`;
-  };
+// professional: (designStyle, sections, formData) => {
+//   const defaultData = {
+//     name: "Employee Name",
+//     jobTitle: "Job Title",
+//     company: "Company Name",
+//     location: "Location",
+//     phone: "",
+//     mobilePhone: "",
+//     email: "",
+//     website: "",
+//     logo: null,
+//     profileImage: null,
+//     ...formData
+//   };
 
-  // Helper function to convert style object to string
-  const styleToString = (styleObj) => {
-    return Object.entries(styleObj)
-      .map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}: ${value}`)
-      .join('; ');
-  };
+//   // Function to get user initials
+//   const getUserInitials = () => {
+//     if (!defaultData.name) return "ID";
+    
+//     const nameParts = defaultData.name.trim().split(/\s+/);
+//     if (nameParts.length === 0) return "ID";
+    
+//     const firstNameInitial = nameParts[0].charAt(0).toUpperCase();
+    
+//     if (nameParts.length === 1) return firstNameInitial;
+    
+//     const lastNameInitial = nameParts[nameParts.length - 1].charAt(0).toUpperCase();
+//     return `${firstNameInitial}${lastNameInitial}`;
+//   };
 
-  const containerStyle = {
-    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-    width: "600px",
-    minHeight: "180px",
-    margin: "0",
-    borderRadius: "8px",
-    overflow: "hidden",
-    ...(designStyle.containerStyle || {})
-  };
+//   // Helper function to convert style object to string
+//   const styleToString = (styleObj) => {
+//     return Object.entries(styleObj)
+//       .map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}: ${value}`)
+//       .join('; ');
+//   };
 
-  return `
-    <div style="${styleToString(containerStyle)}" class="signature-preview professional-layout">
-      <!-- Header Section with Company Logo and Contact Info -->
-      <div style="display: flex; align-items: center; background-color: #ffffff; min-height: 140px;">
+//   const containerStyle = {
+//     fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+//     width: "600px",
+//     minHeight: "180px",
+//     margin: "0",
+//     borderRadius: "8px",
+//     overflow: "hidden",
+//     ...(designStyle.containerStyle || {})
+//   };
+
+//   return `
+//     <div style="${styleToString(containerStyle)}" class="signature-preview professional-layout">
+//       <!-- Header Section with Company Logo and Contact Info -->
+//       <div style="display: flex; align-items: center; background-color: #ffffff; min-height: 140px;">
         
-        <!-- Logo Section - Always takes space even if empty -->
-        <div style="width: 140px; min-width: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-          ${defaultData.logo ? 
-            `<img src="${defaultData.logo}" alt="Company Logo" style="width: 100px; height: 83px; object-fit: contain; border-radius: 4px;" class="company-logo" />
-            <div style="font-size: 12px; font-weight: 650; line-height: 1.2; color: #333333; text-align: center;">
-              ${defaultData.company}
-            </div>` :
-            `<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-              <div style="width: 80px; height: 60px; background: linear-gradient(135deg, ${designStyle.accentColor || "#0066cc"}, ${designStyle.accentColor || "#004499"}); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 24px; border-radius: 4px; margin-bottom: 8px;" class="company-logo-placeholder">
-                ${getUserInitials()}
-              </div>
-              <div style="font-size: 12px; font-weight: 650; line-height: 1.2; color: #333333; text-align: center;">
-                ${defaultData.company}
-              </div>
-            </div>`
-          }
-        </div>
+//         <!-- Logo Section - Always takes space even if empty -->
+//         <div style="width: 140px; min-width: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+//           ${defaultData.logo ? 
+//             `<img src="${defaultData.logo}" alt="Company Logo" style="width: 100px; height: 83px; object-fit: contain; border-radius: 4px;" class="company-logo" />
+//             <div style="font-size: 12px; font-weight: 650; line-height: 1.2; color: #333333; text-align: center;">
+//               ${defaultData.company}
+//             </div>` :
+//             `<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+//               <div style="width: 80px; height: 60px; background: linear-gradient(135deg, ${designStyle.accentColor || "#0066cc"}, ${designStyle.accentColor || "#004499"}); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 24px; border-radius: 4px; margin-bottom: 8px;" class="company-logo-placeholder">
+//                 ${getUserInitials()}
+//               </div>
+//               <div style="font-size: 12px; font-weight: 650; line-height: 1.2; color: #333333; text-align: center;">
+//                 ${defaultData.company}
+//               </div>
+//             </div>`
+//           }
+//         </div>
 
-        <!-- Contact Information -->
-        <div style="flex: 1;">
-          <div style="font-size: 18px; font-weight: 700; color: #333333; margin-bottom: 2px;" class="preview-name">
-            ${defaultData.name}
-          </div>
-          <div style="font-size: 14px; color: ${designStyle.accentColor || "#0066cc"}; margin-bottom: 8px;" class="preview-job">
-            ${defaultData.jobTitle}
-          </div>
-          <div style="font-size: 12px; color: #666666; line-height: 1.4;" class="contact-details">
-            ${(defaultData.mobilePhone || defaultData.phone) ? 
-              `<strong>mobile:</strong> ${defaultData.mobilePhone || defaultData.phone}${defaultData.phone && defaultData.mobilePhone ? ` | <strong>tel:</strong> ${defaultData.phone}` : ''}<br/>` : 
-              ''
-            }
-            ${defaultData.email ? 
-              `<strong>email:</strong> <a href="mailto:${defaultData.email}" style="color: #666666; text-decoration: none;">${defaultData.email}</a><br/>` : 
-              ''
-            }
-            ${defaultData.website ? 
-              `<strong>website:</strong> <a href="${defaultData.website.startsWith('http') ? defaultData.website : `https://${defaultData.website}`}" target="_blank" rel="noopener noreferrer" style="color: #666666; text-decoration: none;">${defaultData.website.replace(/^https?:\/\//, '')}</a><br/>` : 
-              ''
-            }
-            <strong>location:</strong> ${defaultData.location || ""}
-          </div>
-        </div>
+//         <!-- Contact Information -->
+//         <div style="flex: 1;">
+//           <div style="font-size: 18px; font-weight: 700; color: #333333; margin-bottom: 2px;" class="preview-name">
+//             ${defaultData.name}
+//           </div>
+//           <div style="font-size: 14px; color: ${designStyle.accentColor || "#0066cc"}; margin-bottom: 8px;" class="preview-job">
+//             ${defaultData.jobTitle}
+//           </div>
+//           <div style="font-size: 12px; color: #666666; line-height: 1.4;" class="contact-details">
+//             ${(defaultData.mobilePhone || defaultData.phone) ? 
+//               `<strong>mobile:</strong> ${defaultData.mobilePhone || defaultData.phone}${defaultData.phone && defaultData.mobilePhone ? ` | <strong>tel:</strong> ${defaultData.phone}` : ''}<br/>` : 
+//               ''
+//             }
+//             ${defaultData.email ? 
+//               `<strong>email:</strong> <a href="mailto:${defaultData.email}" style="color: #666666; text-decoration: none;">${defaultData.email}</a><br/>` : 
+//               ''
+//             }
+//             ${defaultData.website ? 
+//               `<strong>website:</strong> <a href="${defaultData.website.startsWith('http') ? defaultData.website : `https://${defaultData.website}`}" target="_blank" rel="noopener noreferrer" style="color: #666666; text-decoration: none;">${defaultData.website.replace(/^https?:\/\//, '')}</a><br/>` : 
+//               ''
+//             }
+//             <strong>location:</strong> ${defaultData.location || ""}
+//           </div>
+//         </div>
 
-        <!-- Profile Image - Always takes space even if empty -->
-        <div style="min-width: 80px; height: 80px; ${!defaultData.profileImage ? 'visibility: hidden;' : ''}">
-          ${defaultData.profileImage ? 
-            `<img src="${defaultData.profileImage}" alt="${defaultData.name || 'Profile'}" style="width: 100%; height: 100%; border-radius: 6px; object-fit: cover; border: 2px solid #e0e0e0;" class="profile-image" />` :
-            ''
-          }
-        </div>
-      </div>
+//         <!-- Profile Image - Always takes space even if empty -->
+//         <div style="min-width: 80px; height: 80px; ${!defaultData.profileImage ? 'visibility: hidden;' : ''}">
+//           ${defaultData.profileImage ? 
+//             `<img src="${defaultData.profileImage}" alt="${defaultData.name || 'Profile'}" style="width: 100%; height: 100%; border-radius: 6px; object-fit: cover; border: 2px solid #e0e0e0;" class="profile-image" />` :
+//             ''
+//           }
+//         </div>
+//       </div>
 
-      <!-- Social Section -->
-      <div style="display: flex; align-items: center; justify-content: space-between;">
-        <div>
-          <!-- Social Icons -->
-          <div class="social-icons-container">
-            ${renderSocialIcons ? renderSocialIcons(defaultData) : ''}
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-},
+//       <!-- Social Section -->
+//       <div style="display: flex; align-items: center; justify-content: space-between;">
+//         <div>
+//           <!-- Social Icons -->
+//           <div class="social-icons-container">
+//             ${renderSocialIcons ? renderSocialIcons(defaultData) : ''}
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   `;
+// },
 
 
   text: (designStyle, sections,formData) => {
@@ -1184,8 +1189,8 @@ export const replacePlaceholders = (template, employeeData) => {
     '{{phone}}': employeeData.businessPhones?.[0] || employeeData.phone || '',
     '{{mobilePhone}}': employeeData.mobilePhone || '',
     '{{location}}': employeeData.officeLocation || employeeData.location || '',
-    '{{company}}': employeeData.company || 'Agile World Technologies LLC',
-    '{{website}}': employeeData.website || 'www.Agile World Technologies LLC',
+    '{{company}}': employeeData.company || 'agileworldtechnologies.com',
+    '{{website}}': employeeData.website || 'www.agileworldtechnologies.com',
     '{{department}}': employeeData.department || ''
   };
   
@@ -1209,6 +1214,11 @@ export const generateSignatureHTML = (
   const design =
     designTemplates.find((d) => d.id === selectedDesign) || designTemplates[0];
   console.log("📋 Using layout:", design.layout, "for design:", selectedDesign);
+
+// For professional layout, use the dedicated HTML generator
+  if (design.layout === "professional") {
+    return generateProfessionalLayoutHTML(formData, designStyle);
+  }
 
   // Generate reusable content sections
   const sections = generateContentSections(formData, designStyle);
