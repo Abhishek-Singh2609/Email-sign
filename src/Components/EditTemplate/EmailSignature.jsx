@@ -479,7 +479,7 @@ const EmailSignatureCreator = () => {
         jobTitle: location.state?.jobTitle || "Product Designer",
         company: location.state?.organization || "Agilesignature.com",
         email: location.state?.email || "john.doe@agile.com",
-        phone: location.state?.businessPhones?.[0] || "+1 (555) 123-4567",
+        phone: location.state?.phoneNumber?.[0] || "+1 (555) 123-4567",
         mobilePhone: "",
         location: location.state?.officeLocation || "San Francisco, CA",
         website: "www.agilesignature.com",
@@ -515,7 +515,7 @@ const EmailSignatureCreator = () => {
         name: firstEmployee.displayName || "John Doe",
         jobTitle: firstEmployee.jobTitle || "Product Designer", 
         email: firstEmployee.mail || "john.doe@agile.com",
-        phone: firstEmployee.businessPhones?.[0] || "+1 (555) 123-4567",
+        phone: firstEmployee.phoneNumber?.[0] || "+1 (555) 123-4567",
         location: firstEmployee.officeLocation || "San Francisco, CA",
         company: "Agile World Technologies LLC", // Keep static company info
       };
