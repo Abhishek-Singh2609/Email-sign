@@ -10,8 +10,6 @@ const TextLayout = ({ formData, designStyle }) => {
           width: "600px",
           minHeight: "180px",
           margin: "0",
-          backgroundColor: "#ffffff",
-          border: "1px solid #e0e0e0",
           borderRadius: "8px",
           overflow: "hidden",
           ...designStyle.containerStyle,

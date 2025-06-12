@@ -407,6 +407,7 @@
 // };
 
 // export default EmailSignatureCreator;
+
 // Fixed EmailSignatureCreator.jsx - Uses common HTML generator only
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -670,7 +671,7 @@ const EmailSignatureCreator = () => {
 
       console.log("Bulk apply response:", response.data);
       alert(`Signature template applied to ${selectedEmployees.length} employees!`);
-      navigate("/employees"); // Return to employees page after bulk apply
+      navigate("/edittemplate"); // Return to employees page after bulk apply
     } catch (error) {
       console.error("Error in bulk apply:", error);
       alert(`Bulk apply failed. Error: ${error.message}`);
