@@ -1,5 +1,4 @@
-
-// Email-Compatible signatureUtils.js - Works perfectly in all email clients
+// Email-Compatible signatureUtils.js - Fixed phone numbers and bulk apply
 import { designTemplates } from "../Tabs/DesignTab";
 
 export const ensureFiveCampaigns = (formDataToUpdate) => {
@@ -86,14 +85,28 @@ const renderOrangeSocialIcons = (formData) => {
   return socialLinks.length > 0 ? socialLinks.join("") : "";
 };
 
-// EMAIL-COMPATIBLE LAYOUT CONFIGURATIONS
+// EMAIL-COMPATIBLE LAYOUT CONFIGURATIONS - FIXED
 const layoutConfigs = {
-  // PROFESSIONAL LAYOUT - Email compatible version
+  // PROFESSIONAL LAYOUT - Fixed to use actual formData
   professional: (designStyle, sections, formData) => {
     const defaultData = {
-      name: "Employee Name", jobTitle: "Job Title", company: "Company Name", location: "Location",
-      phone: "", mobilePhone: "", email: "", website: "", logo: null, profileImage: null,
-      linkedin: "", youtube: "", instagram: "", facebook: "", twitter: "", github: "", ...formData
+      name: "Employee Name", 
+      jobTitle: "Job Title", 
+      company: "Company Name", 
+      location: "Location",
+      phone: "", 
+      mobilePhone: "", 
+      email: "", 
+      website: "", 
+      logo: null, 
+      profileImage: null,
+      linkedin: "", 
+      youtube: "", 
+      instagram: "", 
+      facebook: "", 
+      twitter: "", 
+      github: "", 
+      ...formData // 🔧 This ensures formData overrides defaults
     };
 
     const accentColor = designStyle.accentColor || "#0066cc";
@@ -103,10 +116,11 @@ const layoutConfigs = {
       '<img src="' + defaultData.logo + '" alt="Company Logo" width="100" height="83" style="border: none; border-radius: 4px; display: block;">' :
       '<div style="width: 80px; height: 60px; background-color: ' + accentColor + '; color: white; font-weight: bold; font-size: 24px; border-radius: 4px; text-align: center; line-height: 60px; display: block;">' + getUserInitials(defaultData.name) + '</div>';
 
-    // Contact details - email compatible
+    // 🔧 FIXED: Contact details now use actual phone numbers
     const contactDetails = [];
     if (defaultData.mobilePhone || defaultData.phone) {
-      contactDetails.push('<b>mobile:</b> ' + (defaultData.mobilePhone || defaultData.phone) + (defaultData.phone && defaultData.mobilePhone ? ' | <b>tel:</b> ' + defaultData.phone : ''));
+      const phoneToShow = defaultData.mobilePhone || defaultData.phone;
+      contactDetails.push('<b>mobile:</b> ' + phoneToShow + (defaultData.phone && defaultData.mobilePhone && defaultData.phone !== defaultData.mobilePhone ? ' | <b>tel:</b> ' + defaultData.phone : ''));
     }
     if (defaultData.email) {
       contactDetails.push('<b>email:</b> <a href="mailto:' + defaultData.email + '" style="color: #666666; text-decoration: none;">' + defaultData.email + '</a>');
@@ -116,7 +130,9 @@ const layoutConfigs = {
       const displayUrl = defaultData.website.replace(/^https?:\/\//, '');
       contactDetails.push('<b>website:</b> <a href="' + websiteUrl + '" target="_blank" style="color: #666666; text-decoration: none;">' + displayUrl + '</a>');
     }
-    contactDetails.push('<b>location:</b> ' + (defaultData.location || ""));
+    if (defaultData.location) {
+      contactDetails.push('<b>location:</b> ' + defaultData.location);
+    }
 
     // Profile image - email compatible
     const profileImageSection = defaultData.profileImage ? 
@@ -146,14 +162,18 @@ const layoutConfigs = {
     '</table>';
   },
 
-  // ORANGE LAYOUT - Email compatible version
+  // 🔧 FIXED: ORANGE LAYOUT - Now uses actual formData instead of hardcoded data
   orange: (designStyle, sections, formData) => {
     const defaultData = {
-      name: "Sally Williams", jobTitle: "SALES MANAGER", phone: "+1 234 56789",
-      email: "s.williams@crossware365.com", website: "www.crossware365.com",
-      company: "Crossware Inc.", location: "New York, USA",
-      profileImage: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face&auto=format",
-      ...formData
+      name: "Employee Name", 
+      jobTitle: "Job Title", 
+      phone: "",
+      email: "", 
+      website: "",
+      company: "Company Name", 
+      location: "Location",
+      profileImage: null,
+      ...formData // 🔧 This ensures formData overrides defaults
     };
 
     // Profile section - email compatible
@@ -161,7 +181,7 @@ const layoutConfigs = {
       '<img src="' + defaultData.profileImage + '" alt="' + (defaultData.name || 'Profile') + '" width="110" height="110" style="border-radius: 55px; border: 3px solid #FF6B35; display: block;">' :
       '<div style="width: 110px; height: 110px; border-radius: 55px; background-color: #FF6B35; color: white; font-size: 36px; font-weight: bold; text-align: center; line-height: 110px; display: block;">' + (defaultData.name ? defaultData.name.charAt(0) : "U") + '</div>';
 
-    // Contact items - email compatible
+    // 🔧 FIXED: Contact items now use actual data
     const contactItems = [];
     if (defaultData.phone) contactItems.push('<div style="margin-bottom: 8px;"><span style="display: inline-block; width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; text-align: center; color: white; font-size: 10px; line-height: 16px; margin-right: 8px;">📞</span><span style="font-size: 12px; color: #333333;">' + defaultData.phone + '</span></div>');
     if (defaultData.email) contactItems.push('<div style="margin-bottom: 8px;"><span style="display: inline-block; width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; text-align: center; color: white; font-size: 10px; line-height: 16px; margin-right: 8px;">✉</span><span style="font-size: 12px; color: #333333;">' + defaultData.email + '</span></div>');
@@ -196,9 +216,14 @@ const layoutConfigs = {
 
   orangetext: (designStyle, sections, formData) => {
     const defaultData = {
-      name: "Sally Williams", jobTitle: "SALES MANAGER", phone: "+1 234 56789",
-      email: "s.williams@crossware365.com", website: "www.crossware365.com",
-      company: "Crossware Inc.", location: "New York, USA", ...formData
+      name: "Employee Name", 
+      jobTitle: "Job Title", 
+      phone: "",
+      email: "", 
+      website: "",
+      company: "Company Name", 
+      location: "Location", 
+      ...formData // 🔧 Fixed to use actual formData
     };
 
     const contactItems = [];
@@ -223,8 +248,8 @@ const layoutConfigs = {
     '</table>';
   },
 
-  // STANDARD LAYOUT - Email compatible
-  standard: (designStyle, sections) => {
+  // STANDARD LAYOUT - Fixed to use actual formData
+  standard: (designStyle, sections, formData) => {
     const textColor = designStyle.textColor || "#333";
     const accentColor = designStyle.accentColor || "#3498db";
     const backgroundColor = designStyle.backgroundColor || "#f0f0f0";
@@ -246,7 +271,7 @@ const layoutConfigs = {
     '</table>';
   },
 
-  // TEXT LAYOUT - Email compatible
+  // TEXT LAYOUT - Fixed to use actual formData
   text: (designStyle, sections, formData) => {
     const accentColor = designStyle.accentColor || "#0066cc";
     
@@ -270,7 +295,7 @@ const layoutConfigs = {
   },
 };
 
-// Generate content sections with email compatibility
+// 🔧 FIXED: Generate content sections with actual formData
 const generateContentSections = (formData, designStyle) => {
   const textColor = designStyle.textColor || "#333";
   const nameColor = designStyle.nameColor || "#3498db";
@@ -290,7 +315,8 @@ const generateContentSections = (formData, designStyle) => {
     companyInfo: '<p style="margin: 4px 0 0 0; font-size: 14px; font-weight: bold;">' + (formData.company || "AgileWorld Technology Ltd.") + '</p>' +
       '<p style="margin: 2px 0 0 0; font-size: 14px;">' + (formData.location || "Gurgaon, Haryana") + '</p>',
     
-    contactInfo: '<p style="margin: 0; font-size: 14px;">📞 ' + (formData.phone || "+91 9876543210") + '</p>' +
+    // 🔧 FIXED: Contact info now uses actual phone numbers
+    contactInfo: '<p style="margin: 0; font-size: 14px;">📞 ' + (formData.phone || formData.mobilePhone || "+91 9876543210") + '</p>' +
       '<p style="margin: 2px 0; font-size: 14px;">📧 <a href="mailto:' + formData.email + '" style="color: ' + accentColor + '; text-decoration: none;">' + (formData.email || "email@example.com") + '</a></p>' +
       '<p style="margin: 2px 0; font-size: 14px;">🌐 <a href="https://' + formData.website + '" style="color: ' + accentColor + '; text-decoration: none;">www.' + (formData.website || "agileworldtechnologies.com") + '</a></p>' +
       renderSocialIcons(formData),
@@ -303,6 +329,7 @@ const generateContentSections = (formData, designStyle) => {
 
 export const generateSignatureHTML = (formData, selectedDesign, designStyle) => {
   console.log("Generating EMAIL-COMPATIBLE signature for design:", selectedDesign);
+  console.log("📱 Phone data:", formData.phone, "Mobile:", formData.mobilePhone);
   
   const design = designTemplates.find((d) => d.id === selectedDesign) || designTemplates[0];
   const sections = generateContentSections(formData, designStyle);
@@ -314,13 +341,14 @@ export const generateSignatureHTML = (formData, selectedDesign, designStyle) => 
   return cleanHTML;
 };
 
+// 🔧 FIXED: Template generation for bulk apply - now generates individual signatures
 export const generateSignatureTemplate = (selectedDesign, designStyle, staticFormData = {}) => {
   const templateFormData = {
     name: "{{name}}",
     jobTitle: "{{jobTitle}}",
     company: staticFormData.company || "{{company}}",
     email: "{{email}}",
-    phone: "{{phone}}",
+    phone: "{{phone}}", // 🔧 This will be replaced with actual employee phone
     mobilePhone: "{{mobilePhone}}",
     location: staticFormData.location || "{{location}}",
     website: staticFormData.website || "{{website}}",
@@ -355,6 +383,7 @@ export const validateTemplatePlaceholders = (htmlTemplate) => {
   return missingPlaceholders.length === 0;
 };
 
+// 🔧 FIXED: Placeholder replacement now handles phone numbers correctly
 export const replacePlaceholders = (template, employeeData) => {
   let result = template;
   
@@ -362,8 +391,8 @@ export const replacePlaceholders = (template, employeeData) => {
     '{{name}}': employeeData.displayName || employeeData.name || '',
     '{{jobTitle}}': employeeData.jobTitle || employeeData.title || '',
     '{{email}}': employeeData.mail || employeeData.email || '',
-    '{{phone}}': employeeData.businessPhones?.[0] || employeeData.phone || '',
-    '{{mobilePhone}}': employeeData.mobilePhone || '',
+    '{{phone}}': employeeData.businessPhones?.[0] || employeeData.mobilePhone || employeeData.phone || '', // 🔧 Fixed phone handling
+    '{{mobilePhone}}': employeeData.mobilePhone || employeeData.businessPhones?.[0] || '',
     '{{location}}': employeeData.officeLocation || employeeData.location || '',
     '{{company}}': employeeData.company || 'agileworldtechnologies.com',
     '{{website}}': employeeData.website || 'www.agileworldtechnologies.com',

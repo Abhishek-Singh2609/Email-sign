@@ -407,7 +407,7 @@
 // };
 
 // export default EmailSignatureCreator;
-// Fixed EmailSignatureCreator.jsx - Uses common HTML generator only
+// Fixed EmailSignatureCreator.jsx - Properly handles individual employee data in bulk apply
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./EmailSignature.css";
@@ -425,12 +425,13 @@ import DisclaimerTab from "./Tabs/DisclaimerTab";
 import TabNavigation from "./TabNavigation";
 import PreviewSection from "./PreviewSection";
 
-// 🔧 FIXED: Only import the common utilities - NO individual design imports needed!
+// Import fixed utilities
 import {
   ensureFiveCampaigns,
   getActiveCampaigns,
-  generateSignatureHTML, // 🎯 This handles ALL designs now!
-  generateSignatureTemplate, // 🎯 This handles ALL bulk templates!
+  generateSignatureHTML,
+  generateSignatureTemplate,
+  replacePlaceholders,
   loadFromLocalStorage,
   saveToLocalStorage,
 } from "./utils/signatureUtils";
@@ -479,7 +480,7 @@ const EmailSignatureCreator = () => {
         jobTitle: location.state?.jobTitle || "Product Designer",
         company: location.state?.organization || "Agilesignature.com",
         email: location.state?.email || "john.doe@agile.com",
-        phone: location.state?.phoneNumber?.[0] || "+1 (555) 123-4567",
+        phone: location.state?.businessPhones?.[0] || "+1 (555) 123-4567",
         mobilePhone: "",
         location: location.state?.officeLocation || "San Francisco, CA",
         website: "www.agilesignature.com",
@@ -515,10 +516,11 @@ const EmailSignatureCreator = () => {
         name: firstEmployee.displayName || "John Doe",
         jobTitle: firstEmployee.jobTitle || "Product Designer", 
         email: firstEmployee.mail || "john.doe@agile.com",
-        phone: firstEmployee.phoneNumber?.[0] || "+1 (555) 123-4567",
+        phone: firstEmployee.businessPhones?.[0] || "+1 (555) 123-4567", // 🔧 Fixed phone handling
         location: firstEmployee.officeLocation || "San Francisco, CA",
         company: "Agile World Technologies LLC", // Keep static company info
       };
+      console.log("🔧 Bulk Apply Preview Data:", newFormData);
       setFormData(newFormData);
     }
   }, [isBulkApply, selectedEmployees]);
@@ -579,7 +581,7 @@ const EmailSignatureCreator = () => {
     });
   };
 
-  // 🔧 FIXED: Single signature apply - works for ALL designs now!
+  // Individual signature apply - works for ALL designs now!
   const handleSendData = async () => {
     if (isBulkApply) {
       await handleBulkApply();
@@ -595,23 +597,23 @@ const EmailSignatureCreator = () => {
     try {
       const organization = "agileworldtechnologies.com";
       
-      // 🎯 FIXED: Use the common HTML generator for ANY design
+      // Generate HTML for individual user
       const signatureHTML = generateSignatureHTML(
         formData,
         selectedDesign,
         designStyle
       );
 
-      console.log("📧 Sending signature HTML for design:", selectedDesign);
+      console.log("📧 Sending individual signature HTML for design:", selectedDesign);
       console.log("📄 HTML length:", signatureHTML.length);
-      console.log("🔍 HTML preview:", signatureHTML.substring(0, 200));
+      console.log("📱 Phone in formData:", formData.phone);
 
       const response = await axios.post(
         "https://email-signature-function-app.azurewebsites.net/api/ApplySignature",
         {
           email: formData.email,
           organization,
-          html: signatureHTML, // Already cleaned in generateSignatureHTML
+          html: signatureHTML,
         },
         {
           headers: {
@@ -631,7 +633,7 @@ const EmailSignatureCreator = () => {
     }
   };
 
-  // 🔧 FIXED: Bulk apply function - works for ALL designs now!
+  // 🔧 FIXED: Bulk apply function - now sends individual signatures for each employee
   const handleBulkApply = async () => {
     if (!selectedEmployees || selectedEmployees.length === 0) {
       alert("No employees selected for bulk apply");
@@ -641,36 +643,79 @@ const EmailSignatureCreator = () => {
     setIsSending(true);
     try {
       const organization = "agileworldtechnologies.com";
-      
-      // 🎯 FIXED: Use the common template generator for ANY design
-      const signatureHTMLTemplate = generateSignatureTemplate(
-        selectedDesign,
-        designStyle,
-        formData // Pass current form data as static data
-      );
+      const successfulApplies = [];
+      const failedApplies = [];
 
-      console.log("📧 Sending bulk template for design:", selectedDesign);
-      console.log("📄 Template length:", signatureHTMLTemplate.length);
-      console.log("🔍 Template preview:", signatureHTMLTemplate.substring(0, 200));
+      console.log("🚀 Starting bulk apply for", selectedEmployees.length, "employees");
 
-      // Send request matching your curl format
-      const response = await axios.post(
-        "https://email-signature-function-app.azurewebsites.net/api/v2/apply-signature",
-        {
-          organization,
-          html: signatureHTMLTemplate, // Already cleaned in generateSignatureTemplate
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "x-functions-key": apiUrl,
-          },
+      // 🔧 NEW APPROACH: Send individual signatures for each employee
+      for (const employee of selectedEmployees) {
+        try {
+          // Create individual signature data for each employee
+          const employeeFormData = {
+            ...formData, // Keep static data (company, social links, logo, etc.)
+            name: employee.displayName || employee.name || "Employee",
+            jobTitle: employee.jobTitle || employee.title || "Job Title",
+            email: employee.mail || employee.email || "",
+            phone: employee.businessPhones?.[0] || employee.phone || "", // 🔧 Fixed phone handling
+            mobilePhone: employee.mobilePhone || "",
+            location: employee.officeLocation || employee.location || formData.location,
+            company: formData.company, // Keep static company
+          };
+
+          console.log("📧 Generating signature for:", employeeFormData.name, "Phone:", employeeFormData.phone);
+
+          // Generate individual HTML signature
+          const individualSignatureHTML = generateSignatureHTML(
+            employeeFormData,
+            selectedDesign,
+            designStyle
+          );
+
+          // Send individual signature
+          const response = await axios.post(
+            "https://email-signature-function-app.azurewebsites.net/api/ApplySignature",
+            {
+              email: employeeFormData.email,
+              organization,
+              html: individualSignatureHTML,
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "x-functions-key": apiUrl,
+              },
+            }
+          );
+
+          console.log(`✅ Applied signature for ${employeeFormData.name}`);
+          successfulApplies.push(employeeFormData.name);
+
+          // Add small delay to avoid overwhelming the API
+          await new Promise(resolve => setTimeout(resolve, 100));
+
+        } catch (error) {
+          console.error(`❌ Failed to apply signature for ${employee.displayName}:`, error);
+          failedApplies.push(employee.displayName || employee.email);
         }
-      );
+      }
 
-      console.log("Bulk apply response:", response.data);
-      alert(`Signature template applied to ${selectedEmployees.length} employees!`);
-      navigate("/edittemplate"); // Return to employees page after bulk apply
+      // Show results
+      const successCount = successfulApplies.length;
+      const failedCount = failedApplies.length;
+      
+      if (successCount > 0 && failedCount === 0) {
+        alert(`🎉 Successfully applied signatures to all ${successCount} employees!`);
+      } else if (successCount > 0 && failedCount > 0) {
+        alert(`✅ Applied signatures to ${successCount} employees.\n❌ Failed for ${failedCount} employees: ${failedApplies.join(', ')}`);
+      } else {
+        alert(`❌ Failed to apply signatures. Please check your connection and try again.`);
+      }
+
+      if (successCount > 0) {
+        navigate("/edittemplate"); // Return to employees page after bulk apply
+      }
+
     } catch (error) {
       console.error("Error in bulk apply:", error);
       alert(`Bulk apply failed. Error: ${error.message}`);
@@ -783,9 +828,12 @@ const EmailSignatureCreator = () => {
       </h2>
       {isBulkApply && (
         <div style={{ textAlign: "center", marginBottom: "20px" }}>
-          <p>Applying to {selectedEmployees?.length || 0} employees</p>
+          <p>Applying individual signatures to {selectedEmployees?.length || 0} employees</p>
           <p style={{ fontSize: "14px", color: "#666" }}>
             📋 Using design: <strong>{selectedDesign}</strong>
+          </p>
+          <p style={{ fontSize: "12px", color: "#888" }}>
+            ℹ️ Each employee will get their own personalized signature with their individual data
           </p>
         </div>
       )}
