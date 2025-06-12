@@ -408,7 +408,7 @@
 
 // export default EmailSignatureCreator;
 
-// Fixed EmailSignatureCreator.jsx - Uses common HTML generator only
+// Fixed EmailSignatureCreator.jsx - Proper data handling and preview
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./EmailSignature.css";
@@ -426,12 +426,12 @@ import DisclaimerTab from "./Tabs/DisclaimerTab";
 import TabNavigation from "./TabNavigation";
 import PreviewSection from "./PreviewSection";
 
-// 🔧 FIXED: Only import the common utilities - NO individual design imports needed!
+// Import utilities
 import {
   ensureFiveCampaigns,
   getActiveCampaigns,
-  generateSignatureHTML, // 🎯 This handles ALL designs now!
-  generateSignatureTemplate, // 🎯 This handles ALL bulk templates!
+  generateSignatureHTML,
+  generateSignatureTemplate,
   loadFromLocalStorage,
   saveToLocalStorage,
 } from "./utils/signatureUtils";
@@ -450,7 +450,7 @@ const EmailSignatureCreator = () => {
   );
   const [tabsDisabled, setTabsDisabled] = useState(isBulkApply || false);
 
-  // Get initial state
+  // FIXED: Get initial state with proper employee data mapping
   const getInitialState = () => {
     // First check if we're coming back from preview page
     if (location.state?.preserveFormData && location.state?.formData) {
@@ -462,40 +462,50 @@ const EmailSignatureCreator = () => {
 
     // Then check localStorage
     const localStorageState = loadFromLocalStorage();
-    if (localStorageState) {
-      // If email was passed, override the stored email
-      const formDataWithEmail = location.state?.email
-        ? { ...localStorageState.formData, email: location.state.email }
-        : localStorageState.formData;
-
+    if (localStorageState && !location.state?.email && !isBulkApply) {
       return {
-        formData: ensureFiveCampaigns(formDataWithEmail),
+        formData: ensureFiveCampaigns(localStorageState.formData),
+        selectedDesign: localStorageState.selectedDesign || "default",
+      };
+    }
+
+    // FIXED: Create form data with proper employee data mapping
+    const defaultFormData = {
+      name: location.state?.displayName || "John Doe",
+      jobTitle: location.state?.jobTitle || "Product Designer",
+      company: location.state?.organization || "Agile World Technologies LLC",
+      email: location.state?.email || "john.doe@agile.com",
+      phone: location.state?.businessPhones?.[0] || "+1 (555) 123-4567",
+      mobilePhone: "", // This will be populated if available
+      location: location.state?.officeLocation || "San Francisco, CA",
+      website: "www.agileworldtechnologies.com",
+      linkedin: "",
+      twitter: "",
+      instagram: "",
+      facebook: "",
+      youtube: "",
+      portfolio: "",
+      profileImage: null,
+      logo: null,
+      banner: null,
+      disclaimer: "",
+      campaigns: [],
+    };
+
+    // If localStorage exists, merge with employee data but prioritize employee data
+    if (localStorageState) {
+      const mergedFormData = {
+        ...localStorageState.formData,
+        ...defaultFormData, // Employee data overrides localStorage
+      };
+      return {
+        formData: ensureFiveCampaigns(mergedFormData),
         selectedDesign: localStorageState.selectedDesign || "default",
       };
     }
 
     return {
-      formData: ensureFiveCampaigns({
-        name: location.state?.displayName || "John Doe",
-        jobTitle: location.state?.jobTitle || "Product Designer",
-        company: location.state?.organization || "Agilesignature.com",
-        email: location.state?.email || "john.doe@agile.com",
-        phone: location.state?.businessPhones?.[0] || "+1 (555) 123-4567",
-        mobilePhone: "",
-        location: location.state?.officeLocation || "San Francisco, CA",
-        website: "www.agilesignature.com",
-        linkedin: "",
-        twitter: "",
-        instagram: "",
-        facebook: "",
-        youtube: "",
-        portfolio: "",
-        profileImage: null,
-        logo: null,
-        banner: null,
-        disclaimer: "",
-        campaigns: [],
-      }),
+      formData: ensureFiveCampaigns(defaultFormData),
       selectedDesign: "default",
     };
   };
@@ -506,20 +516,34 @@ const EmailSignatureCreator = () => {
   );
   const [formData, setFormData] = useState(initialState.formData);
 
-  // Handle bulk apply if needed - Use real data from first employee for preview
+  // FIXED: Handle bulk apply with proper data from first employee for preview
   useEffect(() => {
     if (isBulkApply && selectedEmployees?.length > 0) {
-      // Use the first employee's data for preview, but keep static data like social links, logos etc.
       const firstEmployee = selectedEmployees[0];
+      console.log("🔧 Setting up bulk apply preview with employee:", firstEmployee);
+      
+      // Use the first employee's data for preview, keeping static data like social links, logos etc.
       const newFormData = {
-        ...formData,
+        ...formData, // Keep existing static data (logos, social links, etc.)
+        // Override with first employee's dynamic data
         name: firstEmployee.displayName || "John Doe",
         jobTitle: firstEmployee.jobTitle || "Product Designer", 
         email: firstEmployee.mail || "john.doe@agile.com",
         phone: firstEmployee.businessPhones?.[0] || "+1 (555) 123-4567",
+        mobilePhone: firstEmployee.mobilePhone || "", // Handle mobile phone
         location: firstEmployee.officeLocation || "San Francisco, CA",
         company: "Agile World Technologies LLC", // Keep static company info
       };
+      
+      console.log("📋 Preview form data:", {
+        name: newFormData.name,
+        jobTitle: newFormData.jobTitle,
+        email: newFormData.email,
+        phone: newFormData.phone,
+        mobilePhone: newFormData.mobilePhone,
+        location: newFormData.location
+      });
+      
       setFormData(newFormData);
     }
   }, [isBulkApply, selectedEmployees]);
@@ -580,7 +604,7 @@ const EmailSignatureCreator = () => {
     });
   };
 
-  // 🔧 FIXED: Single signature apply - works for ALL designs now!
+  // Single signature apply
   const handleSendData = async () => {
     if (isBulkApply) {
       await handleBulkApply();
@@ -596,7 +620,6 @@ const EmailSignatureCreator = () => {
     try {
       const organization = "agileworldtechnologies.com";
       
-      // 🎯 FIXED: Use the common HTML generator for ANY design
       const signatureHTML = generateSignatureHTML(
         formData,
         selectedDesign,
@@ -612,7 +635,7 @@ const EmailSignatureCreator = () => {
         {
           email: formData.email,
           organization,
-          html: signatureHTML, // Already cleaned in generateSignatureHTML
+          html: signatureHTML,
         },
         {
           headers: {
@@ -632,7 +655,7 @@ const EmailSignatureCreator = () => {
     }
   };
 
-  // 🔧 FIXED: Bulk apply function - works for ALL designs now!
+  // FIXED: Bulk apply function with proper template generation
   const handleBulkApply = async () => {
     if (!selectedEmployees || selectedEmployees.length === 0) {
       alert("No employees selected for bulk apply");
@@ -643,7 +666,15 @@ const EmailSignatureCreator = () => {
     try {
       const organization = "agileworldtechnologies.com";
       
-      // 🎯 FIXED: Use the common template generator for ANY design
+      console.log("🎯 Generating bulk template with static data:", {
+        company: formData.company,
+        website: formData.website,
+        logo: formData.logo,
+        banner: formData.banner,
+        selectedDesign: selectedDesign
+      });
+      
+      // Generate template with placeholders for dynamic fields
       const signatureHTMLTemplate = generateSignatureTemplate(
         selectedDesign,
         designStyle,
@@ -654,12 +685,12 @@ const EmailSignatureCreator = () => {
       console.log("📄 Template length:", signatureHTMLTemplate.length);
       console.log("🔍 Template preview:", signatureHTMLTemplate.substring(0, 200));
 
-      // Send request matching your curl format
+      // Send request to bulk apply endpoint
       const response = await axios.post(
         "https://email-signature-function-app.azurewebsites.net/api/v2/apply-signature",
         {
           organization,
-          html: signatureHTMLTemplate, // Already cleaned in generateSignatureTemplate
+          html: signatureHTMLTemplate,
         },
         {
           headers: {
@@ -787,6 +818,9 @@ const EmailSignatureCreator = () => {
           <p>Applying to {selectedEmployees?.length || 0} employees</p>
           <p style={{ fontSize: "14px", color: "#666" }}>
             📋 Using design: <strong>{selectedDesign}</strong>
+          </p>
+          <p style={{ fontSize: "12px", color: "#888" }}>
+            Preview shows data from: <strong>{formData.name}</strong>
           </p>
         </div>
       )}
