@@ -1,4 +1,4 @@
-// Email-Compatible signatureUtils.js - COMPLETE FIX for all data issues
+// Email-Compatible signatureUtils.js - FIXED Mobile Phone & Job Title Issues
 import { designTemplates } from "../Tabs/DesignTab";
 
 export const ensureFiveCampaigns = (formDataToUpdate) => {
@@ -85,17 +85,20 @@ const renderOrangeSocialIcons = (formData) => {
   return socialLinks.length > 0 ? socialLinks.join("") : "";
 };
 
-// FIXED: Ensure all form data fields are properly accessible
+// FIXED: Ensure all form data fields are properly accessible with correct API mapping
 const ensureFormData = (formData) => {
-  return {
-    name: formData.name || "Employee Name",
+  console.log("🔧 ensureFormData input:", formData);
+  
+  // Handle API data format vs form data format
+  const result = {
+    name: formData.displayName || formData.name || "Employee Name",
     jobTitle: formData.jobTitle || "Job Title", 
-    company: formData.company || "Company Name",
-    email: formData.email || "email@example.com",
-    phone: formData.phone || "+1 (555) 123-4567",
-    mobilePhone: formData.mobilePhone || "",
-    location: formData.location || "Location",
-    website: formData.website || "www.company.com",
+    company: formData.company || "Agile World Technologies LLC",
+    email: formData.mail || formData.email || "email@example.com",
+    phone: formData.businessPhones?.[0] || formData.phone || "", // Regular phone
+    mobilePhone: formData.mobilePhone || "", // Mobile phone from API
+    location: formData.officeLocation || formData.location || "Location",
+    website: formData.website || "www.agileworldtechnologies.com",
     linkedin: formData.linkedin || "",
     twitter: formData.twitter || "",
     instagram: formData.instagram || "",
@@ -109,28 +112,54 @@ const ensureFormData = (formData) => {
     disclaimer: formData.disclaimer || "",
     campaigns: formData.campaigns || [],
   };
+  
+  console.log("🔧 ensureFormData output:", {
+    name: result.name,
+    jobTitle: result.jobTitle,
+    phone: result.phone,
+    mobilePhone: result.mobilePhone,
+    email: result.email
+  });
+  
+  return result;
 };
 
 // EMAIL-COMPATIBLE LAYOUT CONFIGURATIONS - FIXED
 const layoutConfigs = {
-  // PROFESSIONAL LAYOUT - Fixed to show all data
+  // PROFESSIONAL LAYOUT - Fixed to show mobile phone and job title properly
   professional: (designStyle, sections, formData) => {
     const data = ensureFormData(formData);
     const accentColor = designStyle.accentColor || "#0066cc";
+    
+    console.log("🎯 Professional layout data:", {
+      name: data.name,
+      jobTitle: data.jobTitle,
+      phone: data.phone,
+      mobilePhone: data.mobilePhone
+    });
     
     // Logo section
     const logoSection = data.logo ? 
       '<img src="' + data.logo + '" alt="Company Logo" width="100" height="83" style="border: none; border-radius: 4px; display: block;">' :
       '<div style="width: 80px; height: 60px; background-color: ' + accentColor + '; color: white; font-weight: bold; font-size: 24px; border-radius: 4px; text-align: center; line-height: 60px; display: block;">' + getUserInitials(data.name) + '</div>';
 
-    // FIXED: Contact details with mobile phone priority
+    // FIXED: Enhanced contact details with proper phone handling
     const contactDetails = [];
     
-    // Phone handling - prioritize mobile, then regular phone
-    const phoneToShow = data.mobilePhone || data.phone;
-    if (phoneToShow) {
-      const phoneLabel = data.mobilePhone ? "mobile" : "phone";
-      contactDetails.push('<b>' + phoneLabel + ':</b> ' + phoneToShow);
+    // Mobile phone gets priority and "mobile:" label
+    if (data.mobilePhone) {
+      contactDetails.push('<b>mobile:</b> ' + data.mobilePhone);
+    }
+    
+    // Regular phone with "tel:" label if both phones exist, or "phone:" if only regular exists
+    if (data.phone && data.phone !== data.mobilePhone) {
+      const phoneLabel = data.mobilePhone ? "tel" : "phone";
+      contactDetails.push('<b>' + phoneLabel + ':</b> ' + data.phone);
+    }
+    
+    // If no mobile phone but regular phone exists, use "mobile:" label for regular phone
+    if (!data.mobilePhone && data.phone) {
+      contactDetails.push('<b>mobile:</b> ' + data.phone);
     }
     
     if (data.email) {
@@ -174,22 +203,38 @@ const layoutConfigs = {
     '</table>';
   },
 
-  // ORANGE LAYOUT - Fixed to show all data properly
+  // ORANGE LAYOUT - Fixed to show mobile phone and job title properly
   orange: (designStyle, sections, formData) => {
     const data = ensureFormData(formData);
+    
+    console.log("🍊 Orange layout data:", {
+      name: data.name,
+      jobTitle: data.jobTitle,
+      phone: data.phone,
+      mobilePhone: data.mobilePhone
+    });
     
     // Profile section
     const profileSection = data.profileImage ? 
       '<img src="' + data.profileImage + '" alt="' + data.name + '" width="110" height="110" style="border-radius: 55px; border: 3px solid #FF6B35; display: block;">' :
       '<div style="width: 110px; height: 110px; border-radius: 55px; background-color: #FF6B35; color: white; font-size: 36px; font-weight: bold; text-align: center; line-height: 110px; display: block;">' + (data.name && !data.name.includes('{{') ? data.name.charAt(0) : "U") + '</div>';
 
-    // FIXED: Contact items with proper phone handling
+    // FIXED: Contact items with proper phone handling for Orange layout
     const contactItems = [];
     
-    // Phone handling - prioritize mobile, then regular phone
-    const phoneToShow = data.mobilePhone || data.phone;
-    if (phoneToShow) {
-      contactItems.push('<div style="margin-bottom: 8px;"><span style="display: inline-block; width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; text-align: center; color: white; font-size: 10px; line-height: 16px; margin-right: 8px;">📞</span><span style="font-size: 12px; color: #333333;">' + phoneToShow + '</span></div>');
+    // Mobile phone gets priority
+    if (data.mobilePhone) {
+      contactItems.push('<div style="margin-bottom: 8px;"><span style="display: inline-block; width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; text-align: center; color: white; font-size: 10px; line-height: 16px; margin-right: 8px;">📱</span><span style="font-size: 12px; color: #333333;">' + data.mobilePhone + '</span></div>');
+    }
+    
+    // Regular phone with different icon if both exist
+    if (data.phone && data.phone !== data.mobilePhone) {
+      contactItems.push('<div style="margin-bottom: 8px;"><span style="display: inline-block; width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; text-align: center; color: white; font-size: 10px; line-height: 16px; margin-right: 8px;">📞</span><span style="font-size: 12px; color: #333333;">' + data.phone + '</span></div>');
+    }
+    
+    // If no mobile phone but regular phone exists, use mobile icon for regular phone
+    if (!data.mobilePhone && data.phone) {
+      contactItems.push('<div style="margin-bottom: 8px;"><span style="display: inline-block; width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; text-align: center; color: white; font-size: 10px; line-height: 16px; margin-right: 8px;">📱</span><span style="font-size: 12px; color: #333333;">' + data.phone + '</span></div>');
     }
     
     if (data.email) {
@@ -237,10 +282,17 @@ const layoutConfigs = {
     
     const contactItems = [];
     
-    // FIXED: Phone handling - prioritize mobile, then regular phone
-    const phoneToShow = data.mobilePhone || data.phone;
-    if (phoneToShow) {
-      contactItems.push('<div style="margin-bottom: 5px;"><span style="font-size: 12px; color: #333333;">📞 ' + phoneToShow + '</span></div>');
+    // FIXED: Phone handling for orangetext layout
+    if (data.mobilePhone) {
+      contactItems.push('<div style="margin-bottom: 5px;"><span style="font-size: 12px; color: #333333;">📱 ' + data.mobilePhone + '</span></div>');
+    }
+    
+    if (data.phone && data.phone !== data.mobilePhone) {
+      contactItems.push('<div style="margin-bottom: 5px;"><span style="font-size: 12px; color: #333333;">📞 ' + data.phone + '</span></div>');
+    }
+    
+    if (!data.mobilePhone && data.phone) {
+      contactItems.push('<div style="margin-bottom: 5px;"><span style="font-size: 12px; color: #333333;">📱 ' + data.phone + '</span></div>');
     }
     
     if (data.email) {
@@ -329,8 +381,16 @@ const generateContentSections = (formData, designStyle) => {
   const nameColor = designStyle.nameColor || "#3498db";
   const accentColor = designStyle.accentColor || "#3498db";
 
-  // FIXED: Phone handling - prioritize mobile, then regular phone
-  const phoneToShow = data.mobilePhone || data.phone;
+  // FIXED: Enhanced phone handling with mobile priority
+  let phoneInfo = "";
+  if (data.mobilePhone) {
+    phoneInfo = '<p style="margin: 0; font-size: 14px;">📱 ' + data.mobilePhone + '</p>';
+    if (data.phone && data.phone !== data.mobilePhone) {
+      phoneInfo += '<p style="margin: 2px 0; font-size: 14px;">📞 ' + data.phone + '</p>';
+    }
+  } else if (data.phone) {
+    phoneInfo = '<p style="margin: 0; font-size: 14px;">📱 ' + data.phone + '</p>';
+  }
 
   return {
     greeting: '<p style="margin-bottom: 10px; color: ' + textColor + ';">Thanks & Regards,</p>',
@@ -346,7 +406,7 @@ const generateContentSections = (formData, designStyle) => {
     companyInfo: '<p style="margin: 4px 0 0 0; font-size: 14px; font-weight: bold;">' + data.company + '</p>' +
       '<p style="margin: 2px 0 0 0; font-size: 14px;">' + data.location + '</p>',
     
-    contactInfo: (phoneToShow ? '<p style="margin: 0; font-size: 14px;">📞 ' + phoneToShow + '</p>' : '') +
+    contactInfo: phoneInfo +
       '<p style="margin: 2px 0; font-size: 14px;">📧 <a href="mailto:' + data.email + '" style="color: ' + accentColor + '; text-decoration: none;">' + data.email + '</a></p>' +
       '<p style="margin: 2px 0; font-size: 14px;">🌐 <a href="https://' + data.website + '" style="color: ' + accentColor + '; text-decoration: none;">' + data.website + '</a></p>' +
       renderSocialIcons(data),
@@ -359,13 +419,13 @@ const generateContentSections = (formData, designStyle) => {
 
 export const generateSignatureHTML = (formData, selectedDesign, designStyle) => {
   console.log("🔧 Generating signature HTML with data:", {
-    name: formData.name,
+    name: formData.name || formData.displayName,
     jobTitle: formData.jobTitle,
-    email: formData.email,
-    phone: formData.phone,
+    email: formData.email || formData.mail,
+    phone: formData.phone || (formData.businessPhones ? formData.businessPhones[0] : null),
     mobilePhone: formData.mobilePhone,
     company: formData.company,
-    location: formData.location
+    location: formData.location || formData.officeLocation
   });
   
   const design = designTemplates.find((d) => d.id === selectedDesign) || designTemplates[0];
@@ -385,11 +445,15 @@ export const generateSignatureTemplate = (selectedDesign, designStyle, staticFor
   const templateFormData = {
     // Dynamic fields that should be replaced per employee
     name: "{{name}}",
+    displayName: "{{name}}", // Ensure both forms work
     jobTitle: "{{jobTitle}}",
     email: "{{email}}",
+    mail: "{{email}}", // Ensure both forms work
     phone: "{{phone}}",
+    businessPhones: ["{{phone}}"], // API format
     mobilePhone: "{{mobilePhone}}",
     location: "{{location}}",
+    officeLocation: "{{location}}", // API format
     
     // Static fields that remain the same for all employees
     company: staticFormData.company || "Agile World Technologies LLC",
@@ -429,7 +493,7 @@ export const generateSignatureTemplate = (selectedDesign, designStyle, staticFor
 };
 
 export const validateTemplatePlaceholders = (htmlTemplate) => {
-  const requiredPlaceholders = ['{{name}}', '{{email}}', '{{jobTitle}}', '{{phone}}'];
+  const requiredPlaceholders = ['{{name}}', '{{email}}', '{{jobTitle}}', '{{phone}}', '{{mobilePhone}}'];
   const missingPlaceholders = requiredPlaceholders.filter(placeholder => 
     !htmlTemplate.includes(placeholder)
   );
@@ -444,6 +508,15 @@ export const validateTemplatePlaceholders = (htmlTemplate) => {
 export const replacePlaceholders = (template, employeeData) => {
   let result = template;
   
+  console.log("🔄 Replacing placeholders with employee data:", {
+    displayName: employeeData.displayName,
+    jobTitle: employeeData.jobTitle,
+    mail: employeeData.mail,
+    businessPhones: employeeData.businessPhones,
+    mobilePhone: employeeData.mobilePhone,
+    officeLocation: employeeData.officeLocation
+  });
+  
   const placeholderMap = {
     '{{name}}': employeeData.displayName || employeeData.name || '',
     '{{jobTitle}}': employeeData.jobTitle || employeeData.title || '',
@@ -456,9 +529,13 @@ export const replacePlaceholders = (template, employeeData) => {
     '{{department}}': employeeData.department || ''
   };
   
+  console.log("🔄 Placeholder mapping:", placeholderMap);
+  
   Object.entries(placeholderMap).forEach(([placeholder, value]) => {
-    result = result.replace(new RegExp(placeholder.replace(/[{}]/g, '\\$&'), 'g'), value);
+    result = result.replace(new RegExp(placeholder.replace(/[{}]/g, '\\    officeLocation: "{{'), 'g'), value);
   });
+  
+  console.log("✅ Template after replacement preview:", result.substring(0, 300));
   
   return result;
 };

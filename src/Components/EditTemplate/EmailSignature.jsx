@@ -408,7 +408,7 @@
 
 // export default EmailSignatureCreator;
 
-// Fixed EmailSignatureCreator.jsx - Proper data handling and preview
+// Fixed EmailSignatureCreator.jsx - Proper API data handling for mobile phone and job title
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./EmailSignature.css";
@@ -450,8 +450,17 @@ const EmailSignatureCreator = () => {
   );
   const [tabsDisabled, setTabsDisabled] = useState(isBulkApply || false);
 
-  // FIXED: Get initial state with proper employee data mapping
+  // FIXED: Get initial state with proper API data mapping
   const getInitialState = () => {
+    console.log("🔧 getInitialState - location.state:", {
+      displayName: location.state?.displayName,
+      jobTitle: location.state?.jobTitle,
+      email: location.state?.email,
+      businessPhones: location.state?.businessPhones,
+      mobilePhone: location.state?.mobilePhone,
+      officeLocation: location.state?.officeLocation
+    });
+
     // First check if we're coming back from preview page
     if (location.state?.preserveFormData && location.state?.formData) {
       return {
@@ -469,15 +478,25 @@ const EmailSignatureCreator = () => {
       };
     }
 
-    // FIXED: Create form data with proper employee data mapping
+    // FIXED: Create form data with proper API data mapping
     const defaultFormData = {
+      // Map from API response format to form format
       name: location.state?.displayName || "John Doe",
+      displayName: location.state?.displayName || "John Doe", // Keep both for compatibility
       jobTitle: location.state?.jobTitle || "Product Designer",
       company: location.state?.organization || "Agile World Technologies LLC",
-      email: location.state?.email || "john.doe@agile.com",
-      phone: location.state?.businessPhones?.[0] || "+1 (555) 123-4567",
-      mobilePhone: "", // This will be populated if available
-      location: location.state?.officeLocation || "San Francisco, CA",
+      email: location.state?.email || location.state?.mail || "john.doe@agile.com",
+      mail: location.state?.email || location.state?.mail || "john.doe@agile.com", // Keep both for compatibility
+      
+      // FIXED: Handle both businessPhones array and direct phone/mobilePhone
+      phone: location.state?.businessPhones?.[0] || location.state?.phone || "",
+      businessPhones: location.state?.businessPhones || [], // Keep API format
+      mobilePhone: location.state?.mobilePhone || "", // Direct from API
+      
+      location: location.state?.officeLocation || location.state?.location || "San Francisco, CA",
+      officeLocation: location.state?.officeLocation || location.state?.location || "San Francisco, CA", // Keep both for compatibility
+      
+      // Static data that can be customized
       website: "www.agileworldtechnologies.com",
       linkedin: "",
       twitter: "",
@@ -492,12 +511,28 @@ const EmailSignatureCreator = () => {
       campaigns: [],
     };
 
+    console.log("📋 Created defaultFormData:", {
+      name: defaultFormData.name,
+      jobTitle: defaultFormData.jobTitle,
+      email: defaultFormData.email,
+      phone: defaultFormData.phone,
+      mobilePhone: defaultFormData.mobilePhone,
+      location: defaultFormData.location
+    });
+
     // If localStorage exists, merge with employee data but prioritize employee data
     if (localStorageState) {
       const mergedFormData = {
-        ...localStorageState.formData,
-        ...defaultFormData, // Employee data overrides localStorage
+        ...localStorageState.formData, // Static customizations from localStorage
+        ...defaultFormData, // Employee data from API overrides localStorage employee data
       };
+      console.log("📋 Merged with localStorage:", {
+        name: mergedFormData.name,
+        jobTitle: mergedFormData.jobTitle,
+        email: mergedFormData.email,
+        phone: mergedFormData.phone,
+        mobilePhone: mergedFormData.mobilePhone
+      });
       return {
         formData: ensureFiveCampaigns(mergedFormData),
         selectedDesign: localStorageState.selectedDesign || "default",
@@ -516,26 +551,38 @@ const EmailSignatureCreator = () => {
   );
   const [formData, setFormData] = useState(initialState.formData);
 
-  // FIXED: Handle bulk apply with proper data from first employee for preview
+  // FIXED: Handle bulk apply with proper API data from first employee for preview
   useEffect(() => {
     if (isBulkApply && selectedEmployees?.length > 0) {
       const firstEmployee = selectedEmployees[0];
-      console.log("🔧 Setting up bulk apply preview with employee:", firstEmployee);
+      console.log("🔧 Setting up bulk apply preview with employee API data:", {
+        displayName: firstEmployee.displayName,
+        jobTitle: firstEmployee.jobTitle,
+        mail: firstEmployee.mail,
+        businessPhones: firstEmployee.businessPhones,
+        mobilePhone: firstEmployee.mobilePhone,
+        officeLocation: firstEmployee.officeLocation
+      });
       
       // Use the first employee's data for preview, keeping static data like social links, logos etc.
       const newFormData = {
         ...formData, // Keep existing static data (logos, social links, etc.)
-        // Override with first employee's dynamic data
+        
+        // Override with first employee's dynamic API data - using exact API field names
         name: firstEmployee.displayName || "John Doe",
+        displayName: firstEmployee.displayName || "John Doe",
         jobTitle: firstEmployee.jobTitle || "Product Designer", 
         email: firstEmployee.mail || "john.doe@agile.com",
-        phone: firstEmployee.businessPhones?.[0] || "+1 (555) 123-4567",
-        mobilePhone: firstEmployee.mobilePhone || "", // Handle mobile phone
+        mail: firstEmployee.mail || "john.doe@agile.com",
+        phone: firstEmployee.businessPhones?.[0] || "",
+        businessPhones: firstEmployee.businessPhones || [],
+        mobilePhone: firstEmployee.mobilePhone || "", // Direct API field
         location: firstEmployee.officeLocation || "San Francisco, CA",
+        officeLocation: firstEmployee.officeLocation || "San Francisco, CA",
         company: "Agile World Technologies LLC", // Keep static company info
       };
       
-      console.log("📋 Preview form data:", {
+      console.log("📋 Preview form data for bulk apply:", {
         name: newFormData.name,
         jobTitle: newFormData.jobTitle,
         email: newFormData.email,
@@ -604,14 +651,16 @@ const EmailSignatureCreator = () => {
     });
   };
 
-  // Single signature apply
+  // FIXED: Single signature apply with proper API data
   const handleSendData = async () => {
     if (isBulkApply) {
       await handleBulkApply();
       return;
     }
 
-    if (!formData.email) {
+    // Use email from either field format
+    const emailToUse = formData.email || formData.mail;
+    if (!emailToUse) {
       alert("Please enter your email address");
       return;
     }
@@ -619,6 +668,15 @@ const EmailSignatureCreator = () => {
     setIsSending(true);
     try {
       const organization = "agileworldtechnologies.com";
+      
+      console.log("📧 Generating signature with form data:", {
+        name: formData.name || formData.displayName,
+        jobTitle: formData.jobTitle,
+        email: emailToUse,
+        phone: formData.phone,
+        mobilePhone: formData.mobilePhone,
+        selectedDesign
+      });
       
       const signatureHTML = generateSignatureHTML(
         formData,
@@ -633,7 +691,7 @@ const EmailSignatureCreator = () => {
       const response = await axios.post(
         "https://email-signature-function-app.azurewebsites.net/api/ApplySignature",
         {
-          email: formData.email,
+          email: emailToUse,
           organization,
           html: signatureHTML,
         },
@@ -672,6 +730,15 @@ const EmailSignatureCreator = () => {
         logo: formData.logo,
         banner: formData.banner,
         selectedDesign: selectedDesign
+      });
+      
+      console.log("📋 Sample employee data for template:", {
+        displayName: selectedEmployees[0]?.displayName,
+        jobTitle: selectedEmployees[0]?.jobTitle,
+        mail: selectedEmployees[0]?.mail,
+        businessPhones: selectedEmployees[0]?.businessPhones,
+        mobilePhone: selectedEmployees[0]?.mobilePhone,
+        officeLocation: selectedEmployees[0]?.officeLocation
       });
       
       // Generate template with placeholders for dynamic fields
@@ -820,7 +887,8 @@ const EmailSignatureCreator = () => {
             📋 Using design: <strong>{selectedDesign}</strong>
           </p>
           <p style={{ fontSize: "12px", color: "#888" }}>
-            Preview shows data from: <strong>{formData.name}</strong>
+            Preview shows data from: <strong>{formData.name || formData.displayName}</strong> 
+            {formData.mobilePhone && <span> (Mobile: {formData.mobilePhone})</span>}
           </p>
         </div>
       )}
