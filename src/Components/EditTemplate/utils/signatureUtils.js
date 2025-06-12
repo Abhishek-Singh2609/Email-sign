@@ -1,4 +1,5 @@
-// Email-Compatible signatureUtils.js - FIXED Mobile Phone & Job Title Issues
+
+// Email-Compatible signatureUtils.js - Works perfectly in all email clients
 import { designTemplates } from "../Tabs/DesignTab";
 
 export const ensureFiveCampaigns = (formDataToUpdate) => {
@@ -36,7 +37,7 @@ export const getActiveCampaigns = (campaigns) => {
 };
 
 const getUserInitials = (name) => {
-  if (!name || name === "Employee Name" || name.includes("{{")) return "ID";
+  if (!name || name === "Employee Name") return "ID";
   const nameParts = name.trim().split(/\s+/);
   if (nameParts.length === 0) return "ID";
   const firstNameInitial = nameParts[0].charAt(0).toUpperCase();
@@ -85,174 +86,90 @@ const renderOrangeSocialIcons = (formData) => {
   return socialLinks.length > 0 ? socialLinks.join("") : "";
 };
 
-// FIXED: Ensure all form data fields are properly accessible with correct API mapping
-const ensureFormData = (formData) => {
-  console.log("🔧 ensureFormData input:", formData);
-  
-  // Handle API data format vs form data format
-  const result = {
-    name: formData.displayName || formData.name || "Employee Name",
-    jobTitle: formData.jobTitle || "Job Title", 
-    company: formData.company || "Agile World Technologies LLC",
-    email: formData.mail || formData.email || "email@example.com",
-    phone: formData.businessPhones?.[0] || formData.phone || "", // Regular phone
-    mobilePhone: formData.mobilePhone || "", // Mobile phone from API
-    location: formData.officeLocation || formData.location || "Location",
-    website: formData.website || "www.agileworldtechnologies.com",
-    linkedin: formData.linkedin || "",
-    twitter: formData.twitter || "",
-    instagram: formData.instagram || "",
-    facebook: formData.facebook || "",
-    youtube: formData.youtube || "",
-    github: formData.github || "",
-    portfolio: formData.portfolio || "",
-    profileImage: formData.profileImage || null,
-    logo: formData.logo || null,
-    banner: formData.banner || null,
-    disclaimer: formData.disclaimer || "",
-    campaigns: formData.campaigns || [],
-  };
-  
-  console.log("🔧 ensureFormData output:", {
-    name: result.name,
-    jobTitle: result.jobTitle,
-    phone: result.phone,
-    mobilePhone: result.mobilePhone,
-    email: result.email
-  });
-  
-  return result;
-};
-
-// EMAIL-COMPATIBLE LAYOUT CONFIGURATIONS - FIXED
+// EMAIL-COMPATIBLE LAYOUT CONFIGURATIONS
 const layoutConfigs = {
-  // PROFESSIONAL LAYOUT - Fixed to show mobile phone and job title properly
+  // PROFESSIONAL LAYOUT - Email compatible version
   professional: (designStyle, sections, formData) => {
-    const data = ensureFormData(formData);
+    const defaultData = {
+      name: "Employee Name", jobTitle: "Job Title", company: "Company Name", location: "Location",
+      phone: "", mobilePhone: "", email: "", website: "", logo: null, profileImage: null,
+      linkedin: "", youtube: "", instagram: "", facebook: "", twitter: "", github: "", ...formData
+    };
+
     const accentColor = designStyle.accentColor || "#0066cc";
     
-    console.log("🎯 Professional layout data:", {
-      name: data.name,
-      jobTitle: data.jobTitle,
-      phone: data.phone,
-      mobilePhone: data.mobilePhone
-    });
-    
-    // Logo section
-    const logoSection = data.logo ? 
-      '<img src="' + data.logo + '" alt="Company Logo" width="100" height="83" style="border: none; border-radius: 4px; display: block;">' :
-      '<div style="width: 80px; height: 60px; background-color: ' + accentColor + '; color: white; font-weight: bold; font-size: 24px; border-radius: 4px; text-align: center; line-height: 60px; display: block;">' + getUserInitials(data.name) + '</div>';
+    // Logo section - email compatible
+    const logoSection = defaultData.logo ? 
+      '<img src="' + defaultData.logo + '" alt="Company Logo" width="100" height="83" style="border: none; border-radius: 4px; display: block;">' :
+      '<div style="width: 80px; height: 60px; background-color: ' + accentColor + '; color: white; font-weight: bold; font-size: 24px; border-radius: 4px; text-align: center; line-height: 60px; display: block;">' + getUserInitials(defaultData.name) + '</div>';
 
-    // FIXED: Enhanced contact details with proper phone handling
+    // Contact details - email compatible
     const contactDetails = [];
-    
-    // Mobile phone gets priority and "mobile:" label
-    if (data.mobilePhone) {
-      contactDetails.push('<b>mobile:</b> ' + data.mobilePhone);
+    if (defaultData.mobilePhone || defaultData.phone) {
+      contactDetails.push('<b>mobile:</b> ' + (defaultData.mobilePhone || defaultData.phone) + (defaultData.phone && defaultData.mobilePhone ? ' | <b>tel:</b> ' + defaultData.phone : ''));
     }
-    
-    // Regular phone with "tel:" label if both phones exist, or "phone:" if only regular exists
-    if (data.phone && data.phone !== data.mobilePhone) {
-      const phoneLabel = data.mobilePhone ? "tel" : "phone";
-      contactDetails.push('<b>' + phoneLabel + ':</b> ' + data.phone);
+    if (defaultData.email) {
+      contactDetails.push('<b>email:</b> <a href="mailto:' + defaultData.email + '" style="color: #666666; text-decoration: none;">' + defaultData.email + '</a>');
     }
-    
-    // If no mobile phone but regular phone exists, use "mobile:" label for regular phone
-    if (!data.mobilePhone && data.phone) {
-      contactDetails.push('<b>mobile:</b> ' + data.phone);
-    }
-    
-    if (data.email) {
-      contactDetails.push('<b>email:</b> <a href="mailto:' + data.email + '" style="color: #666666; text-decoration: none;">' + data.email + '</a>');
-    }
-    
-    if (data.website) {
-      const websiteUrl = data.website.startsWith('http') ? data.website : 'https://' + data.website;
-      const displayUrl = data.website.replace(/^https?:\/\//, '');
+    if (defaultData.website) {
+      const websiteUrl = defaultData.website.startsWith('http') ? defaultData.website : 'https://' + defaultData.website;
+      const displayUrl = defaultData.website.replace(/^https?:\/\//, '');
       contactDetails.push('<b>website:</b> <a href="' + websiteUrl + '" target="_blank" style="color: #666666; text-decoration: none;">' + displayUrl + '</a>');
     }
-    
-    if (data.location) {
-      contactDetails.push('<b>location:</b> ' + data.location);
-    }
+    contactDetails.push('<b>location:</b> ' + (defaultData.location || ""));
 
-    // Profile image
-    const profileImageSection = data.profileImage ? 
-      '<img src="' + data.profileImage + '" alt="' + data.name + '" width="80" height="80" style="border-radius: 6px; border: 2px solid #e0e0e0; display: block;">' : '';
+    // Profile image - email compatible
+    const profileImageSection = defaultData.profileImage ? 
+      '<img src="' + defaultData.profileImage + '" alt="' + (defaultData.name || 'Profile') + '" width="80" height="80" style="border-radius: 6px; border: 2px solid #e0e0e0; display: block;">' : '';
 
+    // EMAIL-COMPATIBLE TABLE STRUCTURE
     return '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, sans-serif; border-collapse: collapse;">' +
       '<tr>' +
         '<td width="140" valign="top" style="padding: 20px; text-align: center;">' +
           logoSection +
-          '<div style="font-size: 12px; font-weight: bold; color: #333333; margin-top: 4px;">' + data.company + '</div>' +
+          '<div style="font-size: 12px; font-weight: bold; color: #333333; margin-top: 4px;">' + defaultData.company + '</div>' +
         '</td>' +
         '<td valign="top" style="padding: 20px;">' +
-          '<div style="font-size: 18px; font-weight: bold; color: #333333; margin-bottom: 2px;">' + data.name + '</div>' +
-          '<div style="font-size: 14px; color: ' + accentColor + '; margin-bottom: 8px;">' + data.jobTitle + '</div>' +
+          '<div style="font-size: 18px; font-weight: bold; color: #333333; margin-bottom: 2px;">' + defaultData.name + '</div>' +
+          '<div style="font-size: 14px; color: ' + accentColor + '; margin-bottom: 8px;">' + defaultData.jobTitle + '</div>' +
           '<div style="font-size: 12px; color: #666666; line-height: 1.4;">' + contactDetails.join('<br>') + '</div>' +
         '</td>' +
         '<td width="80" valign="top" style="padding: 20px; text-align: center;">' +
-          profileImageSection +
+          (defaultData.profileImage ? profileImageSection : '') +
         '</td>' +
       '</tr>' +
       '<tr>' +
         '<td colspan="3" style="padding: 8px 20px;">' +
-          '<div style="margin-top: 8px;">' + renderSocialIcons(data) + '</div>' +
+          '<div style="margin-top: 8px;">' + renderSocialIcons(defaultData) + '</div>' +
         '</td>' +
       '</tr>' +
     '</table>';
   },
 
-  // ORANGE LAYOUT - Fixed to show mobile phone and job title properly
+  // ORANGE LAYOUT - Email compatible version
   orange: (designStyle, sections, formData) => {
-    const data = ensureFormData(formData);
-    
-    console.log("🍊 Orange layout data:", {
-      name: data.name,
-      jobTitle: data.jobTitle,
-      phone: data.phone,
-      mobilePhone: data.mobilePhone
-    });
-    
-    // Profile section
-    const profileSection = data.profileImage ? 
-      '<img src="' + data.profileImage + '" alt="' + data.name + '" width="110" height="110" style="border-radius: 55px; border: 3px solid #FF6B35; display: block;">' :
-      '<div style="width: 110px; height: 110px; border-radius: 55px; background-color: #FF6B35; color: white; font-size: 36px; font-weight: bold; text-align: center; line-height: 110px; display: block;">' + (data.name && !data.name.includes('{{') ? data.name.charAt(0) : "U") + '</div>';
+    const defaultData = {
+      name: "Sally Williams", jobTitle: "SALES MANAGER", phone: "+1 234 56789",
+      email: "s.williams@crossware365.com", website: "www.crossware365.com",
+      company: "Crossware Inc.", location: "New York, USA",
+      profileImage: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face&auto=format",
+      ...formData
+    };
 
-    // FIXED: Contact items with proper phone handling for Orange layout
+    // Profile section - email compatible
+    const profileSection = defaultData.profileImage ? 
+      '<img src="' + defaultData.profileImage + '" alt="' + (defaultData.name || 'Profile') + '" width="110" height="110" style="border-radius: 55px; border: 3px solid #FF6B35; display: block;">' :
+      '<div style="width: 110px; height: 110px; border-radius: 55px; background-color: #FF6B35; color: white; font-size: 36px; font-weight: bold; text-align: center; line-height: 110px; display: block;">' + (defaultData.name ? defaultData.name.charAt(0) : "U") + '</div>';
+
+    // Contact items - email compatible
     const contactItems = [];
-    
-    // Mobile phone gets priority
-    if (data.mobilePhone) {
-      contactItems.push('<div style="margin-bottom: 8px;"><span style="display: inline-block; width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; text-align: center; color: white; font-size: 10px; line-height: 16px; margin-right: 8px;">📱</span><span style="font-size: 12px; color: #333333;">' + data.mobilePhone + '</span></div>');
-    }
-    
-    // Regular phone with different icon if both exist
-    if (data.phone && data.phone !== data.mobilePhone) {
-      contactItems.push('<div style="margin-bottom: 8px;"><span style="display: inline-block; width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; text-align: center; color: white; font-size: 10px; line-height: 16px; margin-right: 8px;">📞</span><span style="font-size: 12px; color: #333333;">' + data.phone + '</span></div>');
-    }
-    
-    // If no mobile phone but regular phone exists, use mobile icon for regular phone
-    if (!data.mobilePhone && data.phone) {
-      contactItems.push('<div style="margin-bottom: 8px;"><span style="display: inline-block; width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; text-align: center; color: white; font-size: 10px; line-height: 16px; margin-right: 8px;">📱</span><span style="font-size: 12px; color: #333333;">' + data.phone + '</span></div>');
-    }
-    
-    if (data.email) {
-      contactItems.push('<div style="margin-bottom: 8px;"><span style="display: inline-block; width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; text-align: center; color: white; font-size: 10px; line-height: 16px; margin-right: 8px;">✉</span><span style="font-size: 12px; color: #333333;">' + data.email + '</span></div>');
-    }
-    
-    if (data.website) {
-      contactItems.push('<div style="margin-bottom: 8px;"><span style="display: inline-block; width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; text-align: center; color: white; font-size: 10px; line-height: 16px; margin-right: 8px;">🌐</span><span style="font-size: 12px; color: #333333;">' + data.website + '</span></div>');
-    }
-    
-    if (data.company) {
-      contactItems.push('<div style="margin-bottom: 8px; margin-top: 10px;"><span style="display: inline-block; width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; text-align: center; color: white; font-size: 10px; line-height: 16px; margin-right: 8px;">🏢</span><span style="font-size: 12px; color: #333333;">' + data.company + '</span></div>');
-    }
-    
-    if (data.location) {
-      contactItems.push('<div style="margin-bottom: 8px;"><span style="display: inline-block; width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; text-align: center; color: white; font-size: 10px; line-height: 16px; margin-right: 8px;">📍</span><span style="font-size: 12px; color: #333333;">' + data.location + '</span></div>');
-    }
+    if (defaultData.phone) contactItems.push('<div style="margin-bottom: 8px;"><span style="display: inline-block; width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; text-align: center; color: white; font-size: 10px; line-height: 16px; margin-right: 8px;">📞</span><span style="font-size: 12px; color: #333333;">' + defaultData.phone + '</span></div>');
+    if (defaultData.email) contactItems.push('<div style="margin-bottom: 8px;"><span style="display: inline-block; width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; text-align: center; color: white; font-size: 10px; line-height: 16px; margin-right: 8px;">✉</span><span style="font-size: 12px; color: #333333;">' + defaultData.email + '</span></div>');
+    if (defaultData.website) contactItems.push('<div style="margin-bottom: 8px;"><span style="display: inline-block; width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; text-align: center; color: white; font-size: 10px; line-height: 16px; margin-right: 8px;">🌐</span><span style="font-size: 12px; color: #333333;">' + defaultData.website + '</span></div>');
+    if (defaultData.company) contactItems.push('<div style="margin-bottom: 8px; margin-top: 10px;"><span style="display: inline-block; width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; text-align: center; color: white; font-size: 10px; line-height: 16px; margin-right: 8px;">🏢</span><span style="font-size: 12px; color: #333333;">' + defaultData.company + '</span></div>');
+    if (defaultData.location) contactItems.push('<div style="margin-bottom: 8px;"><span style="display: inline-block; width: 16px; height: 16px; background-color: #FF6B35; border-radius: 2px; text-align: center; color: white; font-size: 10px; line-height: 16px; margin-right: 8px;">📍</span><span style="font-size: 12px; color: #333333;">' + defaultData.location + '</span></div>');
 
+    // EMAIL-COMPATIBLE TABLE STRUCTURE
     return '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, sans-serif; border-collapse: collapse; background-color: #ffffff;">' +
       '<tr>' +
         '<td colspan="3" style="height: 4px; background-color: #FF6B35;"></td>' +
@@ -262,9 +179,9 @@ const layoutConfigs = {
           profileSection +
         '</td>' +
         '<td valign="top" style="padding: 20px;">' +
-          '<div style="font-size: 24px; font-weight: bold; color: #333333; margin-bottom: 2px; line-height: 1.2;">' + data.name + '</div>' +
-          '<div style="font-size: 14px; font-weight: bold; color: #FF6B35; margin-bottom: 15px; letter-spacing: 0.5px;">' + data.jobTitle.toUpperCase() + '</div>' +
-          '<div style="margin-bottom: 10px;">' + renderOrangeSocialIcons(data) + '</div>' +
+          '<div style="font-size: 24px; font-weight: bold; color: #333333; margin-bottom: 2px; line-height: 1.2;">' + (defaultData.name || "Your Name") + '</div>' +
+          '<div style="font-size: 14px; font-weight: bold; color: #FF6B35; margin-bottom: 15px; letter-spacing: 0.5px;">' + (defaultData.jobTitle || "YOUR JOB TITLE") + '</div>' +
+          '<div style="margin-bottom: 10px;">' + renderOrangeSocialIcons(defaultData) + '</div>' +
         '</td>' +
         '<td width="200" valign="top" style="padding: 20px;">' +
           contactItems.join('') +
@@ -278,38 +195,18 @@ const layoutConfigs = {
   },
 
   orangetext: (designStyle, sections, formData) => {
-    const data = ensureFormData(formData);
-    
+    const defaultData = {
+      name: "Sally Williams", jobTitle: "SALES MANAGER", phone: "+1 234 56789",
+      email: "s.williams@crossware365.com", website: "www.crossware365.com",
+      company: "Crossware Inc.", location: "New York, USA", ...formData
+    };
+
     const contactItems = [];
-    
-    // FIXED: Phone handling for orangetext layout
-    if (data.mobilePhone) {
-      contactItems.push('<div style="margin-bottom: 5px;"><span style="font-size: 12px; color: #333333;">📱 ' + data.mobilePhone + '</span></div>');
-    }
-    
-    if (data.phone && data.phone !== data.mobilePhone) {
-      contactItems.push('<div style="margin-bottom: 5px;"><span style="font-size: 12px; color: #333333;">📞 ' + data.phone + '</span></div>');
-    }
-    
-    if (!data.mobilePhone && data.phone) {
-      contactItems.push('<div style="margin-bottom: 5px;"><span style="font-size: 12px; color: #333333;">📱 ' + data.phone + '</span></div>');
-    }
-    
-    if (data.email) {
-      contactItems.push('<div style="margin-bottom: 5px;"><span style="font-size: 12px; color: #333333;">✉ ' + data.email + '</span></div>');
-    }
-    
-    if (data.website) {
-      contactItems.push('<div style="margin-bottom: 5px;"><span style="font-size: 12px; color: #333333;">🌐 ' + data.website + '</span></div>');
-    }
-    
-    if (data.company) {
-      contactItems.push('<div style="margin-bottom: 5px;"><span style="font-size: 12px; color: #333333;">🏢 ' + data.company + '</span></div>');
-    }
-    
-    if (data.location) {
-      contactItems.push('<div style="margin-bottom: 5px;"><span style="font-size: 12px; color: #333333;">📍 ' + data.location + '</span></div>');
-    }
+    if (defaultData.phone) contactItems.push('<div style="margin-bottom: 5px;"><span style="font-size: 12px; color: #333333;">📞 ' + defaultData.phone + '</span></div>');
+    if (defaultData.email) contactItems.push('<div style="margin-bottom: 5px;"><span style="font-size: 12px; color: #333333;">✉ ' + defaultData.email + '</span></div>');
+    if (defaultData.website) contactItems.push('<div style="margin-bottom: 5px;"><span style="font-size: 12px; color: #333333;">🌐 ' + defaultData.website + '</span></div>');
+    if (defaultData.company) contactItems.push('<div style="margin-bottom: 5px;"><span style="font-size: 12px; color: #333333;">🏢 ' + defaultData.company + '</span></div>');
+    if (defaultData.location) contactItems.push('<div style="margin-bottom: 5px;"><span style="font-size: 12px; color: #333333;">📍 ' + defaultData.location + '</span></div>');
 
     return '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, sans-serif; border-collapse: collapse; background-color: #ffffff;">' +
       '<tr>' +
@@ -317,17 +214,17 @@ const layoutConfigs = {
       '</tr>' +
       '<tr>' +
         '<td style="padding: 20px;">' +
-          '<div style="font-size: 24px; font-weight: bold; color: #333333; margin-bottom: 2px; line-height: 1.2;">' + data.name + '</div>' +
-          '<div style="font-size: 14px; font-weight: bold; color: #FF6B35; margin-bottom: 15px; letter-spacing: 0.5px;">' + data.jobTitle.toUpperCase() + '</div>' +
-          '<div style="margin-bottom: 15px;">' + renderOrangeSocialIcons(data) + '</div>' +
+          '<div style="font-size: 24px; font-weight: bold; color: #333333; margin-bottom: 2px; line-height: 1.2;">' + (defaultData.name || "Your Name") + '</div>' +
+          '<div style="font-size: 14px; font-weight: bold; color: #FF6B35; margin-bottom: 15px; letter-spacing: 0.5px;">' + (defaultData.jobTitle || "YOUR JOB TITLE") + '</div>' +
+          '<div style="margin-bottom: 15px;">' + renderOrangeSocialIcons(defaultData) + '</div>' +
           '<div>' + contactItems.join('') + '</div>' +
         '</td>' +
       '</tr>' +
     '</table>';
   },
 
-  // STANDARD LAYOUT - Fixed to use proper form data
-  standard: (designStyle, sections, formData) => {
+  // STANDARD LAYOUT - Email compatible
+  standard: (designStyle, sections) => {
     const textColor = designStyle.textColor || "#333";
     const accentColor = designStyle.accentColor || "#3498db";
     const backgroundColor = designStyle.backgroundColor || "#f0f0f0";
@@ -349,84 +246,63 @@ const layoutConfigs = {
     '</table>';
   },
 
-  // TEXT LAYOUT - Fixed to show all data
+  // TEXT LAYOUT - Email compatible
   text: (designStyle, sections, formData) => {
-    const data = ensureFormData(formData);
     const accentColor = designStyle.accentColor || "#0066cc";
     
     return '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, sans-serif; border-collapse: collapse; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px;">' +
       '<tr>' +
         '<td width="70%" valign="top" style="padding: 20px;">' +
-          '<div style="font-size: 18px; font-weight: bold; color: #333333; margin-bottom: 2px;">' + data.name + '</div>' +
-          '<div style="font-size: 14px; color: ' + accentColor + '; margin-bottom: 8px;">' + data.jobTitle + '</div>' +
+          '<div style="font-size: 18px; font-weight: bold; color: #333333; margin-bottom: 2px;">' + (formData.name || "Employee Name") + '</div>' +
+          '<div style="font-size: 14px; color: ' + accentColor + '; margin-bottom: 8px;">' + (formData.jobTitle || "Job Title") + '</div>' +
           '<div style="font-size: 12px; color: #666666; line-height: 1.4;">' + sections.contactInfo + '</div>' +
         '</td>' +
         '<td width="30%" valign="middle" style="padding: 20px; text-align: center;">' +
-          '<div style="font-size: 16px; font-weight: bold; color: #666666;">' + data.company + '</div>' +
+          '<div style="font-size: 16px; font-weight: bold; color: #666666;">' + (formData.company || "Company Name") + '</div>' +
         '</td>' +
       '</tr>' +
       '<tr>' +
         '<td colspan="2" style="padding: 15px 20px;">' +
-          renderSocialIcons(data) +
+          renderSocialIcons(formData) +
         '</td>' +
       '</tr>' +
     '</table>';
   },
 };
 
-// FIXED: Generate content sections with proper phone handling
+// Generate content sections with email compatibility
 const generateContentSections = (formData, designStyle) => {
-  const data = ensureFormData(formData);
   const textColor = designStyle.textColor || "#333";
   const nameColor = designStyle.nameColor || "#3498db";
   const accentColor = designStyle.accentColor || "#3498db";
 
-  // FIXED: Enhanced phone handling with mobile priority
-  let phoneInfo = "";
-  if (data.mobilePhone) {
-    phoneInfo = '<p style="margin: 0; font-size: 14px;">📱 ' + data.mobilePhone + '</p>';
-    if (data.phone && data.phone !== data.mobilePhone) {
-      phoneInfo += '<p style="margin: 2px 0; font-size: 14px;">📞 ' + data.phone + '</p>';
-    }
-  } else if (data.phone) {
-    phoneInfo = '<p style="margin: 0; font-size: 14px;">📱 ' + data.phone + '</p>';
-  }
-
   return {
     greeting: '<p style="margin-bottom: 10px; color: ' + textColor + ';">Thanks & Regards,</p>',
     
-    personalInfo: '<p style="margin: 0; font-size: 16px; font-weight: bold; color: ' + nameColor + ';">' + data.name + '</p>' +
-      '<p style="margin: 2px 0; font-size: 14px; color: ' + accentColor + ';">' + data.jobTitle + '</p>' +
-      '<p style="margin: 4px 0 0 0; font-size: 14px; font-weight: bold; color: ' + textColor + ';">' + data.company + '</p>' +
-      '<p style="margin: 2px 0 0 0; font-size: 14px; color: ' + textColor + ';">' + data.location + '</p>',
+    personalInfo: '<p style="margin: 0; font-size: 16px; font-weight: bold; color: ' + nameColor + ';">' + (formData.name || "Employee Name") + '</p>' +
+      '<p style="margin: 2px 0; font-size: 14px; color: ' + accentColor + ';">' + (formData.jobTitle || "Employee Title") + '</p>' +
+      '<p style="margin: 4px 0 0 0; font-size: 14px; font-weight: bold; color: ' + textColor + ';">' + (formData.company || "AgileWorld Technology Ltd.") + '</p>' +
+      '<p style="margin: 2px 0 0 0; font-size: 14px; color: ' + textColor + ';">' + (formData.location || "Gurgaon, Haryana") + '</p>',
     
-    sidebarInfo: '<p style="margin: 0; font-size: 14px; font-weight: bold;">' + data.name + '</p>' +
-      '<p style="margin: 5px 0; font-size: 12px;">' + data.jobTitle + '</p>',
+    sidebarInfo: '<p style="margin: 0; font-size: 14px; font-weight: bold;">' + (formData.name || "Employee Name") + '</p>' +
+      '<p style="margin: 5px 0; font-size: 12px;">' + (formData.jobTitle || "Employee Title") + '</p>',
     
-    companyInfo: '<p style="margin: 4px 0 0 0; font-size: 14px; font-weight: bold;">' + data.company + '</p>' +
-      '<p style="margin: 2px 0 0 0; font-size: 14px;">' + data.location + '</p>',
+    companyInfo: '<p style="margin: 4px 0 0 0; font-size: 14px; font-weight: bold;">' + (formData.company || "AgileWorld Technology Ltd.") + '</p>' +
+      '<p style="margin: 2px 0 0 0; font-size: 14px;">' + (formData.location || "Gurgaon, Haryana") + '</p>',
     
-    contactInfo: phoneInfo +
-      '<p style="margin: 2px 0; font-size: 14px;">📧 <a href="mailto:' + data.email + '" style="color: ' + accentColor + '; text-decoration: none;">' + data.email + '</a></p>' +
-      '<p style="margin: 2px 0; font-size: 14px;">🌐 <a href="https://' + data.website + '" style="color: ' + accentColor + '; text-decoration: none;">' + data.website + '</a></p>' +
-      renderSocialIcons(data),
+    contactInfo: '<p style="margin: 0; font-size: 14px;">📞 ' + (formData.phone || "+91 9876543210") + '</p>' +
+      '<p style="margin: 2px 0; font-size: 14px;">📧 <a href="mailto:' + formData.email + '" style="color: ' + accentColor + '; text-decoration: none;">' + (formData.email || "email@example.com") + '</a></p>' +
+      '<p style="margin: 2px 0; font-size: 14px;">🌐 <a href="https://' + formData.website + '" style="color: ' + accentColor + '; text-decoration: none;">www.' + (formData.website || "agileworldtechnologies.com") + '</a></p>' +
+      renderSocialIcons(formData),
     
-    banner: data.banner ? '<div style="margin-top: 20px;"><img src="' + data.banner + '" alt="Banner" width="100%" style="height: auto; border-radius: 8px; display: block; border: none;"></div>' : "",
+    banner: formData.banner ? '<div style="margin-top: 20px;"><img src="' + formData.banner + '" alt="Banner" width="100%" style="height: auto; border-radius: 8px; display: block; border: none;"></div>' : "",
     
-    disclaimer: data.disclaimer ? '<div style="margin-top: 20px; font-size: 11px; color: #cccccc;"><p><b>DISCLAIMER</b></p><p style="margin-top: 5px;">' + data.disclaimer + '</p></div>' : "",
+    disclaimer: formData.disclaimer ? '<div style="margin-top: 20px; font-size: 11px; color: #cccccc;"><p><b>DISCLAIMER</b></p><p style="margin-top: 5px;">' + formData.disclaimer + '</p></div>' : "",
   };
 };
 
 export const generateSignatureHTML = (formData, selectedDesign, designStyle) => {
-  console.log("🔧 Generating signature HTML with data:", {
-    name: formData.name || formData.displayName,
-    jobTitle: formData.jobTitle,
-    email: formData.email || formData.mail,
-    phone: formData.phone || (formData.businessPhones ? formData.businessPhones[0] : null),
-    mobilePhone: formData.mobilePhone,
-    company: formData.company,
-    location: formData.location || formData.officeLocation
-  });
+  console.log("Generating EMAIL-COMPATIBLE signature for design:", selectedDesign);
   
   const design = designTemplates.find((d) => d.id === selectedDesign) || designTemplates[0];
   const sections = generateContentSections(formData, designStyle);
@@ -439,25 +315,15 @@ export const generateSignatureHTML = (formData, selectedDesign, designStyle) => 
 };
 
 export const generateSignatureTemplate = (selectedDesign, designStyle, staticFormData = {}) => {
-  console.log("🎯 Generating TEMPLATE with placeholders for design:", selectedDesign);
-  
-  // Create template data with placeholders for dynamic fields and static data for others
   const templateFormData = {
-    // Dynamic fields that should be replaced per employee
     name: "{{name}}",
-    displayName: "{{name}}", // Ensure both forms work
     jobTitle: "{{jobTitle}}",
+    company: staticFormData.company || "{{company}}",
     email: "{{email}}",
-    mail: "{{email}}", // Ensure both forms work
     phone: "{{phone}}",
-    businessPhones: ["{{phone}}"], // API format
     mobilePhone: "{{mobilePhone}}",
-    location: "{{location}}",
-    officeLocation: "{{location}}", // API format
-    
-    // Static fields that remain the same for all employees
-    company: staticFormData.company || "Agile World Technologies LLC",
-    website: staticFormData.website || "www.agileworldtechnologies.com",
+    location: staticFormData.location || "{{location}}",
+    website: staticFormData.website || "{{website}}",
     linkedin: staticFormData.linkedin || "",
     twitter: staticFormData.twitter || "",
     instagram: staticFormData.instagram || "",
@@ -470,30 +336,14 @@ export const generateSignatureTemplate = (selectedDesign, designStyle, staticFor
     banner: staticFormData.banner || null,
     disclaimer: staticFormData.disclaimer || "",
     campaigns: staticFormData.campaigns || [],
+    ...staticFormData
   };
 
-  console.log("📝 Template data:", {
-    name: templateFormData.name,
-    email: templateFormData.email,
-    jobTitle: templateFormData.jobTitle,
-    phone: templateFormData.phone,
-    mobilePhone: templateFormData.mobilePhone,
-    company: templateFormData.company,
-    website: templateFormData.website
-  });
-
-  const templateHTML = generateSignatureHTML(templateFormData, selectedDesign, designStyle);
-  
-  // Verify template has placeholders
-  const hasPlaceholders = templateHTML.includes('{{name}}') && templateHTML.includes('{{email}}') && templateHTML.includes('{{jobTitle}}');
-  console.log("✅ Template contains placeholders:", hasPlaceholders);
-  console.log("📄 Template preview:", templateHTML.substring(0, 300) + "...");
-  
-  return templateHTML;
+  return generateSignatureHTML(templateFormData, selectedDesign, designStyle);
 };
 
 export const validateTemplatePlaceholders = (htmlTemplate) => {
-  const requiredPlaceholders = ['{{name}}', '{{email}}', '{{jobTitle}}', '{{phone}}', '{{mobilePhone}}'];
+  const requiredPlaceholders = ['{{name}}', '{{email}}', '{{jobTitle}}', '{{company}}'];
   const missingPlaceholders = requiredPlaceholders.filter(placeholder => 
     !htmlTemplate.includes(placeholder)
   );
@@ -508,15 +358,6 @@ export const validateTemplatePlaceholders = (htmlTemplate) => {
 export const replacePlaceholders = (template, employeeData) => {
   let result = template;
   
-  console.log("🔄 Replacing placeholders with employee data:", {
-    displayName: employeeData.displayName,
-    jobTitle: employeeData.jobTitle,
-    mail: employeeData.mail,
-    businessPhones: employeeData.businessPhones,
-    mobilePhone: employeeData.mobilePhone,
-    officeLocation: employeeData.officeLocation
-  });
-  
   const placeholderMap = {
     '{{name}}': employeeData.displayName || employeeData.name || '',
     '{{jobTitle}}': employeeData.jobTitle || employeeData.title || '',
@@ -524,18 +365,14 @@ export const replacePlaceholders = (template, employeeData) => {
     '{{phone}}': employeeData.businessPhones?.[0] || employeeData.phone || '',
     '{{mobilePhone}}': employeeData.mobilePhone || '',
     '{{location}}': employeeData.officeLocation || employeeData.location || '',
-    '{{company}}': employeeData.company || 'Agile World Technologies LLC',
+    '{{company}}': employeeData.company || 'agileworldtechnologies.com',
     '{{website}}': employeeData.website || 'www.agileworldtechnologies.com',
     '{{department}}': employeeData.department || ''
   };
   
-  console.log("🔄 Placeholder mapping:", placeholderMap);
-  
   Object.entries(placeholderMap).forEach(([placeholder, value]) => {
-    result = result.replace(new RegExp(placeholder.replace(/[{}]/g, '\\    officeLocation: "{{'), 'g'), value);
+    result = result.replace(new RegExp(placeholder.replace(/[{}]/g, '\\$&'), 'g'), value);
   });
-  
-  console.log("✅ Template after replacement preview:", result.substring(0, 300));
   
   return result;
 };
