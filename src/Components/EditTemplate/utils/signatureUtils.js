@@ -328,8 +328,8 @@ const generateContentSections = (formData, designStyle) => {
 };
 
 export const generateSignatureHTML = (formData, selectedDesign, designStyle) => {
-  console.log("Generating EMAIL-COMPATIBLE signature for design:", selectedDesign);
-  console.log("📱 Phone data:", formData.phone, "Mobile:", formData.mobilePhone);
+  // console.log("Generating EMAIL-COMPATIBLE signature for design:", selectedDesign);
+  // console.log("📱 Phone data:", formData.phone, "Mobile:", formData.mobilePhone);
   
   const design = designTemplates.find((d) => d.id === selectedDesign) || designTemplates[0];
   const sections = generateContentSections(formData, designStyle);
