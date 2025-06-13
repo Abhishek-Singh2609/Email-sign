@@ -87,7 +87,7 @@ const EmployeeSignatureGenerator = () => {
       state: {
         email: emp.mail,
         organization: "Agile World Technologies LLC",
-        businessPhones: emp.businessPhones,
+        Phone: emp.mobilePhone,
         displayName: emp.displayName,
         jobTitle: emp.jobTitle,
         officeLocation: emp.officeLocation,
