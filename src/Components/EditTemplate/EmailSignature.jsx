@@ -407,8 +407,7 @@
 // };
 
 // export default EmailSignatureCreator;
-
-// Fixed EmailSignatureCreator.jsx - Now uses bulk apply with template approach
+// Fixed EmailSignatureCreator.jsx - Properly handles individual employee data in bulk apply
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./EmailSignature.css";
@@ -634,7 +633,7 @@ const EmailSignatureCreator = () => {
     }
   };
 
-  // 🔧 FIXED: Bulk apply function - now uses template approach like the second code
+  // 🔧 FIXED: Bulk apply function - now sends individual signatures for each employee
   const handleBulkApply = async () => {
     if (!selectedEmployees || selectedEmployees.length === 0) {
       alert("No employees selected for bulk apply");
@@ -644,53 +643,81 @@ const EmailSignatureCreator = () => {
     setIsSending(true);
     try {
       const organization = "agileworldtechnologies.com";
-      
-      console.log("🚀 Starting bulk apply with template approach for", selectedEmployees.length, "employees");
+      const successfulApplies = [];
+      const failedApplies = [];
 
-      // 🔧 NEW APPROACH: Create template form data with placeholders for the backend
-      const templateFormData = {
-        ...formData,
-        name: "{{name}}",
-        jobTitle: "{{title}}", 
-        email: "{{email}}",
-        phone: "{{phone}}",
-        location: "{{location}}",
-        company: "{{company}}",
-        mobilePhone: "{{mobilePhone}}",
-        website: formData.website || "{{website}}"
-      };
-      
-      // Generate the signature HTML template with placeholders
-      const signatureHTMLTemplate = generateSignatureHTML(
-        templateFormData,
-        selectedDesign,
-        designStyle
-      );
+      console.log("🚀 Starting bulk apply for", selectedEmployees.length, "employees");
 
-      console.log("📧 Sending bulk apply request with template for design:", selectedDesign);
-      console.log("📄 Template HTML length:", signatureHTMLTemplate.length);
+      // 🔧 NEW APPROACH: Send individual signatures for each employee
+      for (const employee of selectedEmployees) {
+        try {
+          // Create individual signature data for each employee
+          const employeeFormData = {
+            ...formData, // Keep static data (company, social links, logo, etc.)
+            name: employee.displayName || employee.name || "Employee",
+            jobTitle: employee.jobTitle || employee.title || "Job Title",
+            email: employee.mail || employee.email || "",
+            phone: employee.businessPhones?.[0] || employee.phone || "", // 🔧 Fixed phone handling
+            mobilePhone: employee.mobilePhone || "",
+            location: employee.officeLocation || employee.location || formData.location,
+            company: formData.company, // Keep static company
+          };
 
-      // Send request to v2 API endpoint for bulk apply
-      const response = await axios.post(
-        "https://email-signature-function-app.azurewebsites.net/api/v2/apply-signature",
-        {
-          organization,
-          html: signatureHTMLTemplate,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "x-functions-key": apiUrl,
-          },
+          // console.log("📧 Generating signature for:", employeeFormData.name, "Phone:", employeeFormData.phone);
+
+          // Generate individual HTML signature
+          const individualSignatureHTML = generateSignatureHTML(
+            employeeFormData,
+            selectedDesign,
+            designStyle
+          );
+
+          // Send individual signature
+          const response = await axios.post(
+            "https://email-signature-function-app.azurewebsites.net/api/ApplySignature",
+            {
+              email: employeeFormData.email,
+              organization,
+              html: individualSignatureHTML,
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "x-functions-key": apiUrl,
+              },
+            }
+          );
+
+          // console.log(`✅ Applied signature for ${employeeFormData.name}`);
+          successfulApplies.push(employeeFormData.name);
+
+          // Add small delay to avoid overwhelming the API
+          await new Promise(resolve => setTimeout(resolve, 100));
+
+        } catch (error) {
+          console.error(`❌ Failed to apply signature for ${employee.displayName}:`, error);
+          failedApplies.push(employee.displayName || employee.email);
         }
-      );
+      }
 
-      console.log("✅ Bulk apply response:", response.data);
-      alert(`🎉 Signature template applied to ${selectedEmployees.length} employees!`);
-      navigate("/edittemplate"); // Return to employees page after bulk apply
+      // Show results
+      const successCount = successfulApplies.length;
+      const failedCount = failedApplies.length;
+      
+      if (successCount > 0 && failedCount === 0) {
+        alert(`🎉 Successfully applied signatures to all ${successCount} employees!`);
+      } else if (successCount > 0 && failedCount > 0) {
+        alert(`✅ Applied signatures to ${successCount} employees.\n❌ Failed for ${failedCount} employees: ${failedApplies.join(', ')}`);
+      } else {
+        alert(`❌ Failed to apply signatures. Please check your connection and try again.`);
+      }
+
+      if (successCount > 0) {
+        navigate("/edittemplate"); // Return to employees page after bulk apply
+      }
 
     } catch (error) {
-      console.error("❌ Error in bulk apply:", error);
+      console.error("Error in bulk apply:", error);
       alert(`Bulk apply failed. Error: ${error.message}`);
     } finally {
       setIsSending(false);
@@ -801,12 +828,12 @@ const EmailSignatureCreator = () => {
       </h2>
       {isBulkApply && (
         <div style={{ textAlign: "center", marginBottom: "20px" }}>
-          <p>Applying template to {selectedEmployees?.length || 0} employees</p>
+          <p>Applying individual signatures to {selectedEmployees?.length || 0} employees</p>
           <p style={{ fontSize: "14px", color: "#666" }}>
             📋 Using design: <strong>{selectedDesign}</strong>
           </p>
           <p style={{ fontSize: "12px", color: "#888" }}>
-            ⚡ Fast bulk apply using template with placeholders
+            ℹ️ Each employee will get their own personalized signature with their individual data
           </p>
         </div>
       )}
