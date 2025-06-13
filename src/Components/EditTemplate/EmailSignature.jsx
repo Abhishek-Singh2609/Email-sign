@@ -68,7 +68,7 @@ const EmailSignatureCreator = () => {
         jobTitle: location.state?.jobTitle || "Product Designer",
         company: location.state?.organization || "Agilesignature.com",
         email: location.state?.email || "john.doe@agile.com",
-        phone: location.state?.businessPhones?.[0] || "+1 (555) 123-4567",
+        phone: location.state?.mobilePhone || "+1 (555) 123-4567",
         mobilePhone: "",
         location: location.state?.officeLocation || "San Francisco, CA",
         website: "www.agilesignature.com",
