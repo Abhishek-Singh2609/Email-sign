@@ -154,12 +154,12 @@ const ProfessionalLayout = ({ formData, designStyle }) => {
             >
               {(formData.mobilePhone || formData.phone) && (
                 <>
-                  <strong>mobile:</strong>{" "}
+                  <strong>mobile:</strong> {formData.phone}
                   {formData.mobilePhone || formData.phone}
                   {formData.phone && formData.mobilePhone && (
                     <>
                       {" | "}
-                      <strong>tel:</strong> {formData.phone}
+                      <strong>tel:</strong>{" "}
                     </>
                   )}
                   <br />
