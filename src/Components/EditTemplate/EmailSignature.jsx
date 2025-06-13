@@ -233,7 +233,7 @@ const EmailSignatureCreator = () => {
         phone: "{{phone}}",
         location: "{{location}}",
         company: "{{company}}",
-        mobilePhone: "{{mobilePhone}}",
+        // mobilePhone: "{{mobilePhone}}",
         website: formData.website || "{{website}}"
       };
       
