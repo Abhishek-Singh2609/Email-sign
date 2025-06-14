@@ -114,7 +114,7 @@ const layoutConfigs = {
     // Logo section - email compatible
     const logoSection = defaultData.logo ? 
       '<img src="' + defaultData.logo + '" alt="Company Logo" width="100" height="83" style="border: none; border-radius: 4px; display: block;">' :
-      '<div style="width: 80px; height: 60px; background-color: ' + accentColor + '; color: white; font-weight: bold; font-size: 24px; border-radius: 4px; text-align: center; line-height: 60px; display: block;">' + getUserInitials(defaultData.name) + '</div>';
+      '<div style="width: 80px; height: 60px; background-color: ' + accentColor + '; color: white; font-weight: bold; font-size: 24px; border-radius: 4px; text-align: center; line-height: 60px; display: inline-block;">' + getUserInitials(defaultData.name) + '</div>';
 
     // 🔧 FIXED: Contact details now use actual phone numbers
     const contactDetails = [];
@@ -141,16 +141,16 @@ const layoutConfigs = {
     // EMAIL-COMPATIBLE TABLE STRUCTURE
     return '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, sans-serif; border-collapse: collapse;">' +
       '<tr>' +
-        '<td width="140" valign="top" style="padding: 20px; text-align: center;">' +
+        '<td width="140"  style="padding-block: 20px; text-align: center;">' +
           logoSection +
           '<div style="font-size: 12px; font-weight: bold; color: #333333; margin-top: 4px;">' + defaultData.company + '</div>' +
         '</td>' +
-        '<td valign="top" style="padding: 20px;">' +
+        '<td valign="top" style="padding-block: 20px;">' +
           '<div style="font-size: 18px; font-weight: bold; color: #333333; margin-bottom: 2px;">' + defaultData.name + '</div>' +
           '<div style="font-size: 14px; color: ' + accentColor + '; margin-bottom: 8px;">' + defaultData.jobTitle + '</div>' +
           '<div style="font-size: 12px; color: #666666; line-height: 1.4;">' + contactDetails.join('<br>') + '</div>' +
         '</td>' +
-        '<td width="80" valign="top" style="padding: 20px; text-align: center;">' +
+        '<td width="80" valign="top" style="padding: 7px; text-align: center;">' +
           (defaultData.profileImage ? profileImageSection : '') +
         '</td>' +
       '</tr>' +
@@ -394,7 +394,7 @@ export const replacePlaceholders = (template, employeeData) => {
     '{{phone}}': employeeData.businessPhones?.[0] || employeeData.mobilePhone || employeeData.phone || '', // 🔧 Fixed phone handling
     // '{{mobilePhone}}': employeeData.mobilePhone || employeeData.businessPhones?.[0] || '',
     '{{location}}': employeeData.officeLocation || employeeData.location || '',
-    '{{company}}': employeeData.company || 'agileworldtechnologies.com',
+    '{{company}}': employeeData.company || 'Agile World Technologies LLC',
     '{{website}}': employeeData.website || 'www.agileworldtechnologies.com',
     '{{department}}': employeeData.department || ''
   };
