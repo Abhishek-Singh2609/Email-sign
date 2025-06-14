@@ -114,7 +114,7 @@ const layoutConfigs = {
     // Logo section - email compatible
     const logoSection = defaultData.logo ? 
       '<img src="' + defaultData.logo + '" alt="Company Logo" width="100" height="83" style="border: none; border-radius: 4px; display: block;">' :
-      '<table cellpadding="0" cellspacing="0" border="0"><tr><td width="80" height="60" style="background-color: ' + accentColor + '; color: white; font-weight: bold; font-size: 24px; border-radius: 4px; text-align: center; line-height: 60px;">' + getUserInitials(defaultData.name) + '</td></tr></table>';
+      '<table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;"><tr><td width="80" height="60" style="background-color: ' + accentColor + '; color: white; font-weight: bold; font-size: 24px; border-radius: 4px; text-align: center; line-height: 60px;">' + getUserInitials(defaultData.name) + '</td></tr></table>';
 
     // Contact details
     const contactDetails = [];
