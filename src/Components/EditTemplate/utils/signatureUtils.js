@@ -88,7 +88,7 @@ const renderOrangeSocialIcons = (formData) => {
 // EMAIL-COMPATIBLE LAYOUT CONFIGURATIONS - FIXED
 const layoutConfigs = {
   // PROFESSIONAL LAYOUT - Fixed to use actual formData
-  professional: (designStyle, sections, formData) => {
+ professional: (designStyle, sections, formData) => {
     const defaultData = {
       name: "Employee Name", 
       jobTitle: "Job Title", 
@@ -106,7 +106,7 @@ const layoutConfigs = {
       facebook: "", 
       twitter: "", 
       github: "", 
-      ...formData // 🔧 This ensures formData overrides defaults
+      ...formData // This ensures formData overrides defaults
     };
 
     const accentColor = designStyle.accentColor || "#0066cc";
@@ -114,9 +114,9 @@ const layoutConfigs = {
     // Logo section - email compatible
     const logoSection = defaultData.logo ? 
       '<img src="' + defaultData.logo + '" alt="Company Logo" width="100" height="83" style="border: none; border-radius: 4px; display: block;">' :
-      '<div style="width: 80px; height: 60px; background-color: ' + accentColor + '; color: white; font-weight: bold; font-size: 24px; border-radius: 4px; text-align: center; line-height: 60px; display: inline-block;">' + getUserInitials(defaultData.name) + '</div>';
+      '<table cellpadding="0" cellspacing="0" border="0"><tr><td width="80" height="60" style="background-color: ' + accentColor + '; color: white; font-weight: bold; font-size: 24px; border-radius: 4px; text-align: center; line-height: 60px;">' + getUserInitials(defaultData.name) + '</td></tr></table>';
 
-    // 🔧 FIXED: Contact details now use actual phone numbers
+    // Contact details
     const contactDetails = [];
     if (defaultData.mobilePhone || defaultData.phone) {
       const phoneToShow = defaultData.mobilePhone || defaultData.phone;
@@ -141,23 +141,49 @@ const layoutConfigs = {
     // EMAIL-COMPATIBLE TABLE STRUCTURE
     return '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, sans-serif; border-collapse: collapse;">' +
       '<tr>' +
-        '<td width="140"  style="padding-block: 20px; text-align: center;">' +
-          logoSection +
-          '<div style="font-size: 12px; font-weight: bold; color: #333333; margin-top: 4px;">' + defaultData.company + '</div>' +
+         '<td width="140" style="padding: 20px 0px 20px 0px; text-align: center;">' +
+      logoSection +
+      '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
+        '<tr>' +
+          '<td style="font-size: 12px; font-weight: bold; color: #333333; padding-top: 4px;">' +
+            defaultData.company +
+          '</td>' +
+        '</tr>' +
+      '</table>' +
+    '</td>' +
+        '<td valign="top" style="padding: 20px 0px 20px 0px">' +
+          '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
+        '<tr>' +
+          '<td style="font-size: 18px; font-weight: bold; color: #333333; padding-bottom: 2px;">' +
+            defaultData.name +
+          '</td>' +
+        '</tr>' +
+        '<tr>' +
+          '<td style="font-size: 14px; color: ' + accentColor + '; padding-bottom: 8px;">' +
+            defaultData.jobTitle +
+          '</td>' +
+        '</tr>' +
+        '<tr>' +
+          '<td style="font-size: 12px; color: #666666; line-height: 1.4;">' +
+            contactDetails.join('<br>') +
+          '</td>' +
+        '</tr>' +
+      '</table>' +
         '</td>' +
-        '<td valign="top" style="padding-block: 20px;">' +
-          '<div style="font-size: 18px; font-weight: bold; color: #333333; margin-bottom: 2px;">' + defaultData.name + '</div>' +
-          '<div style="font-size: 14px; color: ' + accentColor + '; margin-bottom: 8px;">' + defaultData.jobTitle + '</div>' +
-          '<div style="font-size: 12px; color: #666666; line-height: 1.4;">' + contactDetails.join('<br>') + '</div>' +
-        '</td>' +
-        '<td width="80" valign="top" style="padding: 7px; text-align: center;">' +
-          (defaultData.profileImage ? profileImageSection : '') +
-        '</td>' +
+      '<td width="80" valign="top" style="padding: 7px; text-align: center;">' +
+      (defaultData.profileImage ? profileImageSection : '') +
+    '</td>' +
       '</tr>' +
       '<tr>' +
-        '<td colspan="3" style="padding: 8px 20px;">' +
-          '<div style="margin-top: 8px;">' + renderSocialIcons(defaultData) + '</div>' +
-        '</td>' +
+        '<td colspan="3" style="padding: 8px 0px;">' +
+          '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
+        '<tr>' +
+          '<td style="padding-top: 8px;">' +
+            renderSocialIcons(defaultData) +
+          '</td>' +
+        '</tr>' +
+      '</table>' +
+      '</td>' +
       '</tr>' +
     '</table>';
   },
@@ -328,8 +354,7 @@ const generateContentSections = (formData, designStyle) => {
 };
 
 export const generateSignatureHTML = (formData, selectedDesign, designStyle) => {
-  // console.log("Generating EMAIL-COMPATIBLE signature for design:", selectedDesign);
-  // console.log("📱 Phone data:", formData.phone, "Mobile:", formData.mobilePhone);
+
   
   const design = designTemplates.find((d) => d.id === selectedDesign) || designTemplates[0];
   const sections = generateContentSections(formData, designStyle);
