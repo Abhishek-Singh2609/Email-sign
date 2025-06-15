@@ -2,6 +2,22 @@ import React from "react";
 import { renderSocialIcons } from "../Tabs/SocialTab";
 
 const WithoutLogo = ({ formData, designStyle }) => {
+
+// Function to get user initials
+  const getUserInitials = () => {
+    if (!formData.name) return "ID";
+    
+    const nameParts = formData.name.trim().split(/\s+/);
+    if (nameParts.length === 0) return "ID";
+    
+    const firstNameInitial = nameParts[0].charAt(0).toUpperCase();
+    
+    if (nameParts.length === 1) return firstNameInitial;
+    
+    const lastNameInitial = nameParts[nameParts.length - 1].charAt(0).toUpperCase();
+    return `${firstNameInitial}${lastNameInitial}`;
+  };
+
   return (
     <>
       <div
@@ -10,8 +26,6 @@ const WithoutLogo = ({ formData, designStyle }) => {
           width: "600px", // Changed from maxWidth to fixed width
           minHeight: "180px", 
           margin: "0",
-          backgroundColor: "#ffffff",
-          border: "1px solid #e0e0e0",
           borderRadius: "8px",
           overflow: "hidden",
           ...designStyle.containerStyle,
@@ -23,8 +37,6 @@ const WithoutLogo = ({ formData, designStyle }) => {
           style={{
             display: "flex",
             alignItems: "center",
-            padding: "20px",
-            backgroundColor: "#ffffff",
             minHeight: "140px", // Ensure consistent height for this section
           }}
         >
@@ -35,9 +47,8 @@ const WithoutLogo = ({ formData, designStyle }) => {
               minWidth: "140px", // Ensure fixed width
               display: "flex",
               flexDirection: "column",
+              marginRight: "10px",
               alignItems: "center",
-              marginRight: "21px",
-              visibility: formData.logo ? "visible" : "hidden", // Keep space reserved
             }}
           >
             {formData.logo ? (
@@ -47,8 +58,7 @@ const WithoutLogo = ({ formData, designStyle }) => {
                 style={{
                   width: "100px",
                   height: "83px",
-                  objectFit: "contain",
-                  marginRight: "15px",
+                  objectFit: "contain",               
                   borderRadius: "4px",
                 }}
                 className="company-logo"
@@ -72,9 +82,7 @@ const WithoutLogo = ({ formData, designStyle }) => {
                 }}
                 className="company-logo-placeholder"
               >
-                {formData.company
-                  ? formData.company.substring(0, 3).toUpperCase()
-                  : "IDC"}
+                {getUserInitials()}
               </div>
             )}
             <div
@@ -144,13 +152,37 @@ const WithoutLogo = ({ formData, designStyle }) => {
               )}
               {formData.email && (
                 <>
-                  <strong>email:</strong> {formData.email}
+                  <strong>email:</strong>{" "}
+                  <a
+                    href={`mailto:${formData.email}`}
+                    style={{
+                      color: "#666666",
+                      textDecoration: "none",
+                    }}
+                  >
+                    {formData.email}
+                  </a>
                   <br />
                 </>
               )}
               {formData.website && (
                 <>
-                  <strong>website:</strong> {formData.website}
+                  <strong>website:</strong> {" "}
+                   <a
+                    href={
+                      formData.website.startsWith("http")
+                        ? formData.website
+                        : `https://${formData.website}`
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      color: "#666666",
+                      textDecoration: "none",
+                    }}
+                  >
+                    {formData.website.replace(/^https?:\/\//, "")}
+                  </a>
                   <br />
                 </>
               )}
