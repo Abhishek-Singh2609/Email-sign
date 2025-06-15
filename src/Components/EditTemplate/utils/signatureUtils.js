@@ -299,26 +299,54 @@ const layoutConfigs = {
 
   // TEXT LAYOUT - Fixed to use actual formData
   text: (designStyle, sections, formData) => {
-    const accentColor = designStyle.accentColor || "#0066cc";
-    
-    return '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, sans-serif; border-collapse: collapse; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px;">' +
+  const accentColor = designStyle.accentColor || "#0066cc";
+
+  return (
+    '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, sans-serif; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px;">' +
+      // Header Row with Contact Info and Company
       '<tr>' +
-        '<td width="70%" valign="top" style="padding: 20px;">' +
-          '<div style="font-size: 18px; font-weight: bold; color: #333333; margin-bottom: 2px;">' + (formData.name || "Employee Name") + '</div>' +
-          '<div style="font-size: 14px; color: ' + accentColor + '; margin-bottom: 8px;">' + (formData.jobTitle || "Job Title") + '</div>' +
-          '<div style="font-size: 12px; color: #666666; line-height: 1.4;">' + sections.contactInfo + '</div>' +
+        '<td style="padding: 20px;" width="70%" valign="top">' +
+          '<table width="100%" cellpadding="0" cellspacing="0" border="0">' +
+            '<tr>' +
+              '<td style="font-size: 18px; font-weight: bold; color: #333333; padding-bottom: 2px;">' +
+                (formData.name || "Employee Name") +
+              '</td>' +
+            '</tr>' +
+            '<tr>' +
+              '<td style="font-size: 14px; color: ' + accentColor + '; padding-bottom: 8px;">' +
+                (formData.jobTitle || "Job Title") +
+              '</td>' +
+            '</tr>' +
+            '<tr>' +
+              '<td style="font-size: 12px; color: #666666; line-height: 1.4;">' +
+                (sections.contactInfo || "") +
+              '</td>' +
+            '</tr>' +
+          '</table>' +
         '</td>' +
-        '<td width="30%" valign="middle" style="padding: 20px; text-align: center;">' +
-          '<div style="font-size: 16px; font-weight: bold; color: #666666;">' + (formData.company || "Company Name") + '</div>' +
+
+        // Company Name on Right
+        '<td style="padding: 20px; text-align: center;" width="30%" valign="middle">' +
+          '<table width="100%" cellpadding="0" cellspacing="0" border="0">' +
+            '<tr>' +
+              '<td style="font-size: 16px; font-weight: bold; color: #666666;">' +
+                (formData.company || "Company Name") +
+              '</td>' +
+            '</tr>' +
+          '</table>' +
         '</td>' +
       '</tr>' +
+
+      // Social Icons Row
       '<tr>' +
-        '<td colspan="2" style="padding: 15px 20px;">' +
+        '<td colspan="2" style="padding: 15px 20px; text-align: left;">' +
           renderSocialIcons(formData) +
         '</td>' +
       '</tr>' +
-    '</table>';
-  },
+    '</table>'
+  );
+
+  }
 };
 
 // 🔧 FIXED: Generate content sections with actual formData
