@@ -1123,7 +1123,7 @@ const EmailSignatureCreator = () => {
       console.log("Total employees:", selectedEmployees.length);
       console.log("First employee full data:", selectedEmployees[0]);
       console.log("Selected design:", selectedDesign);
-      console.log("Design style:", designStyle);
+      console.log("Design style:", getDesignStyle(selectedDesign));
       
       // Check what phone fields are available
       selectedEmployees.slice(0, 3).forEach((emp, index) => {
@@ -1157,7 +1157,7 @@ const EmailSignatureCreator = () => {
       
       console.log("🧪 Test form data for first employee:", testFormData);
       
-      const testSignature = generateSignatureHTML(testFormData, selectedDesign, designStyle);
+      const testSignature = generateSignatureHTML(testFormData, selectedDesign, getDesignStyle(selectedDesign));
       console.log("🧪 Test signature HTML (first 300 chars):", testSignature.substring(0, 300));
       
       // Check if signature contains placeholders (should not)
@@ -1165,62 +1165,7 @@ const EmailSignatureCreator = () => {
       console.log("🧪 Signature has placeholders:", hasPlaceholders);
     }
   }, [isBulkApply, selectedEmployees, formData, selectedDesign]);
-  // END OF DEBUGGING useEffect
-// Add this button next to your other debug buttons
-<button 
-  onClick={() => {
-    if (selectedEmployees?.length > 0) {
-      console.log("📞 TESTING EMPLOYEES WITH PHONE NUMBERS:");
-      
-      // Find employees with phone numbers
-      const employeesWithPhones = selectedEmployees.filter(emp => emp.mobilePhone);
-      console.log("Found employees with phones:", employeesWithPhones.length);
-      
-      employeesWithPhones.forEach((emp, index) => {
-        console.log(`\n📞 Employee ${index + 1}: ${emp.displayName}`);
-        console.log("Phone:", emp.mobilePhone);
-        
-        // Generate form data same as bulk apply
-        const testFormData = {
-          ...formData,
-          name: emp.displayName || "Employee Name",
-          jobTitle: emp.jobTitle || "Job Title",
-          email: emp.mail || "",
-          phone: emp.mobilePhone || "",
-          mobilePhone: emp.mobilePhone || "",
-          location: emp.officeLocation || "",
-          company: "Agile World Technologies LLC"
-        };
-        
-        console.log("Form data:", testFormData);
-        
-        // Generate signature using same method as bulk apply
-        const signature = generateSignatureHTML(testFormData, selectedDesign, designStyle);
-        
-        console.log("Signature includes phone?", signature.includes(emp.mobilePhone));
-        console.log("Signature snippet:", signature.substring(0, 500));
-        
-        if (!signature.includes(emp.mobilePhone)) {
-          console.log("❌ PHONE MISSING for", emp.displayName);
-          console.log("❌ Looking for:", emp.mobilePhone);
-          console.log("❌ In HTML:", signature);
-        } else {
-          console.log("✅ Phone found for", emp.displayName);
-        }
-      });
-    }
-  }}
-  style={{
-    backgroundColor: "#6f42c1",
-    color: "white",
-    padding: "8px 16px",
-    border: "none",
-    borderRadius: "4px",
-    margin: "10px"
-  }}
->
-  📞 Test Employees with Phones
-</button>
+
   // Ensure we have 5 campaigns when the component mounts
   useEffect(() => {
     if (!formData.campaigns || formData.campaigns.length < 5) {
@@ -1265,7 +1210,7 @@ const EmailSignatureCreator = () => {
     const signatureHTML = generateSignatureHTML(
       formData,
       selectedDesign,
-      designStyle
+      getDesignStyle(selectedDesign)
     );
     navigate("/preview", {
       state: {
@@ -1294,7 +1239,7 @@ const EmailSignatureCreator = () => {
       const signatureHTML = generateSignatureHTML(
         formData,
         selectedDesign,
-        designStyle
+        getDesignStyle(selectedDesign)
       );
 
       const response = await axios.post(
@@ -1336,8 +1281,11 @@ const EmailSignatureCreator = () => {
 
     try {
       const organization = "agileworldtechnologies.com";
+      const designStyle = getDesignStyle(selectedDesign);
       
       console.log("🚀 Starting bulk apply for", selectedEmployees.length, "employees");
+      console.log("🔍 Current selectedDesign:", selectedDesign);
+      console.log("🔍 Current designStyle:", designStyle);
       
       // Apply to each employee individually (more reliable than template approach)
       for (let i = 0; i < selectedEmployees.length; i++) {
@@ -1461,6 +1409,123 @@ const EmailSignatureCreator = () => {
     }
   };
 
+  // ADD THESE NEW DEBUG FUNCTIONS
+  const testEmployeesWithPhones = () => {
+    if (selectedEmployees?.length > 0) {
+      console.log("📞 TESTING EMPLOYEES WITH PHONE NUMBERS:");
+      
+      // Find employees with phone numbers
+      const employeesWithPhones = selectedEmployees.filter(emp => emp.mobilePhone);
+      console.log("Found employees with phones:", employeesWithPhones.length);
+      
+      employeesWithPhones.forEach((emp, index) => {
+        console.log(`\n📞 Employee ${index + 1}: ${emp.displayName}`);
+        console.log("Phone:", emp.mobilePhone);
+        
+        // Generate form data same as bulk apply
+        const testFormData = {
+          ...formData,
+          name: emp.displayName || "Employee Name",
+          jobTitle: emp.jobTitle || "Job Title",
+          email: emp.mail || "",
+          phone: emp.mobilePhone || "",
+          mobilePhone: emp.mobilePhone || "",
+          location: emp.officeLocation || "",
+          company: "Agile World Technologies LLC"
+        };
+        
+        console.log("Form data:", testFormData);
+        
+        // Generate signature using same method as bulk apply
+        const signature = generateSignatureHTML(testFormData, selectedDesign, getDesignStyle(selectedDesign));
+        
+        console.log("Signature includes phone?", signature.includes(emp.mobilePhone));
+        console.log("Signature snippet:", signature.substring(0, 500));
+        
+        if (!signature.includes(emp.mobilePhone)) {
+          console.log("❌ PHONE MISSING for", emp.displayName);
+          console.log("❌ Looking for:", emp.mobilePhone);
+          console.log("❌ In HTML:", signature);
+        } else {
+          console.log("✅ Phone found for", emp.displayName);
+        }
+      });
+    }
+  };
+
+  const compareIndividualVsBulk = () => {
+    if (selectedEmployees?.length > 0) {
+      const ankuur = selectedEmployees.find(emp => emp.displayName.includes('Ankuur'));
+      if (ankuur && ankuur.mobilePhone) {
+        console.log("🔄 COMPARING INDIVIDUAL VS BULK for", ankuur.displayName);
+        console.log("Phone number:", ankuur.mobilePhone);
+        
+        // INDIVIDUAL APPLY STYLE (from your working individual apply)
+        const individualFormData = {
+          name: ankuur.displayName,
+          jobTitle: ankuur.jobTitle,
+          company: "Agile World Technologies LLC",
+          email: ankuur.mail,
+          phone: ankuur.mobilePhone,
+          mobilePhone: ankuur.mobilePhone,
+          location: ankuur.officeLocation || "San Francisco, CA",
+          website: "www.agilesignature.com",
+          linkedin: "",
+          twitter: "",
+          instagram: "",
+          facebook: "",
+          youtube: "",
+          portfolio: "",
+          profileImage: null,
+          logo: null,
+          banner: null,
+          disclaimer: "",
+          campaigns: [],
+        };
+        
+        // BULK APPLY STYLE (from your bulk apply)
+        const bulkFormData = {
+          ...formData, // Use current form data
+          name: ankuur.displayName || "Employee Name",
+          jobTitle: ankuur.jobTitle || "Job Title", 
+          email: ankuur.mail || "",
+          phone: ankuur.mobilePhone || "",
+          mobilePhone: ankuur.mobilePhone || "",
+          location: ankuur.officeLocation || "",
+          company: "Agile World Technologies LLC"
+        };
+        
+        console.log("📝 Individual form data:", individualFormData);
+        console.log("📝 Bulk form data:", bulkFormData);
+        
+        // Generate signatures
+        const designStyle = getDesignStyle(selectedDesign);
+        const individualSignature = generateSignatureHTML(individualFormData, selectedDesign, designStyle);
+        const bulkSignature = generateSignatureHTML(bulkFormData, selectedDesign, designStyle);
+        
+        console.log("🔍 Individual signature:", individualSignature);
+        console.log("🔍 Bulk signature:", bulkSignature);
+        
+        console.log("📞 Phone in individual signature?", individualSignature.includes(ankuur.mobilePhone));
+        console.log("📞 Phone in bulk signature?", bulkSignature.includes(ankuur.mobilePhone));
+        
+        console.log("🔄 Signatures identical?", individualSignature === bulkSignature);
+        
+        if (individualSignature !== bulkSignature) {
+          console.log("❌ SIGNATURES ARE DIFFERENT!");
+          console.log("❌ Difference in form data:");
+          Object.keys(individualFormData).forEach(key => {
+            if (individualFormData[key] !== bulkFormData[key]) {
+              console.log(`  ${key}: individual="${individualFormData[key]}" vs bulk="${bulkFormData[key]}"`);
+            }
+          });
+        }
+      } else {
+        alert("Ankuur Tyagi not found or no phone number");
+      }
+    }
+  };
+
   const handleTabClick = (tab) => {
     if (tabsDisabled) return; // Prevent tab changes in bulk apply mode
     setActiveTab(tab);
@@ -1563,10 +1628,12 @@ const EmailSignatureCreator = () => {
           ? "Bulk Apply Email Signatures"
           : "Customize Your Email Signature"}
       </h2>
+      
       {isBulkApply && (
         <div style={{ textAlign: "center", marginBottom: "20px" }}>
           <p>Applying to {selectedEmployees?.length || 0} employees</p>
-          {/* 🔍 ADD THIS DEBUG BUTTON - Place it right after the employee count */}
+          
+          {/* DEBUG BUTTONS */}
           <button 
             onClick={() => {
               if (selectedEmployees?.length > 0) {
@@ -1585,98 +1652,7 @@ const EmailSignatureCreator = () => {
           >
             🔍 Debug Employee Data
           </button>
-          {isBulkApply && (
-  <div style={{ textAlign: "center", marginBottom: "20px" }}>
-    <p>Applying to {selectedEmployees?.length || 0} employees</p>
-    
-    {/* Existing debug buttons */}
-    <button 
-      onClick={() => {
-        if (selectedEmployees?.length > 0) {
-          console.log("🔍 Manual Debug - Employee Data:", selectedEmployees[0]);
-          debugEmployeeData();
-        }
-      }}
-      style={{
-        backgroundColor: "#ffc107",
-        color: "black",
-        padding: "8px 16px",
-        border: "none",
-        borderRadius: "4px",
-        margin: "10px"
-      }}
-    >
-      🔍 Debug Employee Data
-    </button>
-    
-    <button 
-      onClick={() => {
-        if (selectedEmployees?.length > 0) {
-          const testEmployee = selectedEmployees[0];
-          console.log("🧪 TESTING SIGNATURE GENERATION:");
-          console.log("Test employee:", testEmployee);
           
-          const testFormData = {
-            ...formData,
-            name: testEmployee.displayName || "Test Name",
-            jobTitle: testEmployee.jobTitle || "Test Title",
-            email: testEmployee.mail || "test@email.com",
-            phone: testEmployee.mobilePhone || "NO_PHONE",
-            mobilePhone: testEmployee.mobilePhone || "NO_PHONE",
-            location: testEmployee.officeLocation || "Test Location",
-            company: "Agile World Technologies LLC"
-          };
-          
-          console.log("🧪 Test form data:", testFormData);
-          
-          const testSignature = generateSignatureHTML(testFormData, selectedDesign, designStyle);
-          console.log("🧪 Full signature HTML:", testSignature);
-          console.log("🧪 Signature includes phone?", testSignature.includes(testEmployee.mobilePhone));
-        }
-      }}
-      style={{
-        backgroundColor: "#17a2b8",
-        color: "white",
-        padding: "8px 16px",
-        border: "none",
-        borderRadius: "4px",
-        margin: "10px"
-      }}
-    >
-      🧪 Test Signature HTML
-    </button>
-
-    {/* NEW DEBUG BUTTONS */}
-    <button 
-      onClick={testEmployeesWithPhones}
-      style={{
-        backgroundColor: "#6f42c1",
-        color: "white",
-        padding: "8px 16px",
-        border: "none",
-        borderRadius: "4px",
-        margin: "10px"
-      }}
-    >
-      📞 Test Employees with Phones
-    </button>
-
-    <button 
-      onClick={compareIndividualVsBulk}
-      style={{
-        backgroundColor: "#e83e8c",
-        color: "white",
-        padding: "8px 16px",
-        border: "none",
-        borderRadius: "4px",
-        margin: "10px"
-      }}
-    >
-      🔄 Compare Individual vs Bulk
-    </button>
-  </div>
-)}
-          {/* NEW: Test signature generation button */}
           <button 
             onClick={() => {
               if (selectedEmployees?.length > 0) {
@@ -1700,11 +1676,6 @@ const EmailSignatureCreator = () => {
                 const testSignature = generateSignatureHTML(testFormData, selectedDesign, designStyle);
                 console.log("🧪 Full signature HTML:", testSignature);
                 console.log("🧪 Signature includes phone?", testSignature.includes(testEmployee.mobilePhone));
-                console.log("🧪 Search for phone in HTML:", {
-                  phoneNumber: testEmployee.mobilePhone,
-                  foundInHTML: testSignature.includes(testEmployee.mobilePhone),
-                  mobileKeywordFound: testSignature.toLowerCase().includes("mobile")
-                });
               }
             }}
             style={{
@@ -1718,9 +1689,37 @@ const EmailSignatureCreator = () => {
           >
             🧪 Test Signature HTML
           </button>
-          {/* END OF DEBUG BUTTON */}
+
+          <button 
+            onClick={testEmployeesWithPhones}
+            style={{
+              backgroundColor: "#6f42c1",
+              color: "white",
+              padding: "8px 16px",
+              border: "none",
+              borderRadius: "4px",
+              margin: "10px"
+            }}
+          >
+            📞 Test Employees with Phones
+          </button>
+
+          <button 
+            onClick={compareIndividualVsBulk}
+            style={{
+              backgroundColor: "#e83e8c",
+              color: "white",
+              padding: "8px 16px",
+              border: "none",
+              borderRadius: "4px",
+              margin: "10px"
+            }}
+          >
+            🔄 Compare Individual vs Bulk
+          </button>
         </div>
       )}
+      
       <div className="editor-container">
         <div className="content">
           <div className="form-section">
