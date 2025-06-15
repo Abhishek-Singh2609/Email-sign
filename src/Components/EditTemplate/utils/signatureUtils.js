@@ -299,10 +299,30 @@ const layoutConfigs = {
 
   // TEXT LAYOUT - Fixed to use actual formData
   text: (designStyle, sections, formData) => {
+    const defaultData = {
+      name: "Employee Name", 
+      jobTitle: "Job Title", 
+      company: "Company Name", 
+      location: "Location",
+      phone: "", 
+      mobilePhone: "", 
+      email: "", 
+      website: "", 
+      logo: null, 
+      profileImage: null,
+      linkedin: "", 
+      youtube: "", 
+      instagram: "", 
+      facebook: "", 
+      twitter: "", 
+      github: "", 
+      ...formData // This ensures formData overrides defaults
+    };
+
   const accentColor = designStyle.accentColor || "#0066cc";
 
   return (
-    '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, sans-serif; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px;">' +
+    '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, sans-serif;">' +
       // Header Row with Contact Info and Company
       '<tr>' +
         '<td style="padding: 20px;" width="70%" valign="top">' +
