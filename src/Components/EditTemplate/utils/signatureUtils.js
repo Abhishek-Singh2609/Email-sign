@@ -301,7 +301,7 @@ logo: (designStyle, sections, formData) => {
   '</table>';
 },
 // WithoutLogo Layout - Email Compatible HTML Table Version
-withoutLogo: (designStyle, sections, formData) => {
+withoutProfile: (designStyle, sections, formData) => {
   const defaultData = {
     name: "Employee Name", 
     jobTitle: "Job Title", 
@@ -326,7 +326,7 @@ withoutLogo: (designStyle, sections, formData) => {
   // Logo section - email compatible with company name below
   const logoSection = defaultData.logo ? 
     '<img src="' + defaultData.logo + '" alt="Company Logo" width="100" height="83" style="border: none; border-radius: 4px; display: block; object-fit: contain; padding-bottom: 8px;">' :
-    '<table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;"><tr><td width="80" height="60" style="background-color:' + accentColor + '; color: white; font-weight: bold; font-size: 24px; border-radius: 4px; text-align: center; line-height: 60px;">' + 
+    '<table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto 8px auto;"><tr><td width="80" height="60" style="background-color:' + accentColor + '; color: white; font-weight: bold; font-size: 24px; border-radius: 4px; text-align: center; line-height: 60px;">' + 
     getUserInitials(defaultData.name) + 
     '</td></tr></table>';
 

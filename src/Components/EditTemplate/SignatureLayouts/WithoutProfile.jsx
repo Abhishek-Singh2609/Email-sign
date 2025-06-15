@@ -77,7 +77,7 @@ const WithoutLogo = ({ formData, designStyle }) => {
                   color: "white",
                   fontWeight: "bold",
                   fontSize: "24px",
-                  marginRight: "15px",
+                  marginBottom: "8px",
                   borderRadius: "4px",
                 }}
                 className="company-logo-placeholder"
