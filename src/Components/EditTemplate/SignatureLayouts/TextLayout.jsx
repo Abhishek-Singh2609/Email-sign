@@ -72,13 +72,37 @@ const TextLayout = ({ formData, designStyle }) => {
               )}
               {formData.email && (
                 <>
-                  <strong>email:</strong> {formData.email}
+                  <strong>email:</strong>{" "}
+                  <a
+                    href={`mailto:${formData.email}`}
+                    style={{
+                      color: "#666666",
+                      textDecoration: "none",
+                    }}
+                  >
+                    {formData.email}
+                  </a>
                   <br />
                 </>
               )}
               {formData.website && (
                 <>
-                  <strong>website:</strong> {formData.website}
+                  <strong>website:</strong>{" "}
+                  <a
+                    href={
+                      formData.website.startsWith("http")
+                        ? formData.website
+                        : `https://${formData.website}`
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      color: "#666666",
+                      textDecoration: "none",
+                    }}
+                  >
+                    {formData.website.replace(/^https?:\/\//, "")}
+                  </a>
                   <br />
                 </>
               )}

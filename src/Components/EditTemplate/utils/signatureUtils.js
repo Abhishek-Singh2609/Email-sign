@@ -320,6 +320,23 @@ const layoutConfigs = {
     };
 
   const accentColor = designStyle.accentColor || "#0066cc";
+ // Contact details
+    const contactDetails = [];
+    if (defaultData.mobilePhone || defaultData.phone) {
+      const phoneToShow = defaultData.mobilePhone || defaultData.phone;
+      contactDetails.push('<b>mobile:</b> ' + phoneToShow + (defaultData.phone && defaultData.mobilePhone && defaultData.phone !== defaultData.mobilePhone ? ' | <b>tel:</b> ' + defaultData.phone : ''));
+    }
+    if (defaultData.email) {
+      contactDetails.push('<b>email:</b> <a href="mailto:' + defaultData.email + '" style="color: #666666; text-decoration: none;">' + defaultData.email + '</a>');
+    }
+    if (defaultData.website) {
+      const websiteUrl = defaultData.website.startsWith('http') ? defaultData.website : 'https://' + defaultData.website;
+      const displayUrl = defaultData.website.replace(/^https?:\/\//, '');
+      contactDetails.push('<b>website:</b> <a href="' + websiteUrl + '" target="_blank" style="color: #666666; text-decoration: none;">' + displayUrl + '</a>');
+    }
+    if (defaultData.location) {
+      contactDetails.push('<b>location:</b> ' + defaultData.location);
+    }
 
   return (
     '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, sans-serif;">' +
@@ -339,8 +356,8 @@ const layoutConfigs = {
             '</tr>' +
             '<tr>' +
               '<td style="font-size: 12px; color: #666666; line-height: 1.4;">' +
-                (sections.contactInfo || "") +
-              '</td>' +
+            contactDetails.join('<br>') +
+          '</td>' +
             '</tr>' +
           '</table>' +
         '</td>' +
