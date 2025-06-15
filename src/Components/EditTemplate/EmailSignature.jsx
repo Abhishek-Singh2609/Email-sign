@@ -230,10 +230,10 @@ const EmailSignatureCreator = () => {
         name: "{{name}}",
         jobTitle: "{{title}}", 
         email: "{{email}}",
-        phone: "{{phone}}",
+        mobilePhone: "{{phone}}", // This will be replaced with actual employee mobilePhone
+      phone: "{{phone}}", // Fallback for layouts that use phone field
         location: "{{location}}",
         company: "{{company}}",
-        // mobilePhone: "{{mobilePhone}}",
         website: formData.website || "{{website}}"
       };
       

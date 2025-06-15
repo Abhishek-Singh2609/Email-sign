@@ -10,16 +10,20 @@ import {
 } from "react-icons/fa6";
 
 const OrangeLayout = ({ formData, designStyle }) => {
-  const defaultData = {
-    name: "Sally Williams",
-    jobTitle: "SALES MANAGER", 
-    phone: "+1 234 56789",
-    mobilePhone: "+1 987 65432",
-    email: "s.williams@crossware365.com",
-    website: "www.crossware365.com",
-    company: "Crossware Inc.",
-    location: "New York, USA",
-    ...formData
+ 
+  // Function to get user initials
+  const getUserInitials = () => {
+    if (!formData.name) return "ID";
+    
+    const nameParts = formData.name.trim().split(/\s+/);
+    if (nameParts.length === 0) return "ID";
+    
+    const firstNameInitial = nameParts[0].charAt(0).toUpperCase();
+    
+    if (nameParts.length === 1) return firstNameInitial;
+    
+    const lastNameInitial = nameParts[nameParts.length - 1].charAt(0).toUpperCase();
+    return `${firstNameInitial}${lastNameInitial}`;
   };
 
   return (
@@ -76,16 +80,16 @@ const OrangeLayout = ({ formData, designStyle }) => {
           style={{
             display: "flex",
             alignItems: "center",
-            padding: "20px",
-            backgroundColor: "#ffffff",
+            padding:"10px 0px",
+      
           }}
         >
           {/* Profile Image */}
           <div style={{ marginRight: "20px" }}>
-            {defaultData.profileImage ? (
+            {formData.profileImage ? (
               <img
-                src={defaultData.profileImage}
-                alt={defaultData.name || "Profile"}
+                src={formData.profileImage}
+                alt={formData.name || "Profile"}
                 style={{
                   width: "110px",
                   height: "110px",
@@ -109,7 +113,7 @@ const OrangeLayout = ({ formData, designStyle }) => {
                   fontWeight: "bold",
                 }}
               >
-                {defaultData.name ? defaultData.name.charAt(0) : "U"}
+                {getUserInitials()}
               </div>
             )}
           </div>
@@ -126,7 +130,7 @@ const OrangeLayout = ({ formData, designStyle }) => {
                 lineHeight: "1.2",
               }}
             >
-              {defaultData.name || "Your Name"}
+              {formData.name || "Your Name"}
             </div>
 
             {/* Job Title */}
@@ -139,12 +143,12 @@ const OrangeLayout = ({ formData, designStyle }) => {
                 letterSpacing: "0.5px",
               }}
             >
-              {defaultData.jobTitle || "YOUR JOB TITLE"}
+              {formData.jobTitle || "YOUR JOB TITLE"}
             </div>
 
             {/* Social Icons */}
             <div className="social-icons-container">
-              {renderSocialIcons(defaultData)}
+              {renderSocialIcons(formData)}
             </div>
           </div>
 
@@ -155,14 +159,13 @@ const OrangeLayout = ({ formData, designStyle }) => {
               flexDirection: "column",
               gap: "8px",
               alignItems: "flex-start",
-              marginLeft: "20px",
-              width: "200px",
+              marginLeft: "1x",
             }}
           >
             {/* Phone Numbers */}
-            {(defaultData.mobilePhone || defaultData.phone) && (
+            {(formData.mobilePhone || formData.phone) && (
               <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                {defaultData.mobilePhone && (
+                {formData.mobilePhone && (
                   <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                     <div
                       style={{
@@ -178,11 +181,11 @@ const OrangeLayout = ({ formData, designStyle }) => {
                       <FaMobileScreen size={12} />
                     </div>
                     <span style={{ fontSize: "12px", color: "#333333" }}>
-                      {defaultData.mobilePhone}
+                      {formData.mobilePhone}
                     </span>
                   </div>
                 )}
-                {defaultData.phone && (
+                {formData.phone && (
                   <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                     <div
                       style={{
@@ -198,7 +201,7 @@ const OrangeLayout = ({ formData, designStyle }) => {
                       <FaPhone size={12} />
                     </div>
                     <span style={{ fontSize: "12px", color: "#333333" }}>
-                      {defaultData.phone}
+                      {formData.phone}
                     </span>
                   </div>
                 )}
@@ -206,7 +209,7 @@ const OrangeLayout = ({ formData, designStyle }) => {
             )}
 
             {/* Email */}
-            {defaultData.email && (
+            {formData.email && (
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                 <div
                   style={{
@@ -222,13 +225,13 @@ const OrangeLayout = ({ formData, designStyle }) => {
                   <FaEnvelope size={12} />
                 </div>
                 <span style={{ fontSize: "12px", color: "#333333" }}>
-                  {defaultData.email}
+                  {formData.email}
                 </span>
               </div>
             )}
 
             {/* Website */}
-            {defaultData.website && (
+            {formData.website && (
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                 <div
                   style={{
@@ -244,13 +247,13 @@ const OrangeLayout = ({ formData, designStyle }) => {
                   <FaGlobe size={12} />
                 </div>
                 <span style={{ fontSize: "12px", color: "#333333" }}>
-                  {defaultData.website}
+                  {formData.website}
                 </span>
               </div>
             )}
 
             {/* Company */}
-            {defaultData.company && (
+            {formData.company && (
               <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "10px" }}>
                 <div
                   style={{
@@ -266,13 +269,13 @@ const OrangeLayout = ({ formData, designStyle }) => {
                   <FaBuilding size={12} />
                 </div>
                 <span style={{ fontSize: "12px", color: "#333333" }}>
-                  {defaultData.company}
+                  {formData.company}
                 </span>
               </div>
             )}
 
             {/* Location */}
-            {defaultData.location && (
+            {formData.location && (
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                 <div
                   style={{
@@ -288,7 +291,7 @@ const OrangeLayout = ({ formData, designStyle }) => {
                   <FaLocationDot size={12} />
                 </div>
                 <span style={{ fontSize: "12px", color: "#333333" }}>
-                  {defaultData.location}
+                  {formData.location}
                 </span>
               </div>
             )}
