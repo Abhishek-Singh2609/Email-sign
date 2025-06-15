@@ -49,8 +49,7 @@ const LogoLayout = ({ formData, designStyle }) => {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-        
-              visibility: formData.logo ? "visible" : "hidden",
+      
             }}
           >
             {formData.logo ? (
