@@ -187,6 +187,120 @@ const layoutConfigs = {
       '</tr>' +
     '</table>';
   },
+// Logo Layout - Email Compatible HTML Table Version
+logo: (designStyle, sections, formData) => {
+  const defaultData = {
+    name: "Employee Name", 
+    jobTitle: "Job Title", 
+    company: "Company Name", 
+    location: "Location",
+    phone: "", 
+    mobilePhone: "", 
+    email: "", 
+    website: "", 
+    logo: null, 
+    profileImage: null,
+    linkedin: "", 
+    youtube: "", 
+    instagram: "", 
+    facebook: "", 
+    twitter: "", 
+    github: "", 
+    ...formData // This ensures formData overrides defaults
+  };
+
+  const accentColor = designStyle.accentColor || "#0066cc";
+  
+  // Logo section - email compatible
+  const logoSection = defaultData.logo ? 
+    '<img src="' + defaultData.logo + '" alt="Company Logo" width="100" height="83" style="border: none; border-radius: 4px; display: block; object-fit: contain;">' :
+    '<table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;"><tr><td width="80" height="60" style="background: linear-gradient(135deg, ' + accentColor + ', ' + accentColor + '); color: white; font-weight: bold; font-size: 24px; border-radius: 4px; text-align: center; line-height: 60px;">' + getUserInitials(defaultData.name) + '</td></tr></table>';
+
+  // Contact details with proper formatting
+  const contactDetails = [];
+  
+  if (defaultData.mobilePhone || defaultData.phone) {
+    const phoneToShow = defaultData.mobilePhone || defaultData.phone;
+    contactDetails.push('<b>mobile:</b> ' + phoneToShow + (defaultData.phone && defaultData.mobilePhone && defaultData.phone !== defaultData.mobilePhone ? ' | <b>tel:</b> ' + defaultData.phone : ''));
+  }
+  
+  if (defaultData.email) {
+    contactDetails.push('<b>email:</b> <a href="mailto:' + defaultData.email + '" style="color: #666666; text-decoration: none;">' + defaultData.email + '</a>');
+  }
+  
+  if (defaultData.website) {
+    const websiteUrl = defaultData.website.startsWith('http') ? defaultData.website : 'https://' + defaultData.website;
+    const displayUrl = defaultData.website.replace(/^https?:\/\//, '');
+    contactDetails.push('<b>website:</b> <a href="' + websiteUrl + '" target="_blank" style="color: #666666; text-decoration: none;">' + displayUrl + '</a>');
+  }
+  
+  if (defaultData.location) {
+    contactDetails.push('<b>location:</b> ' + defaultData.location);
+  }
+
+  // EMAIL-COMPATIBLE TABLE STRUCTURE
+  return '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: \'Segoe UI\', Tahoma, Geneva, Verdana, sans-serif; border-collapse: collapse; background-color: #ffffff; min-height: 180px;">' +
+    // Main content row
+    '<tr>' +
+      // Logo Section (118px width)
+      '<td width="118" style="padding: 20px 0px 20px 0px; text-align: center; vertical-align: top; min-width: 118px;">' +
+        '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
+          '<tr>' +
+            '<td style="text-align: center;">' +
+              logoSection +
+            '</td>' +
+          '</tr>' +
+        '</table>' +
+      '</td>' +
+      
+      // Contact Information Section (flex: 1 equivalent)
+      '<td valign="top" style="padding: 20px 0px 20px 0px; vertical-align: top;">' +
+        '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
+          '<tr>' +
+            '<td style="font-size: 18px; font-weight: 700; color: #333333; padding-bottom: 2px;">' +
+              defaultData.name +
+            '</td>' +
+          '</tr>' +
+          '<tr>' +
+            '<td style="font-size: 14px; color: ' + accentColor + '; padding-bottom: 8px;">' +
+              defaultData.jobTitle +
+            '</td>' +
+          '</tr>' +
+          '<tr>' +
+            '<td style="font-size: 12px; color: #666666; line-height: 1.4;">' +
+              contactDetails.join('<br>') +
+            '</td>' +
+          '</tr>' +
+        '</table>' +
+      '</td>' +
+      
+      // Company Name Section (100px width)
+      '<td width="100" style="padding: 20px 0px 20px 20px; text-align: center; vertical-align: middle; min-width: 100px;">' +
+        '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
+          '<tr>' +
+            '<td style="font-size: 16px; font-weight: 700; color: #666666; text-align: center;">' +
+              defaultData.company +
+            '</td>' +
+          '</tr>' +
+        '</table>' +
+      '</td>' +
+    '</tr>' +
+    
+    // Social Icons Section
+    '<tr>' +
+      '<td colspan="3" style="padding: 8px 20px;">' +
+        '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
+          '<tr>' +
+            '<td style="padding-top: 8px;">' +
+              renderSocialIcons(defaultData) +
+            '</td>' +
+          '</tr>' +
+        '</table>' +
+      '</td>' +
+    '</tr>' +
+  '</table>';
+},
+
 
   // 🔧 FIXED: ORANGE LAYOUT - Now uses actual formData instead of hardcoded data
   orange: (designStyle, sections, formData) => {

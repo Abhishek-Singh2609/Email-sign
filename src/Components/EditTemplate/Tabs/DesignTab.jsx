@@ -207,8 +207,6 @@ if (design.layout === "professional") {
         maxWidth: "600px",
         margin: "0",
         padding: "20px",
-        backgroundColor: "#ffffff",
-        border: "1px solid #e0e0e0",
         borderRadius: "8px",
       },
     };

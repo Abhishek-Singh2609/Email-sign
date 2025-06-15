@@ -2,6 +2,22 @@ import React from "react";
 import { renderSocialIcons } from "../Tabs/SocialTab";
 
 const LogoLayout = ({ formData, designStyle }) => {
+
+   // Function to get user initials
+  const getUserInitials = () => {
+    if (!formData.name) return "ID";
+    
+    const nameParts = formData.name.trim().split(/\s+/);
+    if (nameParts.length === 0) return "ID";
+    
+    const firstNameInitial = nameParts[0].charAt(0).toUpperCase();
+    
+    if (nameParts.length === 1) return firstNameInitial;
+    
+    const lastNameInitial = nameParts[nameParts.length - 1].charAt(0).toUpperCase();
+    return `${firstNameInitial}${lastNameInitial}`;
+  };
+
   return (
     <>
       <div
@@ -11,8 +27,6 @@ const LogoLayout = ({ formData, designStyle }) => {
           minHeight: "180px",
           margin: "0",
           backgroundColor: "#ffffff",
-          border: "1px solid #e0e0e0",
-          borderRadius: "8px",
           overflow: "hidden",
           ...designStyle.containerStyle,
         }}
@@ -30,8 +44,8 @@ const LogoLayout = ({ formData, designStyle }) => {
           {/* Logo Section - Maintains space even if empty */}
           <div
             style={{
-              width: "140px",
-              minWidth: "140px",
+              width: "118px",
+              minWidth: "118px",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -47,7 +61,6 @@ const LogoLayout = ({ formData, designStyle }) => {
                   width: "100px",
                   height: "83px",
                   objectFit: "contain",
-                  marginRight: "15px",
                   borderRadius: "4px",
                 }}
                 className="company-logo"
@@ -66,14 +79,11 @@ const LogoLayout = ({ formData, designStyle }) => {
                   color: "white",
                   fontWeight: "bold",
                   fontSize: "24px",
-                  marginRight: "15px",
                   borderRadius: "4px",
                 }}
                 className="company-logo-placeholder"
               >
-                {formData.company
-                  ? formData.company.substring(0, 3).toUpperCase()
-                  : "IDC"}
+              {getUserInitials()}
               </div>
             )}
             
@@ -125,13 +135,37 @@ const LogoLayout = ({ formData, designStyle }) => {
               )}
               {formData.email && (
                 <>
-                  <strong>email:</strong> {formData.email}
+                  <strong>email:</strong>{" "}
+                  <a
+                    href={`mailto:${formData.email}`}
+                    style={{
+                      color: "#666666",
+                      textDecoration: "none",
+                    }}
+                  >
+                    {formData.email}
+                  </a>
                   <br />
                 </>
               )}
               {formData.website && (
                 <>
-                  <strong>website:</strong> {formData.website}
+                  <strong>website:</strong>{" "}
+                  <a
+                    href={
+                      formData.website.startsWith("http")
+                        ? formData.website
+                        : `https://${formData.website}`
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      color: "#666666",
+                      textDecoration: "none",
+                    }}
+                  >
+                    {formData.website.replace(/^https?:\/\//, "")}
+                  </a>
                   <br />
                 </>
               )}
@@ -142,9 +176,8 @@ const LogoLayout = ({ formData, designStyle }) => {
           {/* Company Name (replaces profile image) */}
           <div
             style={{
-              width: "80px",
-              minWidth: "80px",
-              height: "80px",
+              width: "100px",
+              minWidth: "100px",
               marginLeft: "20px",
               display: "flex",
               alignItems: "center",
