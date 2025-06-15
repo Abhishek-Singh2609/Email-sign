@@ -214,7 +214,7 @@ logo: (designStyle, sections, formData) => {
   // Logo section - email compatible
   const logoSection = defaultData.logo ? 
     '<img src="' + defaultData.logo + '" alt="Company Logo" width="100" height="83" style="border: none; border-radius: 4px; display: block; object-fit: contain;">' :
-    '<table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;"><tr><td width="80" height="60" style="background: linear-gradient(135deg, ' + accentColor + ', ' + accentColor + '); color: white; font-weight: bold; font-size: 24px; border-radius: 4px; text-align: center; line-height: 60px;">' + getUserInitials(defaultData.name) + '</td></tr></table>';
+    '<table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;"><tr><td width="80" height="60" style="background-color: ' + accentColor + ';  color: white; font-weight: bold; font-size: 24px; border-radius: 4px; text-align: center; line-height: 60px;">' + getUserInitials(defaultData.name) + '</td></tr></table>';
 
   // Contact details with proper formatting
   const contactDetails = [];
@@ -243,7 +243,7 @@ logo: (designStyle, sections, formData) => {
     // Main content row
     '<tr>' +
       // Logo Section (118px width)
-      '<td width="118" style="padding: 20px 0px 20px 0px; text-align: center; vertical-align: top; min-width: 118px;">' +
+      '<td width="118" style="padding: 20px 0px 20px 0px; text-align: center; min-width: 118px;">' +
         '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
           '<tr>' +
             '<td style="text-align: center;">' +
@@ -254,7 +254,7 @@ logo: (designStyle, sections, formData) => {
       '</td>' +
       
       // Contact Information Section (flex: 1 equivalent)
-      '<td valign="top" style="padding: 20px 0px 20px 0px; vertical-align: top;">' +
+      '<td style="padding: 20px 0px 20px 0px;">' +
         '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
           '<tr>' +
             '<td style="font-size: 18px; font-weight: 700; color: #333333; padding-bottom: 2px;">' +
