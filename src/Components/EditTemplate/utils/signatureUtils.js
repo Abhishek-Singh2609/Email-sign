@@ -329,12 +329,12 @@ const layoutConfigs = {
           '<table width="100%" cellpadding="0" cellspacing="0" border="0">' +
             '<tr>' +
               '<td style="font-size: 18px; font-weight: bold; color: #333333; padding-bottom: 2px;">' +
-                (formData.name || "Employee Name") +
+                (defaultData.name || "Employee Name") +
               '</td>' +
             '</tr>' +
             '<tr>' +
               '<td style="font-size: 14px; color: ' + accentColor + '; padding-bottom: 8px;">' +
-                (formData.jobTitle || "Job Title") +
+                (defaultData.jobTitle || "Job Title") +
               '</td>' +
             '</tr>' +
             '<tr>' +
@@ -350,7 +350,7 @@ const layoutConfigs = {
           '<table width="100%" cellpadding="0" cellspacing="0" border="0">' +
             '<tr>' +
               '<td style="font-size: 16px; font-weight: bold; color: #666666;">' +
-                (formData.company || "Company Name") +
+                (defaultData.company || "Company Name") +
               '</td>' +
             '</tr>' +
           '</table>' +
@@ -360,7 +360,7 @@ const layoutConfigs = {
       // Social Icons Row
       '<tr>' +
         '<td colspan="2" style="padding: 15px 20px; text-align: left;">' +
-          renderSocialIcons(formData) +
+          renderSocialIcons(defaultData) +
         '</td>' +
       '</tr>' +
     '</table>'
