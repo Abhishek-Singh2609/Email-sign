@@ -569,7 +569,60 @@ const EmailSignatureCreator = () => {
     }
   }, [isBulkApply, selectedEmployees, formData, selectedDesign]);
   // END OF DEBUGGING useEffect
+ // Add this temporary useEffect right after your existing useEffects for testing
+useEffect(() => {
+  console.log("🟦 Component mounted/updated");
+  console.log("🟦 isBulkApply:", isBulkApply);
+  console.log("🟦 selectedEmployees length:", selectedEmployees?.length);
+  console.log("🟦 selectedEmployees data:", selectedEmployees);
+  
+  // Force debug if in bulk mode
+  if (isBulkApply) {
+    console.log("🟦 FORCING DEBUG OUTPUT:");
+    if (selectedEmployees && selectedEmployees.length > 0) {
+      console.log("🟦 First employee:", selectedEmployees[0]);
+      console.log("🟦 All employee keys:", Object.keys(selectedEmployees[0]));
+      
+      // Check each employee's phone data
+      selectedEmployees.forEach((emp, index) => {
+        console.log(`🟦 Employee ${index + 1} phone info:`, {
+          name: emp.displayName,
+          mobilePhone: emp.mobilePhone,
+          businessPhones: emp.businessPhones,
+          allPhoneKeys: Object.keys(emp).filter(key => 
+            key.toLowerCase().includes('phone') || 
+            key.toLowerCase().includes('mobile')
+          ),
+          fullEmployeeData: emp
+        });
+      });
+    } else {
+      console.log("🟦 No selectedEmployees found!");
+    }
+  }
+}, []); // Empty dependency array to run once on mount
 
+// Also add this button click handler for immediate debugging
+const forceDebugNow = () => {
+  console.log("🔴 MANUAL FORCE DEBUG:");
+  console.log("🔴 isBulkApply:", isBulkApply);
+  console.log("🔴 selectedEmployees:", selectedEmployees);
+  console.log("🔴 location.state:", location.state);
+  
+  if (selectedEmployees && selectedEmployees.length > 0) {
+    selectedEmployees.forEach((emp, index) => {
+      console.log(`🔴 Employee ${index + 1}:`, {
+        displayName: emp.displayName,
+        mail: emp.mail,
+        mobilePhone: emp.mobilePhone,
+        businessPhones: emp.businessPhones,
+        officeLocation: emp.officeLocation,
+        jobTitle: emp.jobTitle,
+        id: emp.id
+      });
+    });
+  }
+};
   // Ensure we have 5 campaigns when the component mounts
   useEffect(() => {
     if (!formData.campaigns || formData.campaigns.length < 5) {
