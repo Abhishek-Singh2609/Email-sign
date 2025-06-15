@@ -661,7 +661,7 @@ export const generateSignatureTemplate = (selectedDesign, designStyle, staticFor
     company: staticFormData.company || "{{company}}",
     email: "{{email}}",
     mobilePhone: "{{phone}}", // 🔧 This will be replaced with actual employee phone
-    // Phone: "{{mobilePhone}}",
+    Phone: "{{phone}}",
     location: staticFormData.location || "{{location}}",
     website: staticFormData.website || "{{website}}",
     linkedin: staticFormData.linkedin || "",
@@ -704,7 +704,6 @@ export const replacePlaceholders = (template, employeeData) => {
     '{{jobTitle}}': employeeData.jobTitle || employeeData.title || '',
     '{{email}}': employeeData.mail || employeeData.email || '',
     '{{phone}}': employeeData.businessPhones?.[0] || employeeData.mobilePhone || employeeData.phone || '', // 🔧 Fixed phone handling
-    // '{{mobilePhone}}': employeeData.mobilePhone || employeeData.businessPhones?.[0] || '',
     '{{location}}': employeeData.officeLocation || employeeData.location || '',
     '{{company}}': employeeData.company || 'Agile World Technologies LLC',
     '{{website}}': employeeData.website || 'www.agileworldtechnologies.com',
