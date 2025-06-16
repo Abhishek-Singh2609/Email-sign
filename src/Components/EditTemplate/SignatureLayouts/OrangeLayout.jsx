@@ -59,7 +59,6 @@ const OrangeLayout = ({ formData, designStyle }) => {
         style={{
           fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
           width: "600px",
-          backgroundColor: "#ffffff",
           border: "none",
           margin: "0",
           padding: "0",
@@ -85,7 +84,7 @@ const OrangeLayout = ({ formData, designStyle }) => {
           }}
         >
           {/* Profile Image */}
-          <div style={{ marginRight: "20px" }}>
+          <div style={{ marginRight: "3px" }}>
             {formData.profileImage ? (
               <img
                 src={formData.profileImage}
@@ -118,12 +117,12 @@ const OrangeLayout = ({ formData, designStyle }) => {
             )}
           </div>
 
-          {/* Left Section - Name, Title, Social Icons */}
-          <div>
+          {/* Left Section - Name, Title*/}
+          <div style={{width:"108px", textAlign:"center"}}>
             {/* Name */}
             <div
               style={{
-                fontSize: "24px",
+                fontSize: "17px",
                 fontWeight: "700",
                 color: "#333333",
                 marginBottom: "2px",
@@ -146,10 +145,7 @@ const OrangeLayout = ({ formData, designStyle }) => {
               {formData.jobTitle || "YOUR JOB TITLE"}
             </div>
 
-            {/* Social Icons */}
-            <div className="social-icons-container">
-              {renderSocialIcons(formData)}
-            </div>
+            
           </div>
 
           {/* Right Section - Contact Info, Company, Location */}
@@ -297,6 +293,10 @@ const OrangeLayout = ({ formData, designStyle }) => {
             )}
           </div>
         </div>
+        {/* Social Icons */}
+            <div className="social-icons-container">
+              {renderSocialIcons(formData)}
+            </div>
       </div>
     </>
   );

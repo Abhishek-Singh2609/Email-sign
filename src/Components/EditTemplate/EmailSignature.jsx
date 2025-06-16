@@ -102,7 +102,7 @@ const EmailSignatureCreator = () => {
       const newFormData = {
         ...formData,
         name: firstEmployee.displayName || "John Doe",
-        jobTitle: firstEmployee.jobTitle || "Product Designer", 
+        jobTitle: firstEmployee.jobTitle || "Product Designer",
         email: firstEmployee.mail || "john.doe@agile.com",
         phone: firstEmployee.mobilePhone || "+1 (555) 123-4567",
         location: firstEmployee.officeLocation || "San Francisco, CA",
@@ -223,20 +223,20 @@ const EmailSignatureCreator = () => {
     setIsSending(true);
     try {
       const organization = "agileworldtechnologies.com";
-      
+
       // Create template form data with placeholders for the backend
       const templateFormData = {
         ...formData,
         name: "{{name}}",
-        jobTitle: "{{title}}", 
+        jobTitle: "{{title}}",
         email: "{{email}}",
         mobilePhone: "{{phone}}", // This will be replaced with actual employee mobilePhone
-      phone: "{{phone}}", // Fallback for layouts that use phone field
+        phone: "{{phone}}", // Fallback for layouts that use phone field
         location: "{{location}}",
         company: "{{company}}",
-        website: formData.website || "{{website}}"
+        website: formData.website || "{{website}}",
       };
-      
+
       // Generate the signature HTML template with placeholders
       const signatureHTMLTemplate = generateSignatureHTML(
         templateFormData,
@@ -244,7 +244,10 @@ const EmailSignatureCreator = () => {
         designStyle
       );
 
-      console.log("Sending bulk apply request with template:", signatureHTMLTemplate);
+      console.log(
+        "Sending bulk apply request with template:",
+        signatureHTMLTemplate
+      );
 
       // Send request matching your curl format
       const response = await axios.post(
@@ -262,7 +265,9 @@ const EmailSignatureCreator = () => {
       );
 
       console.log("Bulk apply response:", response.data);
-      alert(`Signature template applied to ${selectedEmployees.length} employees!`);
+      alert(
+        `Signature template applied to ${selectedEmployees.length} employees!`
+      );
       navigate("/employees"); // Return to employees page after bulk apply
     } catch (error) {
       console.error("Error in bulk apply:", error);
@@ -512,7 +517,7 @@ export default EmailSignatureCreator;
 //       const newFormData = {
 //         ...formData,
 //         name: firstEmployee.displayName || "John Doe",
-//         jobTitle: firstEmployee.jobTitle || "Product Designer", 
+//         jobTitle: firstEmployee.jobTitle || "Product Designer",
 //         email: firstEmployee.mail || "john.doe@agile.com",
 //         phone: firstEmployee.mobilePhone || "+1 (555) 123-4567",
 //         location: firstEmployee.officeLocation || "San Francisco, CA",
@@ -528,7 +533,7 @@ export default EmailSignatureCreator;
 //       console.log("🔍 DEBUGGING BULK APPLY:");
 //       console.log("Total employees:", selectedEmployees.length);
 //       console.log("First employee full data:", selectedEmployees[0]);
-      
+
 //       // Check what phone fields are available
 //       selectedEmployees.slice(0, 3).forEach((emp, index) => {
 //         console.log(`Employee ${index + 1} phone data:`, {
@@ -538,14 +543,14 @@ export default EmailSignatureCreator;
 //           phone: emp.phone,
 //           officePhone: emp.officePhone,
 //           // Check all possible phone field names
-//           allKeys: Object.keys(emp).filter(key => 
-//             key.toLowerCase().includes('phone') || 
+//           allKeys: Object.keys(emp).filter(key =>
+//             key.toLowerCase().includes('phone') ||
 //             key.toLowerCase().includes('mobile') ||
 //             key.toLowerCase().includes('tel')
 //           )
 //         });
 //       });
-      
+
 //       // Test signature generation for first employee
 //       const testEmployee = selectedEmployees[0];
 //       const testFormData = {
@@ -557,12 +562,12 @@ export default EmailSignatureCreator;
 //         location: testEmployee.officeLocation || "No Location",
 //         company: "Agile World Technologies LLC"
 //       };
-      
+
 //       console.log("🧪 Test form data for first employee:", testFormData);
-      
+
 //       const testSignature = generateSignatureHTML(testFormData, selectedDesign, designStyle);
 //       console.log("🧪 Test signature HTML (first 300 chars):", testSignature.substring(0, 300));
-      
+
 //       // Check if signature contains placeholders (should not)
 //       const hasPlaceholders = testSignature.includes('{{') || testSignature.includes('{name}');
 //       console.log("🧪 Signature has placeholders:", hasPlaceholders);
@@ -575,22 +580,22 @@ export default EmailSignatureCreator;
 //   console.log("🟦 isBulkApply:", isBulkApply);
 //   console.log("🟦 selectedEmployees length:", selectedEmployees?.length);
 //   console.log("🟦 selectedEmployees data:", selectedEmployees);
-  
+
 //   // Force debug if in bulk mode
 //   if (isBulkApply) {
 //     console.log("🟦 FORCING DEBUG OUTPUT:");
 //     if (selectedEmployees && selectedEmployees.length > 0) {
 //       console.log("🟦 First employee:", selectedEmployees[0]);
 //       console.log("🟦 All employee keys:", Object.keys(selectedEmployees[0]));
-      
+
 //       // Check each employee's phone data
 //       selectedEmployees.forEach((emp, index) => {
 //         console.log(`🟦 Employee ${index + 1} phone info:`, {
 //           name: emp.displayName,
 //           mobilePhone: emp.mobilePhone,
 //           businessPhones: emp.businessPhones,
-//           allPhoneKeys: Object.keys(emp).filter(key => 
-//             key.toLowerCase().includes('phone') || 
+//           allPhoneKeys: Object.keys(emp).filter(key =>
+//             key.toLowerCase().includes('phone') ||
 //             key.toLowerCase().includes('mobile')
 //           ),
 //           fullEmployeeData: emp
@@ -608,7 +613,7 @@ export default EmailSignatureCreator;
 //   console.log("🔴 isBulkApply:", isBulkApply);
 //   console.log("🔴 selectedEmployees:", selectedEmployees);
 //   console.log("🔴 location.state:", location.state);
-  
+
 //   if (selectedEmployees && selectedEmployees.length > 0) {
 //     selectedEmployees.forEach((emp, index) => {
 //       console.log(`🔴 Employee ${index + 1}:`, {
@@ -738,20 +743,20 @@ export default EmailSignatureCreator;
 
 //     try {
 //       const organization = "agileworldtechnologies.com";
-      
+
 //       console.log("🚀 Starting bulk apply for", selectedEmployees.length, "employees");
-      
+
 //       // Apply to each employee individually (more reliable than template approach)
 //       for (let i = 0; i < selectedEmployees.length; i++) {
 //         const employee = selectedEmployees[i];
-        
+
 //         try {
 //           // Create individual form data for each employee with actual values
 //           const individualFormData = {
 //             ...formData, // Keep all the design settings, social links, logos, etc.
 //             // Override with actual employee data
 //             name: employee.displayName || "Employee Name",
-//             jobTitle: employee.jobTitle || "Job Title", 
+//             jobTitle: employee.jobTitle || "Job Title",
 //             email: employee.mail || "",
 //             phone: employee.mobilePhone || employee.businessPhones?.[0] || "",
 //             mobilePhone: employee.mobilePhone || employee.businessPhones?.[0] || "",
@@ -797,12 +802,12 @@ export default EmailSignatureCreator;
 
 //           console.log(`✅ Success for ${employee.displayName}`);
 //           successCount++;
-          
+
 //           // Add delay to avoid overwhelming the API
 //           if (i < selectedEmployees.length - 1) {
 //             await new Promise(resolve => setTimeout(resolve, 1000)); // 1 second delay
 //           }
-          
+
 //         } catch (employeeError) {
 //           console.error(`❌ Failed for ${employee.displayName}:`, employeeError.response?.data || employeeError.message);
 //           failCount++;
@@ -815,10 +820,10 @@ export default EmailSignatureCreator;
 //       if (failedEmployees.length > 0) {
 //         message += `\n\nFailed employees:\n${failedEmployees.join('\n')}`;
 //       }
-      
+
 //       alert(message);
 //       navigate("/employees");
-      
+
 //     } catch (error) {
 //       console.error("❌ Error in bulk apply:", error);
 //       alert(`Bulk apply failed. Error: ${error.message}`);
@@ -832,7 +837,7 @@ export default EmailSignatureCreator;
 //     if (selectedEmployees && selectedEmployees.length > 0) {
 //       console.log("🔍 Debug: First employee data:", selectedEmployees[0]);
 //       console.log("🔍 Available fields:", Object.keys(selectedEmployees[0]));
-      
+
 //       selectedEmployees.slice(0, 3).forEach((emp, index) => {
 //         console.log(`Employee ${index + 1}:`, {
 //           displayName: emp.displayName,
@@ -952,7 +957,7 @@ export default EmailSignatureCreator;
 //         <div style={{ textAlign: "center", marginBottom: "20px" }}>
 //           <p>Applying to {selectedEmployees?.length || 0} employees</p>
 //           {/* 🔍 ADD THIS DEBUG BUTTON - Place it right after the employee count */}
-//           <button 
+//           <button
 //             onClick={() => {
 //               if (selectedEmployees?.length > 0) {
 //                 console.log("🔍 Manual Debug - Employee Data:", selectedEmployees[0]);
@@ -1106,7 +1111,7 @@ export default EmailSignatureCreator;
 //       const newFormData = {
 //         ...formData,
 //         name: firstEmployee.displayName || "John Doe",
-//         jobTitle: firstEmployee.jobTitle || "Product Designer", 
+//         jobTitle: firstEmployee.jobTitle || "Product Designer",
 //         email: firstEmployee.mail || "john.doe@agile.com",
 //         phone: firstEmployee.mobilePhone || "+1 (555) 123-4567",
 //         location: firstEmployee.officeLocation || "San Francisco, CA",
@@ -1124,7 +1129,7 @@ export default EmailSignatureCreator;
 //       console.log("First employee full data:", selectedEmployees[0]);
 //       console.log("Selected design:", selectedDesign);
 //       console.log("Design style:", getDesignStyle(selectedDesign));
-      
+
 //       // Check what phone fields are available
 //       selectedEmployees.slice(0, 3).forEach((emp, index) => {
 //         console.log(`Employee ${index + 1} phone data:`, {
@@ -1134,14 +1139,14 @@ export default EmailSignatureCreator;
 //           phone: emp.phone,
 //           officePhone: emp.officePhone,
 //           // Check all possible phone field names
-//           allKeys: Object.keys(emp).filter(key => 
-//             key.toLowerCase().includes('phone') || 
+//           allKeys: Object.keys(emp).filter(key =>
+//             key.toLowerCase().includes('phone') ||
 //             key.toLowerCase().includes('mobile') ||
 //             key.toLowerCase().includes('tel')
 //           )
 //         });
 //       });
-      
+
 //       // Test signature generation for first employee
 //       const testEmployee = selectedEmployees[0];
 //       const testFormData = {
@@ -1154,12 +1159,12 @@ export default EmailSignatureCreator;
 //         location: testEmployee.officeLocation || "No Location",
 //         company: "Agile World Technologies LLC"
 //       };
-      
+
 //       console.log("🧪 Test form data for first employee:", testFormData);
-      
+
 //       const testSignature = generateSignatureHTML(testFormData, selectedDesign, getDesignStyle(selectedDesign));
 //       console.log("🧪 Test signature HTML (first 300 chars):", testSignature.substring(0, 300));
-      
+
 //       // Check if signature contains placeholders (should not)
 //       const hasPlaceholders = testSignature.includes('{{') || testSignature.includes('{name}');
 //       console.log("🧪 Signature has placeholders:", hasPlaceholders);
@@ -1282,22 +1287,22 @@ export default EmailSignatureCreator;
 //     try {
 //       const organization = "agileworldtechnologies.com";
 //       const designStyle = getDesignStyle(selectedDesign);
-      
+
 //       console.log("🚀 Starting bulk apply for", selectedEmployees.length, "employees");
 //       console.log("🔍 Current selectedDesign:", selectedDesign);
 //       console.log("🔍 Current designStyle:", designStyle);
-      
+
 //       // Apply to each employee individually (more reliable than template approach)
 //       for (let i = 0; i < selectedEmployees.length; i++) {
 //         const employee = selectedEmployees[i];
-        
+
 //         try {
 //           // Create individual form data for each employee with actual values
 //           const individualFormData = {
 //             ...formData, // Keep all the design settings, social links, logos, etc.
 //             // Override with actual employee data
 //             name: employee.displayName || "Employee Name",
-//             jobTitle: employee.jobTitle || "Job Title", 
+//             jobTitle: employee.jobTitle || "Job Title",
 //             email: employee.mail || "",
 //             phone: employee.mobilePhone || employee.businessPhones?.[0] || "",
 //             mobilePhone: employee.mobilePhone || employee.businessPhones?.[0] || "",
@@ -1360,12 +1365,12 @@ export default EmailSignatureCreator;
 
 //           console.log(`✅ Success for ${employee.displayName}`);
 //           successCount++;
-          
+
 //           // Add delay to avoid overwhelming the API
 //           if (i < selectedEmployees.length - 1) {
 //             await new Promise(resolve => setTimeout(resolve, 1000)); // 1 second delay
 //           }
-          
+
 //         } catch (employeeError) {
 //           console.error(`❌ Failed for ${employee.displayName}:`, employeeError.response?.data || employeeError.message);
 //           failCount++;
@@ -1378,10 +1383,10 @@ export default EmailSignatureCreator;
 //       if (failedEmployees.length > 0) {
 //         message += `\n\nFailed employees:\n${failedEmployees.join('\n')}`;
 //       }
-      
+
 //       alert(message);
 //       navigate("/employees");
-      
+
 //     } catch (error) {
 //       console.error("❌ Error in bulk apply:", error);
 //       alert(`Bulk apply failed. Error: ${error.message}`);
@@ -1395,7 +1400,7 @@ export default EmailSignatureCreator;
 //     if (selectedEmployees && selectedEmployees.length > 0) {
 //       console.log("🔍 Debug: First employee data:", selectedEmployees[0]);
 //       console.log("🔍 Available fields:", Object.keys(selectedEmployees[0]));
-      
+
 //       selectedEmployees.slice(0, 3).forEach((emp, index) => {
 //         console.log(`Employee ${index + 1}:`, {
 //           displayName: emp.displayName,
@@ -1413,15 +1418,15 @@ export default EmailSignatureCreator;
 //   const testEmployeesWithPhones = () => {
 //     if (selectedEmployees?.length > 0) {
 //       console.log("📞 TESTING EMPLOYEES WITH PHONE NUMBERS:");
-      
+
 //       // Find employees with phone numbers
 //       const employeesWithPhones = selectedEmployees.filter(emp => emp.mobilePhone);
 //       console.log("Found employees with phones:", employeesWithPhones.length);
-      
+
 //       employeesWithPhones.forEach((emp, index) => {
 //         console.log(`\n📞 Employee ${index + 1}: ${emp.displayName}`);
 //         console.log("Phone:", emp.mobilePhone);
-        
+
 //         // Generate form data same as bulk apply
 //         const testFormData = {
 //           ...formData,
@@ -1433,15 +1438,15 @@ export default EmailSignatureCreator;
 //           location: emp.officeLocation || "",
 //           company: "Agile World Technologies LLC"
 //         };
-        
+
 //         console.log("Form data:", testFormData);
-        
+
 //         // Generate signature using same method as bulk apply
 //         const signature = generateSignatureHTML(testFormData, selectedDesign, getDesignStyle(selectedDesign));
-        
+
 //         console.log("Signature includes phone?", signature.includes(emp.mobilePhone));
 //         console.log("Signature snippet:", signature.substring(0, 500));
-        
+
 //         if (!signature.includes(emp.mobilePhone)) {
 //           console.log("❌ PHONE MISSING for", emp.displayName);
 //           console.log("❌ Looking for:", emp.mobilePhone);
@@ -1459,7 +1464,7 @@ export default EmailSignatureCreator;
 //       if (gautam && gautam.mobilePhone) {
 //         console.log("🔄 COMPARING INDIVIDUAL VS BULK for", gautam.displayName);
 //         console.log("Phone number:", gautam.mobilePhone);
-        
+
 //         // INDIVIDUAL APPLY STYLE (from your working individual apply)
 //         const individualFormData = {
 //           name: gautam.displayName,
@@ -1482,35 +1487,35 @@ export default EmailSignatureCreator;
 //           disclaimer: "",
 //           campaigns: [],
 //         };
-        
+
 //         // BULK APPLY STYLE (from your bulk apply)
 //         const bulkFormData = {
 //           ...formData, // Use current form data
 //           name: gautam.displayName || "Employee Name",
-//           jobTitle: gautam.jobTitle || "Job Title", 
+//           jobTitle: gautam.jobTitle || "Job Title",
 //           email: gautam.mail || "",
 //           phone: gautam.mobilePhone || "",
 //           mobilePhone: gautam.mobilePhone || "",
 //           location: gautam.officeLocation || "",
 //           company: "Agile World Technologies LLC"
 //         };
-        
+
 //         console.log("📝 Individual form data:", individualFormData);
 //         console.log("📝 Bulk form data:", bulkFormData);
-        
+
 //         // Generate signatures
 //         const designStyle = getDesignStyle(selectedDesign);
 //         const individualSignature = generateSignatureHTML(individualFormData, selectedDesign, designStyle);
 //         const bulkSignature = generateSignatureHTML(bulkFormData, selectedDesign, designStyle);
-        
+
 //         console.log("🔍 Individual signature:", individualSignature);
 //         console.log("🔍 Bulk signature:", bulkSignature);
-        
+
 //         console.log("📞 Phone in individual signature?", individualSignature.includes(gautam.mobilePhone));
 //         console.log("📞 Phone in bulk signature?", bulkSignature.includes(gautam.mobilePhone));
-        
+
 //         console.log("🔄 Signatures identical?", individualSignature === bulkSignature);
-        
+
 //         if (individualSignature !== bulkSignature) {
 //           console.log("❌ SIGNATURES ARE DIFFERENT!");
 //           console.log("❌ Difference in form data:");
@@ -1628,13 +1633,13 @@ export default EmailSignatureCreator;
 //           ? "Bulk Apply Email Signatures"
 //           : "Customize Your Email Signature"}
 //       </h2>
-      
+
 //       {isBulkApply && (
 //         <div style={{ textAlign: "center", marginBottom: "20px" }}>
 //           <p>Applying to {selectedEmployees?.length || 0} employees</p>
-          
+
 //           {/* DEBUG BUTTONS */}
-//           <button 
+//           <button
 //             onClick={() => {
 //               if (selectedEmployees?.length > 0) {
 //                 console.log("🔍 Manual Debug - Employee Data:", selectedEmployees[0]);
@@ -1652,14 +1657,14 @@ export default EmailSignatureCreator;
 //           >
 //             🔍 Debug Employee Data
 //           </button>
-          
-//           <button 
+
+//           <button
 //             onClick={() => {
 //               if (selectedEmployees?.length > 0) {
 //                 const testEmployee = selectedEmployees[0];
 //                 console.log("🧪 TESTING SIGNATURE GENERATION:");
 //                 console.log("Test employee:", testEmployee);
-                
+
 //                 const testFormData = {
 //                   ...formData,
 //                   name: testEmployee.displayName || "Test Name",
@@ -1670,9 +1675,9 @@ export default EmailSignatureCreator;
 //                   location: testEmployee.officeLocation || "Test Location",
 //                   company: "Agile World Technologies LLC"
 //                 };
-                
+
 //                 console.log("🧪 Test form data:", testFormData);
-                
+
 //                 const testSignature = generateSignatureHTML(testFormData, selectedDesign, designStyle);
 //                 console.log("🧪 Full signature HTML:", testSignature);
 //                 console.log("🧪 Signature includes phone?", testSignature.includes(testEmployee.mobilePhone));
@@ -1690,7 +1695,7 @@ export default EmailSignatureCreator;
 //             🧪 Test Signature HTML
 //           </button>
 
-//           <button 
+//           <button
 //             onClick={testEmployeesWithPhones}
 //             style={{
 //               backgroundColor: "#6f42c1",
@@ -1704,7 +1709,7 @@ export default EmailSignatureCreator;
 //             📞 Test Employees with Phones
 //           </button>
 
-//           <button 
+//           <button
 //             onClick={compareIndividualVsBulk}
 //             style={{
 //               backgroundColor: "#e83e8c",
@@ -1719,7 +1724,7 @@ export default EmailSignatureCreator;
 //           </button>
 //         </div>
 //       )}
-      
+
 //       <div className="editor-container">
 //         <div className="content">
 //           <div className="form-section">
