@@ -414,7 +414,7 @@ orange: (designStyle, sections, formData) => {
 
   // Profile image section - email compatible with fallback to initials
   const profileImageSection = defaultData.profileImage ? 
-    '<img src="' + defaultData.profileImage + '" alt="' + (defaultData.name || 'Profile') + '" width="110" height="110" style="border-radius: 55px; border: 3px solid #FF6B35; display: block; object-fit: cover;">' :
+    '<img src="' + defaultData.profileImage + '" alt="' + (defaultData.name || 'Profile') + '" width="110" height="110" style="border-radius: 55px; border: 3px solid #FF6B35; display: block; object-fit: contain;">' :
     '<table cellpadding="0" cellspacing="0" border="0"><tr><td width="110" height="110" style="background-color: #FF6B35; color: white; font-weight: bold; font-size: 36px; border-radius: 55px; text-align: center; line-height: 110px; display: block;">' + getUserInitials(defaultData.name) + '</td></tr></table>';
 
   // FontAwesome SVG Icons for email compatibility
@@ -497,22 +497,21 @@ orange: (designStyle, sections, formData) => {
 
   // EMAIL-COMPATIBLE TABLE STRUCTURE - Exact Layout Match
   return '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: \'Segoe UI\', Tahoma, Geneva, Verdana, sans-serif; border-collapse: collapse; border: none; margin: 0; padding: 0;">' +
-    // Orange gradient top border (4px height)
     '<tr>' +
       '<td colspan="3" style="height: 4px; background-color: #FF6B35; width: 100%;"></td>' +
     '</tr>' +
     
     // Main content row with exact spacing
     '<tr>' +
-      // Profile Image Section (110px + 3px margin = 113px)
+      
       '<td width="113" style="padding-right: 3px; text-align: left; vertical-align: middle;">' +
         profileImageSection +
       '</td>' +
       
-      // Name & Title Section (108px, center-aligned)
+      // Name & Title Section 
       '<td width="108" style="text-align: center; vertical-align: middle;">' +
         '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
-          // Name (17px font-size)
+         
           '<tr>' +
             '<td style="font-size: 17px; font-weight: 700; color: #333333; padding-bottom: 2px; line-height: 1.2; text-align: center;">' +
               (defaultData.name || "Your Name") +
@@ -535,7 +534,7 @@ orange: (designStyle, sections, formData) => {
       '</td>' +
     '</tr>' +
     
-    // Social Icons Section (at bottom, outside main content)
+  
     '<tr>' +
       '<td colspan="3" style="padding: 0px;">' +
         '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
@@ -551,42 +550,150 @@ orange: (designStyle, sections, formData) => {
 },  
 
   orangecenter: (designStyle, sections, formData) => {
-    return layoutConfigs.orange(designStyle, sections, formData);
+    // return layoutConfigs.orange(designStyle, sections, formData);
   },
 
   orangetext: (designStyle, sections, formData) => {
-    const defaultData = {
-      name: "Employee Name", 
-      jobTitle: "Job Title", 
-      phone: "",
-      email: "", 
-      website: "",
-      company: "Company Name", 
-      location: "Location", 
-      ...formData // 🔧 Fixed to use actual formData
+  const defaultData = {
+    name: "Employee Name", 
+    jobTitle: "Job Title", 
+    company: "Company Name", 
+    location: "Location",
+    phone: "", 
+    mobilePhone: "", 
+    email: "", 
+    website: "", 
+    logo: null, 
+    profileImage: null,
+    linkedin: "", 
+    youtube: "", 
+    instagram: "", 
+    facebook: "", 
+    twitter: "", 
+    github: "", 
+    ...formData // This ensures formData overrides defaults
+  };
+
+  // FontAwesome SVG Icons for email compatibility
+  const getIconSVG = (iconType) => {
+    const icons = {
+      mobile: '<svg width="12" height="12" viewBox="0 0 384 512" fill="#FF6B35"><path d="M80 0C44.7 0 16 28.7 16 64V448c0 35.3 28.7 64 64 64H304c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H80zM96 64H288c8.8 0 16 7.2 16 16V416c0 8.8-7.2 16-16 16H96c-8.8 0-16-7.2-16-16V80c0-8.8 7.2-16 16-16z"/></svg>',
+      phone: '<svg width="12" height="12" viewBox="0 0 512 512" fill="#FF6B35"><path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3l49.4-40.4c13.7-11.1 18.4-30 11.6-46.3l-40-96z"/></svg>',
+      envelope: '<svg width="12" height="12" viewBox="0 0 512 512" fill="#FF6B35"><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/></svg>',
+      globe: '<svg width="12" height="12" viewBox="0 0 512 512" fill="#FF6B35"><path d="M352 256c0 22.2-1.2 43.6-3.3 64H163.3c-2.2-20.4-3.3-41.8-3.3-64s1.2-43.6 3.3-64H348.7c2.2 20.4 3.3 41.8 3.3 64zm28.8-64H503.9c5.3 20.5 8.1 41.9 8.1 64s-2.8 43.5-8.1 64H380.8c2.1-20.6 3.2-42 3.2-64s-1.1-43.4-3.2-64zm112.6-32H376.7c-10-63.9-29.8-117.4-55.3-151.6c78.3 20.7 142 77.5 171.9 151.6zm-149.1 0H167.7c6.1-36.4 15.5-68.6 27-94.7c10.5-23.6 22.2-40.7 33.5-51.5C239.4 3.2 248.7 0 256 0s16.6 3.2 27.8 13.8c11.3 10.8 23 27.9 33.5 51.5c11.6 26 20.9 58.2 27 94.7zm-209 0H8.1C38 85.6 101.7 28.8 180 8.1C154.5 42.3 134.7 95.8 124.7 160zM8.1 352c29.9 74.1 93.6 130.9 171.9 151.6C154.5 469.7 134.7 416.2 124.7 352H8.1zm123.6 0c10 63.9 29.8 117.4 55.3 151.6C109.7 483.9 46 427.1 16.1 352H131.7zm32.4 0H344.3c-6.1 36.4-15.5 68.6-27 94.7c-10.5 23.6-22.2 40.7-33.5 51.5C272.6 508.8 263.3 512 256 512s-16.6-3.2-27.8-13.8c-11.3-10.8-23-27.9-33.5-51.5c-11.6-26-20.9-58.2-27-94.7zm283.7 0c-10 63.9-29.8 117.4-55.3 151.6C465.3 483.9 529 427.1 558.9 352H448.1z"/></svg>',
+      building: '<svg width="12" height="12" viewBox="0 0 384 512" fill="#FF6B35"><path d="M48 0C21.5 0 0 21.5 0 48V464c0 26.5 21.5 48 48 48h96V432c0-26.5 21.5-48 48-48s48 21.5 48 48v80h96c26.5 0 48-21.5 48-48V48c0-26.5-21.5-48-48-48H48zM64 240c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V240zm112-16h32c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H176c-8.8 0-16-7.2-16-16V240c0-8.8 7.2-16 16-16zm80 16c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H272c-8.8 0-16-7.2-16-16V240zM80 96h32c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16zm80 16c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H176c-8.8 0-16-7.2-16-16V112zm112-16h32c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H272c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16z"/></svg>',
+      location: '<svg width="12" height="12" viewBox="0 0 384 512" fill="#FF6B35"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg>'
     };
+    return icons[iconType] || '';
+  };
 
-    const contactItems = [];
-    if (defaultData.phone) contactItems.push('<div style="margin-bottom: 5px;"><span style="font-size: 12px; color: #333333;">📞 ' + defaultData.phone + '</span></div>');
-    if (defaultData.email) contactItems.push('<div style="margin-bottom: 5px;"><span style="font-size: 12px; color: #333333;">✉ ' + defaultData.email + '</span></div>');
-    if (defaultData.website) contactItems.push('<div style="margin-bottom: 5px;"><span style="font-size: 12px; color: #333333;">🌐 ' + defaultData.website + '</span></div>');
-    if (defaultData.company) contactItems.push('<div style="margin-bottom: 5px;"><span style="font-size: 12px; color: #333333;">🏢 ' + defaultData.company + '</span></div>');
-    if (defaultData.location) contactItems.push('<div style="margin-bottom: 5px;"><span style="font-size: 12px; color: #333333;">📍 ' + defaultData.location + '</span></div>');
+  // Contact details with FontAwesome SVG icons
+  const contactDetails = [];
+  
+  // Mobile Phone
+  if (defaultData.mobilePhone) {
+    contactDetails.push(
+      '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
+      '<td style="vertical-align: middle; width: 16px; height: 16px;">' + getIconSVG('mobile') + '</td>' +
+      '<td style="padding-left: 8px; font-size: 12px; color: #333333; vertical-align: middle;">' + defaultData.mobilePhone + '</td>' +
+      '</tr></table></td></tr>'
+    );
+  }
+  
+  // Phone (only show if different from mobile)
+  if (defaultData.phone && defaultData.phone !== defaultData.mobilePhone) {
+    contactDetails.push(
+      '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
+      '<td style="vertical-align: middle; width: 16px; height: 16px;">' + getIconSVG('phone') + '</td>' +
+      '<td style="padding-left: 8px; font-size: 12px; color: #333333; vertical-align: middle;">' + defaultData.phone + '</td>' +
+      '</tr></table></td></tr>'
+    );
+  }
+  
+  // Email
+  if (defaultData.email) {
+    contactDetails.push(
+      '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
+      '<td style="vertical-align: middle; width: 16px; height: 16px;">' + getIconSVG('envelope') + '</td>' +
+      '<td style="padding-left: 8px; font-size: 12px; color: #333333; vertical-align: middle;"><a href="mailto:' + defaultData.email + '" style="color: #333333; text-decoration: none;">' + defaultData.email + '</a></td>' +
+      '</tr></table></td></tr>'
+    );
+  }
+  
+  // Website
+  if (defaultData.website) {
+    const websiteUrl = defaultData.website.startsWith('http') ? defaultData.website : 'https://' + defaultData.website;
+    const displayUrl = defaultData.website.replace(/^https?:\/\//, '');
+    contactDetails.push(
+      '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
+      '<td style="vertical-align: middle; width: 16px; height: 16px;">' + getIconSVG('globe') + '</td>' +
+      '<td style="padding-left: 8px; font-size: 12px; color: #333333; vertical-align: middle;"><a href="' + websiteUrl + '" target="_blank" style="color: #333333; text-decoration: none;">' + displayUrl + '</a></td>' +
+      '</tr></table></td></tr>'
+    );
+  }
+  
+  // Company (with margin-top equivalent)
+  if (defaultData.company) {
+    contactDetails.push(
+      '<tr><td style="padding-bottom: 8px; padding-top: 10px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
+      '<td style="vertical-align: middle; width: 16px; height: 16px;">' + getIconSVG('building') + '</td>' +
+      '<td style="padding-left: 8px; font-size: 12px; color: #333333; vertical-align: middle;">' + defaultData.company + '</td>' +
+      '</tr></table></td></tr>'
+    );
+  }
+  
+  // Location
+  if (defaultData.location) {
+    contactDetails.push(
+      '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
+      '<td style="vertical-align: middle; width: 16px; height: 16px;">' + getIconSVG('location') + '</td>' +
+      '<td style="padding-left: 8px; font-size: 12px; color: #333333; vertical-align: middle;">' + defaultData.location + '</td>' +
+      '</tr></table></td></tr>'
+    );
+  }
 
-    return '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, sans-serif; border-collapse: collapse; background-color: #ffffff;">' +
-      '<tr>' +
-        '<td style="height: 4px; background-color: #FF6B35;"></td>' +
-      '</tr>' +
-      '<tr>' +
-        '<td style="padding: 20px;">' +
-          '<div style="font-size: 24px; font-weight: bold; color: #333333; margin-bottom: 2px; line-height: 1.2;">' + (defaultData.name || "Your Name") + '</div>' +
-          '<div style="font-size: 14px; font-weight: bold; color: #FF6B35; margin-bottom: 15px; letter-spacing: 0.5px;">' + (defaultData.jobTitle || "YOUR JOB TITLE") + '</div>' +
-          '<div style="margin-bottom: 15px;">' + renderOrangeSocialIcons(defaultData) + '</div>' +
-          '<div>' + contactItems.join('') + '</div>' +
-        '</td>' +
-      '</tr>' +
-    '</table>';
-  },
+  // EMAIL-COMPATIBLE TABLE STRUCTURE - OrangeText Layout
+  return '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: \'Segoe UI\', Tahoma, Geneva, Verdana, sans-serif; border-collapse: collapse; border: none; margin: 0; padding: 0;">' +
+    // Orange gradient top border (4px height)
+    '<tr>' +
+      '<td colspan="2" style="height: 4px; background-color: #FF6B35; width: 100%;"></td>' +
+    '</tr>' +
+    
+    // Main content row with exact spacing
+    '<tr>' +
+      
+      '<td width="180" style="padding: 10px; padding-right: 20px; vertical-align: top;">' +
+        '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
+      
+          '<tr>' +
+            '<td style="font-size: 24px; font-weight: 700; color: #333333; padding-bottom: 8px; line-height: 1.2;">' +
+              (defaultData.name || "Your Name") +
+            '</td>' +
+          '</tr>' +
+          // Job Title
+          '<tr>' +
+            '<td style="font-size: 14px; font-weight: 600; color: #FF6B35; padding-bottom: 15px; letter-spacing: 0.5px;">' +
+              (defaultData.jobTitle || "YOUR JOB TITLE") +
+            '</td>' +
+          '</tr>' +
+        
+          '<tr>' +
+            '<td>' +
+              renderSocialIcons(defaultData) +
+            '</td>' +
+          '</tr>' +
+        '</table>' +
+      '</td>' +
+      
+      // Right Section - Contact Information (remaining width, flex: 1 equivalent)
+      '<td style="padding: 10px; vertical-align: top;">' +
+        '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
+          contactDetails.join('') +
+        '</table>' +
+      '</td>' +
+    '</tr>' +
+  '</table>';
+},
 
   // STANDARD LAYOUT - Fixed to use actual formData
   standard: (designStyle, sections, formData) => {

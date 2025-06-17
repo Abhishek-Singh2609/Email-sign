@@ -10,19 +10,7 @@ import {
 } from "react-icons/fa6";
 
 const OrangeCenter = ({ formData, designStyle }) => {
-  const defaultData = {
-    name: "Sally Williams",
-    jobTitle: "SALES MANAGER", 
-    phone: "+1 234 56789",
-    mobilePhone: "+1 987 65432",
-    email: "s.williams@crossware365.com",
-    website: "www.crossware365.com",
-    company: "Crossware Inc.",
-    location: "New York, USA",
-    profileImage: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face&auto=format",
-    ...formData
-  };
-
+  
   return (
     <>
       {/* Custom CSS for orange social icons */}
@@ -56,7 +44,6 @@ const OrangeCenter = ({ formData, designStyle }) => {
         style={{
           fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
           width: "600px",
-          backgroundColor: "#ffffff",
           border: "none",
           margin: "0",
           padding: "0",
@@ -94,7 +81,7 @@ const OrangeCenter = ({ formData, designStyle }) => {
                 
               }}
             >
-              {defaultData.name || "Your Name"}
+              {formData.name || "Your Name"}
             </div>
 
             {/* Job Title */}
@@ -108,23 +95,23 @@ const OrangeCenter = ({ formData, designStyle }) => {
              
               }}
             >
-              {defaultData.jobTitle || "YOUR JOB TITLE"}
+              {formData.jobTitle || "YOUR JOB TITLE"}
             </div>
 
             {/* Social Icons - Centered below name/title */}
             <div style={{ display: "flex" }}>
               <div className="social-icons-container">
-                {renderSocialIcons(defaultData)}
+                {renderSocialIcons(formData)}
               </div>
             </div>
           </div>
 
           {/* Center Section - Profile Image */}
           <div style={{ margin: "0 20px" }}>
-            {defaultData.profileImage ? (
+            {formData.profileImage ? (
               <img
-                src={defaultData.profileImage}
-                alt={defaultData.name || "Profile"}
+                src={formData.profileImage}
+                alt={formData.name || "Profile"}
                 style={{
                   width: "110px",
                   height: "110px",
@@ -148,7 +135,7 @@ const OrangeCenter = ({ formData, designStyle }) => {
                   fontWeight: "bold",
                 }}
               >
-                {defaultData.name ? defaultData.name.charAt(0) : "U"}
+                {formData.name ? formData.name.charAt(0) : "U"}
               </div>
             )}
           </div>
@@ -164,9 +151,9 @@ const OrangeCenter = ({ formData, designStyle }) => {
             }}
           >
             {/* Phone Numbers */}
-            {(defaultData.mobilePhone || defaultData.phone) && (
+            {(formData.mobilePhone || formData.phone) && (
               <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                {defaultData.mobilePhone && (
+                {formData.mobilePhone && (
                   <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                     <div
                       style={{
@@ -182,11 +169,11 @@ const OrangeCenter = ({ formData, designStyle }) => {
                       <FaMobileScreen size={12} />
                     </div>
                     <span style={{ fontSize: "12px", color: "#333333" }}>
-                      {defaultData.mobilePhone}
+                      {formData.mobilePhone}
                     </span>
                   </div>
                 )}
-                {defaultData.phone && (
+                {formData.phone && (
                   <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                     <div
                       style={{
@@ -202,7 +189,7 @@ const OrangeCenter = ({ formData, designStyle }) => {
                       <FaPhone size={12} />
                     </div>
                     <span style={{ fontSize: "12px", color: "#333333" }}>
-                      {defaultData.phone}
+                      {formData.phone}
                     </span>
                   </div>
                 )}
@@ -210,7 +197,7 @@ const OrangeCenter = ({ formData, designStyle }) => {
             )}
 
             {/* Email */}
-            {defaultData.email && (
+            {formData.email && (
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                 <div
                   style={{
@@ -226,13 +213,13 @@ const OrangeCenter = ({ formData, designStyle }) => {
                   <FaEnvelope size={12} />
                 </div>
                 <span style={{ fontSize: "12px", color: "#333333" }}>
-                  {defaultData.email}
+                  {formData.email}
                 </span>
               </div>
             )}
 
             {/* Website */}
-            {defaultData.website && (
+            {formData.website && (
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                 <div
                   style={{
@@ -248,13 +235,13 @@ const OrangeCenter = ({ formData, designStyle }) => {
                   <FaGlobe size={12} />
                 </div>
                 <span style={{ fontSize: "12px", color: "#333333" }}>
-                  {defaultData.website}
+                  {formData.website}
                 </span>
               </div>
             )}
 
             {/* Company */}
-            {defaultData.company && (
+            {formData.company && (
               <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "10px" }}>
                 <div
                   style={{
@@ -270,13 +257,13 @@ const OrangeCenter = ({ formData, designStyle }) => {
                   <FaBuilding size={12} />
                 </div>
                 <span style={{ fontSize: "12px", color: "#333333" }}>
-                  {defaultData.company}
+                  {formData.company}
                 </span>
               </div>
             )}
 
             {/* Location */}
-            {defaultData.location && (
+            {formData.location && (
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                 <div
                   style={{
@@ -292,7 +279,7 @@ const OrangeCenter = ({ formData, designStyle }) => {
                   <FaLocationDot size={12} />
                 </div>
                 <span style={{ fontSize: "12px", color: "#333333" }}>
-                  {defaultData.location}
+                  {formData.location}
                 </span>
               </div>
             )}

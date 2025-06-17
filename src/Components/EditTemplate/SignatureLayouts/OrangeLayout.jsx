@@ -294,7 +294,7 @@ const OrangeLayout = ({ formData, designStyle }) => {
           </div>
         </div>
         {/* Social Icons */}
-            <div className="social-icons-container">
+            <div className="social-icons-container" style={{ paddingBottom:"5px"}}>
               {renderSocialIcons(formData)}
             </div>
       </div>
