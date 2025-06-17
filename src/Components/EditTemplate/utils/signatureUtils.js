@@ -414,7 +414,7 @@ orange: (designStyle, sections, formData) => {
 
   // Profile image section - email compatible with fallback to initials
   const profileImageSection = defaultData.profileImage ? 
-    '<img src="' + defaultData.profileImage + '" alt="' + (defaultData.name || 'Profile') + '" width="110" height="110" style="border-radius: 55px; border: 3px solid #FF6B35; display: block; object-fit: cover;">' :
+    '<img src="' + defaultData.profileImage + '" alt="' + (defaultData.name || 'Profile') + '" width="110" height="110" style="border-radius: 55px; border: 3px solid #FF6B35; display: block; object-fit: contain;">' :
     '<table cellpadding="0" cellspacing="0" border="0"><tr><td width="110" height="110" style="background-color: #FF6B35; color: white; font-weight: bold; font-size: 36px; border-radius: 55px; text-align: center; line-height: 110px; display: block;">' + getUserInitials(defaultData.name) + '</td></tr></table>';
 
   // Contact details
@@ -527,10 +527,141 @@ orange: (designStyle, sections, formData) => {
     '</tr>' +
   '</table>';
 }, 
+ 
+// Orange Center Layout 
+ orangeCenter: (designStyle, sections, formData) => {
+  const defaultData = {
+    name: "Employee Name", 
+    jobTitle: "Job Title", 
+    company: "Company Name", 
+    location: "Location",
+    phone: "", 
+    mobilePhone: "", 
+    email: "", 
+    website: "", 
+    logo: null, 
+    profileImage: null,
+    linkedin: "", 
+    youtube: "", 
+    instagram: "", 
+    facebook: "", 
+    twitter: "", 
+    github: "", 
+    ...formData // This ensures formData overrides defaults
+  };
 
-  orangecenter: (designStyle, sections, formData) => {
-    // return layoutConfigs.orange(designStyle, sections, formData);
-  },
+  // Profile image section - email compatible with fallback to initials
+  const profileImageSection = defaultData.profileImage ? 
+    '<img src="' + defaultData.profileImage + '" alt="' + (defaultData.name || 'Profile') + '" width="110" height="110" style="border-radius: 55px; border: 3px solid #FF6B35; display: block; object-fit:contain max-width: 110px; width: 110px !important; height: 110px !important;">' :
+    '<table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;"><tr><td width="110" height="110" style="background-color: #FF6B35; color: white; font-weight: bold; font-size: 36px; border-radius: 55px; text-align: center; line-height: 110px; width: 110px; max-width: 110px;">' + getUserInitials(defaultData.name) + '</td></tr></table>';
+
+  // Contact details
+  const contactDetails = [];
+  
+  // Mobile Phone
+  if (defaultData.mobilePhone) {
+    contactDetails.push(
+      '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
+      '<td width="16" style="color: #FF6B35; font-size: 12px; text-align: center;">📱</td>' +
+      '<td style="font-size: 12px; color: #333333; padding-left: 8px; vertical-align: middle;">' + defaultData.mobilePhone + '</td>' +
+      '</tr></table></td></tr>'
+    );
+  }
+  
+  // Phone (only show if different from mobile)
+  if (defaultData.phone && defaultData.phone !== defaultData.mobilePhone) {
+    contactDetails.push(
+      '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
+      '<td width="16" style="color: #FF6B35; font-size: 12px; text-align: center;">📞</td>' +
+      '<td style="font-size: 12px; color: #333333; padding-left: 8px; vertical-align: middle;">' + defaultData.phone + '</td>' +
+      '</tr></table></td></tr>'
+    );
+  }
+  
+  // Email
+  if (defaultData.email) {
+    contactDetails.push(
+      '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
+      '<td width="16" style="color: #FF6B35; font-size: 12px; text-align: center;">✉️</td>' +
+      '<td style="font-size: 12px; color: #333333; padding-left: 8px; vertical-align: middle;"><a href="mailto:' + defaultData.email + '" style="color: #333333; text-decoration: none;">' + defaultData.email + '</a></td>' +
+      '</tr></table></td></tr>'
+    );
+  }
+  
+  // Website
+  if (defaultData.website) {
+    const websiteUrl = defaultData.website.startsWith('http') ? defaultData.website : 'https://' + defaultData.website;
+    const displayUrl = defaultData.website.replace(/^https?:\/\//, '');
+    contactDetails.push(
+      '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
+      '<td width="16" style="color: #FF6B35; font-size: 12px; text-align: center;">🌐</td>' +
+      '<td style="font-size: 12px; color: #333333; padding-left: 8px; vertical-align: middle;"><a href="' + websiteUrl + '" target="_blank" style="color: #333333; text-decoration: none;">' + displayUrl + '</a></td>' +
+      '</tr></table></td></tr>'
+    );
+  }
+  
+  // Company (with margin-top equivalent)
+  if (defaultData.company) {
+    contactDetails.push(
+      '<tr><td style="padding-bottom: 8px; padding-top: 10px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
+      '<td width="16" style="color: #FF6B35; font-size: 12px; text-align: center;">🏢</td>' +
+      '<td style="font-size: 12px; color: #333333; padding-left: 8px; vertical-align: middle;">' + defaultData.company + '</td>' +
+      '</tr></table></td></tr>'
+    );
+  }
+  
+  // Location
+  if (defaultData.location) {
+    contactDetails.push(
+      '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
+      '<td width="16" style="color: #FF6B35; font-size: 12px; text-align: center;">📍</td>' +
+      '<td style="font-size: 12px; color: #333333; padding-left: 8px; vertical-align: middle;">' + defaultData.location + '</td>' +
+      '</tr></table></td></tr>'
+    );
+  }
+
+  // EMAIL-COMPATIBLE TABLE STRUCTURE - Orange Center Layout
+  // Layout: Name/Title/Social (Left) | Profile Image (Center) | Contact Info (Right)
+  return '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: \'Segoe UI\', Tahoma, Geneva, Verdana, sans-serif; border-collapse: collapse; table-layout: fixed; width: 600px; max-width: 600px;">' +
+    '<tr>' +
+      '<td colspan="3" height="4" style="background: linear-gradient(90deg, #FF6B35 0%, #F7931E 100%); font-size: 1px; line-height: 1px;">&nbsp;</td>' +
+    '</tr>' +
+    '<tr>' +
+      // Left Column: Name, Title, and Social Icons
+      '<td width="140" style="padding: 10px 0px 10px 10px; width: 140px; max-width: 140px; vertical-align: top;">' +
+        '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
+          '<tr>' +
+            '<td style="font-size: 17px; font-weight: 700; color: #333333; padding-bottom: 2px; line-height: 1.2; text-align: left; word-wrap: break-word;">' +
+              (defaultData.name || "Your Name") +
+            '</td>' +
+          '</tr>' +
+          '<tr>' +
+            '<td style="font-size: 14px; font-weight: 600; color: #FF6B35; padding-bottom: 15px; letter-spacing: 0.5px; text-align: left; word-wrap: break-word;">' +
+              (defaultData.jobTitle || "YOUR JOB TITLE") +
+            '</td>' +
+          '</tr>' +
+          '<tr>' +
+            '<td style="text-align: left;">' +
+              renderSocialIcons(defaultData) +
+            '</td>' +
+          '</tr>' +
+        '</table>' +
+      '</td>' +
+      
+      // Center Column: Profile Image
+      '<td width="120" style="padding: 10px 4px; text-align: center; width: 120px; max-width: 120px; vertical-align: middle;">' +
+        profileImageSection +
+      '</td>' +
+      
+      // Right Column: Contact Information
+      '<td width="340" style="padding: 10px 10px 10px 0px; width: 340px; max-width: 340px; vertical-align: top;">' +
+        '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
+          contactDetails.join('') +
+        '</table>' +
+      '</td>' +
+    '</tr>' +
+  '</table>';
+},
 
   orangetext: (designStyle, sections, formData) => {
   const defaultData = {
@@ -553,7 +684,7 @@ orange: (designStyle, sections, formData) => {
     ...formData // This ensures formData overrides defaults
   };
 
-  // Contact details with FontAwesome SVG icons
+  // Contact details 
   const contactDetails = [];
   
   // Mobile Phone

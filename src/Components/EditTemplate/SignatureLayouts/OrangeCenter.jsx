@@ -64,16 +64,16 @@ const OrangeCenter = ({ formData, designStyle }) => {
           style={{
             display: "flex",
             alignItems: "center",
-            padding: "20px",
+            padding: "10px",
             backgroundColor: "#ffffff",
           }}
         >
           {/* Left Section - Name and Title */}
-          <div style={{ flex: 1, paddingRight: "20px" }}>
+          <div style={{ maxWidth:"128px" }}>
             {/* Name */}
             <div
               style={{
-                fontSize: "24px",
+                fontSize: "17px",
                 fontWeight: "700",
                 color: "#333333",
                 marginBottom: "2px",
@@ -107,7 +107,7 @@ const OrangeCenter = ({ formData, designStyle }) => {
           </div>
 
           {/* Center Section - Profile Image */}
-          <div style={{ margin: "0 20px" }}>
+          <div style={{ margin: "0 4px" }}>
             {formData.profileImage ? (
               <img
                 src={formData.profileImage}
