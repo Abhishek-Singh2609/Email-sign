@@ -477,7 +477,7 @@ orange: (designStyle, sections, formData) => {
   }
 
   // EMAIL-COMPATIBLE TABLE STRUCTURE - Exact Layout Match
-  return '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: \'Segoe UI\', Tahoma, Geneva, Verdana, sans-serif; border-collapse: collapse; border: none; margin: 0; padding: 0;">' +
+  return '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: \'Segoe UI\', Tahoma, Geneva, Verdana, sans-serif; border-collapse: collapse; border: none; margin: 0; padding: 0; table-layout: fixed">' +
     '<tr>' +
       '<td colspan="3" style="height: 4px; background-color: #FF6B35;; width: 100%;"></td>' +
     '</tr>' +
@@ -489,7 +489,7 @@ orange: (designStyle, sections, formData) => {
       
       // Name & Title Section 
       '<td width="108" style="width: 108px; min-width: 108px; max-width: 108px; padding: 10px 0px; text-align: center; vertical-align: middle; box-sizing: border-box;">' +
-        '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
+        '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="table-layout: fixed;>' +
          
           '<tr>' +
             '<td style="font-size: 17px; font-weight: 700; color: #333333; padding-bottom: 2px; line-height: 1.2; text-align: center;">' +
@@ -506,8 +506,8 @@ orange: (designStyle, sections, formData) => {
       '</td>' +
       
       // Contact Information Section (remaining width)
-      '<td style="padding: 10px 0px; padding-left: 1px; vertical-align: middle;">' +
-        '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
+      '<td width="377" style="width: 377px; min-width: 377px; max-width: 377px; padding: 10px 0px 10px 0px; vertical-align: middle;">' +
+        '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="table-layout: fixed;>' +
           contactDetails.join('') +
         '</table>' +
       '</td>' +
@@ -744,7 +744,7 @@ orange: (designStyle, sections, formData) => {
   }
 
   // EMAIL-COMPATIBLE TABLE STRUCTURE - OrangeText Layout
-  return '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: \'Segoe UI\', Tahoma, Geneva, Verdana, sans-serif; border-collapse: collapse; border: none; margin: 0; padding: 0;">' +
+  return '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: \'Segoe UI\', Tahoma, Geneva, Verdana, sans-serif; border-collapse: collapse; border: none; margin: 0; padding: 0;table-layout: fixed;">' +
     // Orange gradient top border (4px height)
     '<tr>' +
       '<td colspan="2" style="height: 4px; background-color: #FF6B35; width: 100%;"></td>' +
@@ -753,8 +753,8 @@ orange: (designStyle, sections, formData) => {
     // Main content row with exact spacing
     '<tr>' +
       
-      '<td width="160" style="padding: 10px; padding-right: 20px; vertical-align: middle;">' +
-        '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
+      '<td  width="160" style=" width: 160px; min-width: 160px; max-width: 160px; padding-right: 20px; vertical-align: middle;">' +
+        '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="table-layout: fixed;>' +
       
           '<tr>' +
             '<td style="font-size: 24px; font-weight: 700; color: #333333; padding-bottom: 8px; line-height: 1.2;">' +
@@ -777,8 +777,8 @@ orange: (designStyle, sections, formData) => {
       '</td>' +
       
       // Right Section - Contact Information (remaining width, flex: 1 equivalent)
-      '<td style="padding: 10px; vertical-align: top;">' +
-        '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
+      '<td width="440px" style="width: 440px; min-width: 440px; max-width: 440px; padding: 10px; vertical-align: top;">' +
+        '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="table-layout: fixed;>' +
           contactDetails.join('') +
         '</table>' +
       '</td>' +
