@@ -60,7 +60,6 @@ const Orangeright = ({ formData, designStyle }) => {
         style={{
           fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
           width: "600px",
-          backgroundColor: "#ffffff",
           border: "none",
           margin: "0",
           padding: "0",
@@ -81,7 +80,7 @@ const Orangeright = ({ formData, designStyle }) => {
           style={{
             display: "flex",
             alignItems: "center",
-            padding: "20px",
+            padding: "10px",
             backgroundColor: "#ffffff",
           }}
         >
@@ -93,7 +92,7 @@ const Orangeright = ({ formData, designStyle }) => {
               gap: "8px",
               alignItems: "flex-start",
               marginRight: "20px",
-              width: "200px",
+              width: "305px",
             }}
           >
             {/* Phone Numbers */}

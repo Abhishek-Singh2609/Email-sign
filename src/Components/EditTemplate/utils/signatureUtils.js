@@ -414,7 +414,7 @@ orange: (designStyle, sections, formData) => {
 
   // Profile image section - email compatible with fallback to initials
   const profileImageSection = defaultData.profileImage ? 
-    '<img src="' + defaultData.profileImage + '" alt="' + (defaultData.name || 'Profile') + '" width="110" height="110" style="border-radius: 55px; border: 3px solid #FF6B35; display: block; object-fit: contain;">' :
+    '<img src="' + defaultData.profileImage + '" alt="' + (defaultData.name || 'Profile') + '" width="110" height="110" style="border-radius: 55px; border: 3px solid #FF6B35; display: block; object-fit: cover;">' :
     '<table cellpadding="0" cellspacing="0" border="0"><tr><td width="110" height="110" style="background-color: #FF6B35; color: white; font-weight: bold; font-size: 36px; border-radius: 55px; text-align: center; line-height: 110px; display: block;">' + getUserInitials(defaultData.name) + '</td></tr></table>';
 
   // Contact details
@@ -482,13 +482,13 @@ orange: (designStyle, sections, formData) => {
       '<td colspan="3" style="height: 4px; background-color: #FF6B35;; width: 100%;"></td>' +
     '</tr>' +
     '<tr>' +
-      
-      '<td width="113" style="padding: 10px 3px 10px 0px; text-align: left; vertical-align: middle;">' +
+       // Profile Image Section - Fixed 113px width (110px image + 3px right padding)
+      '<td width="113" style="width: 113px; min-width: 113px; max-width: 113px; padding: 10px 3px 10px 0px; text-align: left; vertical-align: middle; box-sizing: border-box;">' +
         profileImageSection +
       '</td>' +
       
       // Name & Title Section 
-      '<td width="108" style="padding: 10px 0px; text-align: center; vertical-align: middle;">' +
+      '<td width="108" style="width: 108px; min-width: 108px; max-width: 108px; padding: 10px 0px; text-align: center; vertical-align: middle; box-sizing: border-box;">' +
         '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
          
           '<tr>' +
@@ -753,7 +753,7 @@ orange: (designStyle, sections, formData) => {
     // Main content row with exact spacing
     '<tr>' +
       
-      '<td width="180" style="padding: 10px; padding-right: 20px; vertical-align: top;">' +
+      '<td width="160" style="padding: 10px; padding-right: 20px; vertical-align: middle;">' +
         '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
       
           '<tr>' +
