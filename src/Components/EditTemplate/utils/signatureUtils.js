@@ -477,19 +477,19 @@ orange: (designStyle, sections, formData) => {
   }
 
   // EMAIL-COMPATIBLE TABLE STRUCTURE - Exact Layout Match
-  return '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: \'Segoe UI\', Tahoma, Geneva, Verdana, sans-serif; border-collapse: collapse; border: none; margin: 0; padding: 0; table-layout: fixed">' +
+  return '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: \'Segoe UI\', Tahoma, Geneva, Verdana, sans-serif; border-collapse: collapse; border: none; margin: 0; padding: 0;">' +
     '<tr>' +
       '<td colspan="3" style="height: 4px; background-color: #FF6B35;; width: 100%;"></td>' +
     '</tr>' +
     '<tr>' +
-       // Profile Image Section - Fixed 113px width (110px image + 3px right padding)
-      '<td width="113" style="width: 113px; min-width: 113px; max-width: 113px; padding: 10px 3px 10px 0px; text-align: left; vertical-align: middle; box-sizing: border-box;">' +
+      
+      '<td width="113" style="padding: 10px 3px 10px 0px; text-align: left; vertical-align: middle;">' +
         profileImageSection +
       '</td>' +
       
       // Name & Title Section 
-      '<td width="108" style="width: 108px; min-width: 108px; max-width: 108px; padding: 10px 0px; text-align: center; vertical-align: middle; box-sizing: border-box;">' +
-        '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="table-layout: fixed;>' +
+      '<td width="108" style="padding: 10px 0px; text-align: center; vertical-align: middle;">' +
+        '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
          
           '<tr>' +
             '<td style="font-size: 17px; font-weight: 700; color: #333333; padding-bottom: 2px; line-height: 1.2; text-align: center;">' +
@@ -506,8 +506,8 @@ orange: (designStyle, sections, formData) => {
       '</td>' +
       
       // Contact Information Section (remaining width)
-      '<td width="377" style="width: 377px; min-width: 377px; max-width: 377px; padding: 10px 0px 10px 0px; vertical-align: middle;">' +
-        '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="table-layout: fixed;>' +
+      '<td style="padding: 10px 0px; padding-left: 1px; vertical-align: middle;">' +
+        '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
           contactDetails.join('') +
         '</table>' +
       '</td>' +
@@ -529,7 +529,7 @@ orange: (designStyle, sections, formData) => {
 }, 
  
 // Orange Center Layout 
- orangeCenter: (designStyle, sections, formData) => {
+orangecenter: (designStyle, sections, formData) => {
   const defaultData = {
     name: "Employee Name", 
     jobTitle: "Job Title", 
@@ -549,11 +549,10 @@ orange: (designStyle, sections, formData) => {
     github: "", 
     ...formData // This ensures formData overrides defaults
   };
-
   // Profile image section - email compatible with fallback to initials
   const profileImageSection = defaultData.profileImage ? 
-    '<img src="' + defaultData.profileImage + '" alt="' + (defaultData.name || 'Profile') + '" width="110" height="110" style="border-radius: 55px; border: 3px solid #FF6B35; display: block; object-fit:contain max-width: 110px; width: 110px !important; height: 110px !important;">' :
-    '<table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;"><tr><td width="110" height="110" style="background-color: #FF6B35; color: white; font-weight: bold; font-size: 36px; border-radius: 55px; text-align: center; line-height: 110px; width: 110px; max-width: 110px;">' + getUserInitials(defaultData.name) + '</td></tr></table>';
+    '<img src="' + defaultData.profileImage + '" alt="' + (defaultData.name || 'Profile') + '" width="110" height="110" style="border-radius: 55px; border: 3px solid #FF6B35; display: block; object-fit: cover;">' :
+    '<table cellpadding="0" cellspacing="0" border="0"><tr><td width="110" height="110" style="background-color: #FF6B35; color: white; font-weight: bold; font-size: 36px; border-radius: 55px; text-align: center; line-height: 110px; display: block;">' + getUserInitials(defaultData.name) + '</td></tr></table>';
 
   // Contact details
   const contactDetails = [];
@@ -562,8 +561,7 @@ orange: (designStyle, sections, formData) => {
   if (defaultData.mobilePhone) {
     contactDetails.push(
       '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
-      '<td width="16" style="color: #FF6B35; font-size: 12px; text-align: center;">📱</td>' +
-      '<td style="font-size: 12px; color: #333333; padding-left: 8px; vertical-align: middle;">' + defaultData.mobilePhone + '</td>' +
+      '<td style="font-size: 12px; color: #333333; vertical-align: middle; word-break: break-word;">' + defaultData.mobilePhone + '</td>' +
       '</tr></table></td></tr>'
     );
   }
@@ -572,8 +570,7 @@ orange: (designStyle, sections, formData) => {
   if (defaultData.phone && defaultData.phone !== defaultData.mobilePhone) {
     contactDetails.push(
       '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
-      '<td width="16" style="color: #FF6B35; font-size: 12px; text-align: center;">📞</td>' +
-      '<td style="font-size: 12px; color: #333333; padding-left: 8px; vertical-align: middle;">' + defaultData.phone + '</td>' +
+      '<td style="font-size: 12px; color: #333333; vertical-align: middle; word-break: break-word;">' + defaultData.phone + '</td>' +
       '</tr></table></td></tr>'
     );
   }
@@ -582,8 +579,7 @@ orange: (designStyle, sections, formData) => {
   if (defaultData.email) {
     contactDetails.push(
       '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
-      '<td width="16" style="color: #FF6B35; font-size: 12px; text-align: center;">✉️</td>' +
-      '<td style="font-size: 12px; color: #333333; padding-left: 8px; vertical-align: middle;"><a href="mailto:' + defaultData.email + '" style="color: #333333; text-decoration: none;">' + defaultData.email + '</a></td>' +
+      '<td style="font-size: 12px; color: #333333; vertical-align: middle; word-break: break-word;"><a href="mailto:' + defaultData.email + '" style="color: #333333; text-decoration: none;">' + defaultData.email + '</a></td>' +
       '</tr></table></td></tr>'
     );
   }
@@ -594,8 +590,7 @@ orange: (designStyle, sections, formData) => {
     const displayUrl = defaultData.website.replace(/^https?:\/\//, '');
     contactDetails.push(
       '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
-      '<td width="16" style="color: #FF6B35; font-size: 12px; text-align: center;">🌐</td>' +
-      '<td style="font-size: 12px; color: #333333; padding-left: 8px; vertical-align: middle;"><a href="' + websiteUrl + '" target="_blank" style="color: #333333; text-decoration: none;">' + displayUrl + '</a></td>' +
+      '<td style="font-size: 12px; color: #333333; vertical-align: middle; word-break: break-word;"><a href="' + websiteUrl + '" target="_blank" style="color: #333333; text-decoration: none;">' + displayUrl + '</a></td>' +
       '</tr></table></td></tr>'
     );
   }
@@ -604,8 +599,7 @@ orange: (designStyle, sections, formData) => {
   if (defaultData.company) {
     contactDetails.push(
       '<tr><td style="padding-bottom: 8px; padding-top: 10px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
-      '<td width="16" style="color: #FF6B35; font-size: 12px; text-align: center;">🏢</td>' +
-      '<td style="font-size: 12px; color: #333333; padding-left: 8px; vertical-align: middle;">' + defaultData.company + '</td>' +
+      '<td style="font-size: 12px; color: #333333; vertical-align: middle; word-break: break-word;">' + defaultData.company + '</td>' +
       '</tr></table></td></tr>'
     );
   }
@@ -614,48 +608,59 @@ orange: (designStyle, sections, formData) => {
   if (defaultData.location) {
     contactDetails.push(
       '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
-      '<td width="16" style="color: #FF6B35; font-size: 12px; text-align: center;">📍</td>' +
-      '<td style="font-size: 12px; color: #333333; padding-left: 8px; vertical-align: middle;">' + defaultData.location + '</td>' +
+      '<td style="font-size: 12px; color: #333333; vertical-align: middle; word-break: break-word;">' + defaultData.location + '</td>' +
       '</tr></table></td></tr>'
     );
   }
 
   // EMAIL-COMPATIBLE TABLE STRUCTURE - Orange Center Layout
-  // Layout: Name/Title/Social (Left) | Profile Image (Center) | Contact Info (Right)
-  return '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: \'Segoe UI\', Tahoma, Geneva, Verdana, sans-serif; border-collapse: collapse; table-layout: fixed; width: 600px; max-width: 600px;">' +
+  return '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: \'Segoe UI\', Tahoma, Geneva, Verdana, sans-serif; border-collapse: collapse; border: none; margin: 0; padding: 0; table-layout: fixed;">' +
+    // Orange gradient top border (4px height)
     '<tr>' +
-      '<td colspan="3" height="4" style="background: linear-gradient(90deg, #FF6B35 0%, #F7931E 100%); font-size: 1px; line-height: 1px;">&nbsp;</td>' +
+      '<td colspan="3" style="height: 4px; background-color: #FF6B35; width: 100%;"></td>' +
     '</tr>' +
+    
+    // Main content row with three sections
     '<tr>' +
-      // Left Column: Name, Title, and Social Icons
-      '<td width="140" style="padding: 10px 0px 10px 10px; width: 140px; max-width: 140px; vertical-align: top;">' +
-        '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
+      
+      // Left Section - Name, Title, Social Icons (Fixed 138px: 128px content + 10px left padding)
+      '<td width="138" style="width: 138px; min-width: 138px; max-width: 138px; padding: 10px 0px 10px 10px; vertical-align: middle; box-sizing: border-box; background-color: #ffffff;">' +
+        '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="table-layout: fixed;">' +
+          // Name
           '<tr>' +
-            '<td style="font-size: 17px; font-weight: 700; color: #333333; padding-bottom: 2px; line-height: 1.2; text-align: left; word-wrap: break-word;">' +
+            '<td style="font-size: 17px; font-weight: 700; color: #333333; padding-bottom: 2px; line-height: 1.2; word-wrap: break-word; overflow-wrap: break-word;">' +
               (defaultData.name || "Your Name") +
             '</td>' +
           '</tr>' +
+          // Job Title
           '<tr>' +
-            '<td style="font-size: 14px; font-weight: 600; color: #FF6B35; padding-bottom: 15px; letter-spacing: 0.5px; text-align: left; word-wrap: break-word;">' +
+            '<td style="font-size: 14px; font-weight: 600; color: #FF6B35; padding-bottom: 15px; letter-spacing: 0.5px; word-wrap: break-word; overflow-wrap: break-word;">' +
               (defaultData.jobTitle || "YOUR JOB TITLE") +
             '</td>' +
           '</tr>' +
+          // Social Icons
           '<tr>' +
-            '<td style="text-align: left;">' +
+            '<td>' +
               renderSocialIcons(defaultData) +
             '</td>' +
           '</tr>' +
         '</table>' +
       '</td>' +
       
-      // Center Column: Profile Image
-      '<td width="120" style="padding: 10px 4px; text-align: center; width: 120px; max-width: 120px; vertical-align: middle;">' +
-        profileImageSection +
+      // Center Section - Profile Image (Fixed 118px: 110px image + 4px margin each side)
+      '<td width="118" style="width: 118px; min-width: 118px; max-width: 118px; padding: 10px 0px; text-align: center; vertical-align: middle; box-sizing: border-box; background-color: #ffffff;">' +
+        '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
+          '<tr>' +
+            '<td style="text-align: center; padding: 0px 4px;">' +
+              profileImageSection +
+            '</td>' +
+          '</tr>' +
+        '</table>' +
       '</td>' +
       
-      // Right Column: Contact Information
-      '<td width="340" style="padding: 10px 10px 10px 0px; width: 340px; max-width: 340px; vertical-align: top;">' +
-        '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
+      // Right Section - Contact Information (Fixed 344px: remaining width)
+      '<td width="344" style="width: 344px; min-width: 344px; max-width: 344px; padding: 10px 10px 10px 0px; vertical-align: middle; box-sizing: border-box; background-color: #ffffff;">' +
+        '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="table-layout: fixed;">' +
           contactDetails.join('') +
         '</table>' +
       '</td>' +
@@ -744,7 +749,7 @@ orange: (designStyle, sections, formData) => {
   }
 
   // EMAIL-COMPATIBLE TABLE STRUCTURE - OrangeText Layout
-  return '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: \'Segoe UI\', Tahoma, Geneva, Verdana, sans-serif; border-collapse: collapse; border: none; margin: 0; padding: 0;table-layout: fixed;">' +
+  return '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: \'Segoe UI\', Tahoma, Geneva, Verdana, sans-serif; border-collapse: collapse; border: none; margin: 0; padding: 0;">' +
     // Orange gradient top border (4px height)
     '<tr>' +
       '<td colspan="2" style="height: 4px; background-color: #FF6B35; width: 100%;"></td>' +
@@ -753,8 +758,8 @@ orange: (designStyle, sections, formData) => {
     // Main content row with exact spacing
     '<tr>' +
       
-      '<td  width="160" style=" width: 160px; min-width: 160px; max-width: 160px; padding-right: 20px; vertical-align: middle;">' +
-        '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="table-layout: fixed;>' +
+      '<td width="180" style="padding: 10px; padding-right: 20px; vertical-align: top;">' +
+        '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
       
           '<tr>' +
             '<td style="font-size: 24px; font-weight: 700; color: #333333; padding-bottom: 8px; line-height: 1.2;">' +
@@ -777,8 +782,8 @@ orange: (designStyle, sections, formData) => {
       '</td>' +
       
       // Right Section - Contact Information (remaining width, flex: 1 equivalent)
-      '<td width="440px" style="width: 440px; min-width: 440px; max-width: 440px; padding: 10px; vertical-align: top;">' +
-        '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="table-layout: fixed;>' +
+      '<td style="padding: 10px; vertical-align: top;">' +
+        '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
           contactDetails.join('') +
         '</table>' +
       '</td>' +

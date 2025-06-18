@@ -11,6 +11,22 @@ import {
 
 const OrangeCenter = ({ formData, designStyle }) => {
   
+  // Function to get user initials
+  const getUserInitials = () => {
+    if (!formData.name) return "ID";
+    
+    const nameParts = formData.name.trim().split(/\s+/);
+    if (nameParts.length === 0) return "ID";
+    
+    const firstNameInitial = nameParts[0].charAt(0).toUpperCase();
+    
+    if (nameParts.length === 1) return firstNameInitial;
+    
+    const lastNameInitial = nameParts[nameParts.length - 1].charAt(0).toUpperCase();
+    return `${firstNameInitial}${lastNameInitial}`;
+  };
+
+
   return (
     <>
       {/* Custom CSS for orange social icons */}
@@ -135,7 +151,7 @@ const OrangeCenter = ({ formData, designStyle }) => {
                   fontWeight: "bold",
                 }}
               >
-                {formData.name ? formData.name.charAt(0) : "U"}
+               {getUserInitials()}
               </div>
             )}
           </div>
