@@ -323,3 +323,72 @@
     font-size: 13px;
   }
 } 
+
+/* standard banner */
+
+/* Banner type selector */
+.banner-type-selector {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.banner-type-btn {
+  padding: 8px 16px;
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.banner-type-btn.active {
+  background: #4285F4;
+  color: white;
+  border-color: #4285F4;
+}
+
+/* Standard banners */
+.standard-banners-container {
+  margin: 16px 0;
+  padding: 16px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+}
+
+.standard-banners-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.standard-banner-preview {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.standard-banner-preview:hover {
+  border-color: #4285F4;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* HTML banner editor */
+.html-banner-editor {
+  margin-top: 16px;
+}
+
+.html-banner-editor .ck-editor__editable {
+  min-height: 100px;
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.html-banner-preview {
+  max-width: 600px;
+  border: 2px solid blue;
+}
