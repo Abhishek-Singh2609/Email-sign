@@ -528,6 +528,142 @@ withoutProfile: (designStyle, sections, formData) => {
 //   '</table>';
 // }, 
 
+// orange: (designStyle, sections, formData) => {
+//   const defaultData = {
+//     name: "Employee Name", 
+//     jobTitle: "Job Title", 
+//     company: "Company Name", 
+//     location: "Location",
+//     phone: "", 
+//     mobilePhone: "", 
+//     email: "", 
+//     website: "", 
+//     logo: null, 
+//     profileImage: null,
+//     linkedin: "", 
+//     youtube: "", 
+//     instagram: "", 
+//     facebook: "", 
+//     twitter: "", 
+//     github: "", 
+//     ...formData // This ensures formData overrides defaults
+//   };
+
+//   // Profile image section - email compatible with fallback to initials
+//   const profileImageSection = defaultData.profileImage ? 
+//     '<img src="' + defaultData.profileImage + '" alt="' + (defaultData.name || 'Profile') + '" width="110" height="110" style="border-radius: 55px; border: 3px solid #FF6B35; display: block; object-fit: cover;">' :
+//     '<table cellpadding="0" cellspacing="0" border="0"><tr><td width="110" height="110" style="background-color: #FF6B35; color: white; font-weight: bold; font-size: 36px; border-radius: 55px; text-align: center; line-height: 110px; display: block;">' + getUserInitials(defaultData.name) + '</td></tr></table>';
+
+//   // Contact details
+//   const contactDetails = [];
+  
+//   // Mobile Phone
+//   if (defaultData.mobilePhone) {
+//     contactDetails.push(
+//       '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
+//       '<td style="font-size: 12px; color: #333333; vertical-align: middle; word-break: break-word;">' + defaultData.mobilePhone + '</td>' +
+//       '</tr></table></td></tr>'
+//     );
+//   }
+  
+//   // Phone (only show if different from mobile)
+//   if (defaultData.phone && defaultData.phone !== defaultData.mobilePhone) {
+//     contactDetails.push(
+//       '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
+//       '<td style="font-size: 12px; color: #333333; vertical-align: middle; word-break: break-word;">' + defaultData.phone + '</td>' +
+//       '</tr></table></td></tr>'
+//     );
+//   }
+  
+//   // Email
+//   if (defaultData.email) {
+//     contactDetails.push(
+//       '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
+//       '<td style="font-size: 12px; color: #333333; vertical-align: middle; word-break: break-word;"><a href="mailto:' + defaultData.email + '" style="color: #333333; text-decoration: none;">' + defaultData.email + '</a></td>' +
+//       '</tr></table></td></tr>'
+//     );
+//   }
+  
+//   // Website
+//   if (defaultData.website) {
+//     const websiteUrl = defaultData.website.startsWith('http') ? defaultData.website : 'https://' + defaultData.website;
+//     const displayUrl = defaultData.website.replace(/^https?:\/\//, '');
+//     contactDetails.push(
+//       '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
+//       '<td style="font-size: 12px; color: #333333; vertical-align: middle; word-break: break-word;"><a href="' + websiteUrl + '" target="_blank" style="color: #333333; text-decoration: none;">' + displayUrl + '</a></td>' +
+//       '</tr></table></td></tr>'
+//     );
+//   }
+  
+//   // Company (with margin-top equivalent)
+//   if (defaultData.company) {
+//     contactDetails.push(
+//       '<tr><td style="padding-bottom: 8px; padding-top: 10px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
+//       '<td style="font-size: 12px; color: #333333; vertical-align: middle; word-break: break-word;">' + defaultData.company + '</td>' +
+//       '</tr></table></td></tr>'
+//     );
+//   }
+  
+//   // Location
+//   if (defaultData.location) {
+//     contactDetails.push(
+//       '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
+//       '<td style="font-size: 12px; color: #333333; vertical-align: middle; word-break: break-word;">' + defaultData.location + '</td>' +
+//       '</tr></table></td></tr>'
+//     );
+//   }
+
+//   // EMAIL-COMPATIBLE TABLE STRUCTURE - Fixed Width Layout
+//   return '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: \'Segoe UI\', Tahoma, Geneva, Verdana, sans-serif; border-collapse: collapse; border: none; margin: 0; padding: 0; table-layout: fixed;">' +
+//     '<tr>' +
+//       '<td colspan="3" style="height: 4px; background-color: #FF6B35; width: 100%;"></td>' +
+//     '</tr>' +
+//     '<tr>' +
+      
+//       // Profile Image Section - Fixed 113px width (110px image + 3px right padding)
+//       '<td width="113" style="width: 113px; min-width: 113px; max-width: 113px; padding: 10px 3px 10px 0px; text-align: left; vertical-align: middle; box-sizing: border-box;">' +
+//         profileImageSection +
+//       '</td>' +
+      
+//       // Name & Title Section - Fixed 110px width
+//       '<td width="110" style="width: 110px; min-width: 110px; max-width: 110px; padding: 10px 5px; text-align: center; vertical-align: middle; box-sizing: border-box;">' +
+//         '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="table-layout: fixed;">' +
+//           '<tr>' +
+//             '<td style="font-size: 17px; font-weight: 700; color: #333333; padding-bottom: 2px; line-height: 1.2; text-align: center; word-wrap: break-word; overflow-wrap: break-word;">' +
+//               (defaultData.name || "Your Name") +
+//             '</td>' +
+//           '</tr>' +
+//           // Job Title
+//           '<tr>' +
+//             '<td style="font-size: 14px; font-weight: 600; color: #FF6B35; padding-bottom: 15px; letter-spacing: 0.5px; text-align: center; word-wrap: break-word; overflow-wrap: break-word;">' +
+//               (defaultData.jobTitle || "YOUR JOB TITLE") +
+//             '</td>' +
+//           '</tr>' +
+//         '</table>' +
+//       '</td>' +
+      
+//       // Contact Information Section - Remaining width (377px)
+//       '<td width="377" style="width: 377px; min-width: 377px; max-width: 377px; padding: 10px 0px; padding-left: 5px; vertical-align: middle; box-sizing: border-box;">' +
+//         '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="table-layout: fixed;">' +
+//           contactDetails.join('') +
+//         '</table>' +
+//       '</td>' +
+//     '</tr>' +
+    
+//     // Social icons section
+//     '<tr>' +
+//       '<td colspan="3" style="padding: 0px 0px 5px 0px;">' +
+//         '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
+//           '<tr>' +
+//             '<td style="padding: 5px;">' +
+//              renderSocialIcons(defaultData) +
+//             '</td>' +
+//           '</tr>' +
+//         '</table>' +
+//       '</td>' +
+//     '</tr>' +
+//   '</table>';
+// },
 orange: (designStyle, sections, formData) => {
   const defaultData = {
     name: "Employee Name", 
@@ -546,117 +682,109 @@ orange: (designStyle, sections, formData) => {
     facebook: "", 
     twitter: "", 
     github: "", 
-    ...formData // This ensures formData overrides defaults
+    ...formData
   };
 
-  // Profile image section - email compatible with fallback to initials
+  // Profile image section - kept your exact implementation
   const profileImageSection = defaultData.profileImage ? 
     '<img src="' + defaultData.profileImage + '" alt="' + (defaultData.name || 'Profile') + '" width="110" height="110" style="border-radius: 55px; border: 3px solid #FF6B35; display: block; object-fit: cover;">' :
     '<table cellpadding="0" cellspacing="0" border="0"><tr><td width="110" height="110" style="background-color: #FF6B35; color: white; font-weight: bold; font-size: 36px; border-radius: 55px; text-align: center; line-height: 110px; display: block;">' + getUserInitials(defaultData.name) + '</td></tr></table>';
 
-  // Contact details
+  // Contact details - kept your exact table structure
   const contactDetails = [];
   
-  // Mobile Phone
   if (defaultData.mobilePhone) {
     contactDetails.push(
       '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
-      '<td style="font-size: 12px; color: #333333; vertical-align: middle; word-break: break-word;">' + defaultData.mobilePhone + '</td>' +
+      '<td style="font-size: 12px; color: #333333; vertical-align: middle;">' + defaultData.mobilePhone + '</td>' +
       '</tr></table></td></tr>'
     );
   }
   
-  // Phone (only show if different from mobile)
   if (defaultData.phone && defaultData.phone !== defaultData.mobilePhone) {
     contactDetails.push(
       '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
-      '<td style="font-size: 12px; color: #333333; vertical-align: middle; word-break: break-word;">' + defaultData.phone + '</td>' +
+      '<td style="font-size: 12px; color: #333333; vertical-align: middle;">' + defaultData.phone + '</td>' +
       '</tr></table></td></tr>'
     );
   }
   
-  // Email
   if (defaultData.email) {
     contactDetails.push(
       '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
-      '<td style="font-size: 12px; color: #333333; vertical-align: middle; word-break: break-word;"><a href="mailto:' + defaultData.email + '" style="color: #333333; text-decoration: none;">' + defaultData.email + '</a></td>' +
+      '<td style="font-size: 12px; color: #333333; vertical-align: middle;"><a href="mailto:' + defaultData.email + '" style="color: #333333; text-decoration: none;">' + defaultData.email + '</a></td>' +
       '</tr></table></td></tr>'
     );
   }
   
-  // Website
   if (defaultData.website) {
     const websiteUrl = defaultData.website.startsWith('http') ? defaultData.website : 'https://' + defaultData.website;
     const displayUrl = defaultData.website.replace(/^https?:\/\//, '');
     contactDetails.push(
       '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
-      '<td style="font-size: 12px; color: #333333; vertical-align: middle; word-break: break-word;"><a href="' + websiteUrl + '" target="_blank" style="color: #333333; text-decoration: none;">' + displayUrl + '</a></td>' +
+      '<td style="font-size: 12px; color: #333333; vertical-align: middle;"><a href="' + websiteUrl + '" target="_blank" style="color: #333333; text-decoration: none;">' + displayUrl + '</a></td>' +
       '</tr></table></td></tr>'
     );
   }
   
-  // Company (with margin-top equivalent)
   if (defaultData.company) {
     contactDetails.push(
       '<tr><td style="padding-bottom: 8px; padding-top: 10px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
-      '<td style="font-size: 12px; color: #333333; vertical-align: middle; word-break: break-word;">' + defaultData.company + '</td>' +
+      '<td style="font-size: 12px; color: #333333; vertical-align: middle;">' + defaultData.company + '</td>' +
       '</tr></table></td></tr>'
     );
   }
   
-  // Location
   if (defaultData.location) {
     contactDetails.push(
       '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
-      '<td style="font-size: 12px; color: #333333; vertical-align: middle; word-break: break-word;">' + defaultData.location + '</td>' +
+      '<td style="font-size: 12px; color: #333333; vertical-align: middle;">' + defaultData.location + '</td>' +
       '</tr></table></td></tr>'
     );
   }
 
-  // EMAIL-COMPATIBLE TABLE STRUCTURE - Fixed Width Layout
-  return '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: \'Segoe UI\', Tahoma, Geneva, Verdana, sans-serif; border-collapse: collapse; border: none; margin: 0; padding: 0; table-layout: fixed;">' +
+  // Only changed the main table structure slightly for Outlook compatibility
+  return '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: \'Segoe UI\', Tahoma, Geneva, Verdana, sans-serif; border-collapse: collapse;">' +
     '<tr>' +
-      '<td colspan="3" style="height: 4px; background-color: #FF6B35; width: 100%;"></td>' +
+      '<td colspan="3" style="height: 4px; background-color: #FF6B35;"></td>' +
     '</tr>' +
     '<tr>' +
-      
-      // Profile Image Section - Fixed 113px width (110px image + 3px right padding)
-      '<td width="113" style="width: 113px; min-width: 113px; max-width: 113px; padding: 10px 3px 10px 0px; text-align: left; vertical-align: middle; box-sizing: border-box;">' +
+      // Profile image column - added explicit width
+      '<td width="120" style="padding: 10px 10px 10px 0; text-align: left; vertical-align: middle;">' +
         profileImageSection +
       '</td>' +
       
-      // Name & Title Section - Fixed 110px width
-      '<td width="110" style="width: 110px; min-width: 110px; max-width: 110px; padding: 10px 5px; text-align: center; vertical-align: middle; box-sizing: border-box;">' +
-        '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="table-layout: fixed;">' +
+      // Name & Title Section - added explicit width
+      '<td width="150" style="padding: 10px 10px; text-align: center; vertical-align: middle;">' +
+        '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
           '<tr>' +
-            '<td style="font-size: 17px; font-weight: 700; color: #333333; padding-bottom: 2px; line-height: 1.2; text-align: center; word-wrap: break-word; overflow-wrap: break-word;">' +
+            '<td style="font-size: 17px; font-weight: 700; color: #333333; padding-bottom: 2px; line-height: 1.2; text-align: center;">' +
               (defaultData.name || "Your Name") +
             '</td>' +
           '</tr>' +
-          // Job Title
           '<tr>' +
-            '<td style="font-size: 14px; font-weight: 600; color: #FF6B35; padding-bottom: 15px; letter-spacing: 0.5px; text-align: center; word-wrap: break-word; overflow-wrap: break-word;">' +
+            '<td style="font-size: 14px; font-weight: 600; color: #FF6B35; padding-bottom: 15px; letter-spacing: 0.5px; text-align: center;">' +
               (defaultData.jobTitle || "YOUR JOB TITLE") +
             '</td>' +
           '</tr>' +
         '</table>' +
       '</td>' +
       
-      // Contact Information Section - Remaining width (377px)
-      '<td width="377" style="width: 377px; min-width: 377px; max-width: 377px; padding: 10px 0px; padding-left: 5px; vertical-align: middle; box-sizing: border-box;">' +
-        '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="table-layout: fixed;">' +
+      // Contact Information Section - remaining width
+      '<td style="padding: 10px 10px; vertical-align: middle;">' +
+        '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
           contactDetails.join('') +
         '</table>' +
       '</td>' +
     '</tr>' +
     
-    // Social icons section
+    // Social icons section - unchanged
     '<tr>' +
       '<td colspan="3" style="padding: 0px 0px 5px 0px;">' +
         '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
           '<tr>' +
             '<td style="padding: 5px;">' +
-             renderSocialIcons(defaultData) +
+              renderSocialIcons(defaultData) +
             '</td>' +
           '</tr>' +
         '</table>' +
