@@ -813,48 +813,48 @@ const PreviewSection = ({
   };
 
   // Remove standard banners from organization
-  const handleRemoveStandardBanners = async () => {
-    try {
-      const organization = formData.companyName?.trim() 
-        ? formData.companyName.toLowerCase().replace(/\s+/g, '') + '.com'
-        : 'agileworldtechnologies.com';
+  // const handleRemoveStandardBanners = async () => {
+  //   try {
+  //     const organization = formData.companyName?.trim() 
+  //       ? formData.companyName.toLowerCase().replace(/\s+/g, '') + '.com'
+  //       : 'agileworldtechnologies.com';
       
-      // Remove both types of standard banners
-      const bannerTypes = ['AnnouncementBanner', 'ListPriorityBanner'];
+  //     // Remove both types of standard banners
+  //     const bannerTypes = ['AnnouncementBanner', 'ListPriorityBanner'];
       
-      for (const bannerName of bannerTypes) {
-        const requestData = {
-          action: "remove",
-          organization: organization,
-          bannerName: bannerName,
-          html: ""
-        };
+  //     for (const bannerName of bannerTypes) {
+  //       const requestData = {
+  //         action: "remove",
+  //         organization: organization,
+  //         bannerName: bannerName,
+  //         html: ""
+  //       };
 
-        console.log('Removing banner:', requestData);
+  //       console.log('Removing banner:', requestData);
 
-        const response = await fetch('https://email-signature-function-app.azurewebsites.net/api/RemoveBanner', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(requestData)
-        });
+  //       const response = await fetch('https://email-signature-function-app.azurewebsites.net/api/RemoveBanner', {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify(requestData)
+  //       });
 
-        if (!response.ok) {
-          console.warn(`Failed to remove ${bannerName}: ${response.statusText}`);
-        } else {
-          const result = await response.text();
-          console.log(`${bannerName} removed successfully:`, result);
-        }
-      }
+  //       if (!response.ok) {
+  //         console.warn(`Failed to remove ${bannerName}: ${response.statusText}`);
+  //       } else {
+  //         const result = await response.text();
+  //         console.log(`${bannerName} removed successfully:`, result);
+  //       }
+  //     }
 
-      alert(`Standard banners removal attempted for ${organization}`);
+  //     alert(`Standard banners removal attempted for ${organization}`);
       
-    } catch (error) {
-      console.error('Error removing standard banners:', error);
-      alert(`Error removing standard banners: ${error.message}`);
-    }
-  };
+  //   } catch (error) {
+  //     console.error('Error removing standard banners:', error);
+  //     alert(`Error removing standard banners: ${error.message}`);
+  //   }
+  // };
 
   return (
     <div className="preview-section">
@@ -1030,7 +1030,7 @@ const PreviewSection = ({
               Apply Standard Banners to Organization
             </button>
             
-            <button
+            {/* <button
               onClick={handleRemoveStandardBanners}
               className="remove-banner-button"
               style={{
@@ -1050,19 +1050,9 @@ const PreviewSection = ({
             >
               <i className="bi bi-trash"></i>
               Remove Standard Banners
-            </button>
+            </button> */}
           </div>
           
-          <div style={{ 
-            textAlign: "center", 
-            marginTop: "8px", 
-            fontSize: "12px", 
-            color: "#666" 
-          }}>
-            Organization: {formData.companyName?.trim() 
-              ? formData.companyName.toLowerCase().replace(/\s+/g, '') + '.com'
-              : 'agileworldtechnologies.com'}
-          </div>
         </div>
       )}
       
