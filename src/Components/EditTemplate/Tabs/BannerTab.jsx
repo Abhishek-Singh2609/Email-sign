@@ -630,7 +630,11 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
         startDate: '',
         expiryDate: '',
         active: false,
-        selected: false
+        selected: false,
+        link: {
+          text: '',
+          url: ''
+        }
       }));
       handleFormDataUpdate({ standardBanners: initialized });
     }
@@ -669,7 +673,32 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
   const handleStandardBannerDateChange = (bannerId, field, value) => {
     const updatedBanners = formData.standardBanners.map(banner => {
       if (banner.id === bannerId) {
-        return { ...banner, [field]: value };
+        const updatedBanner = { ...banner, [field]: value };
+        
+        // Auto-deactivate if dates are invalid after change
+        if (!isStandardBannerDateValid(updatedBanner)) {
+          updatedBanner.active = false;
+        }
+        
+        return updatedBanner;
+      }
+      return banner;
+    });
+    
+    handleFormDataUpdate({ standardBanners: updatedBanners });
+  };
+
+  // Handle standard banner link changes
+  const handleStandardBannerLinkChange = (bannerId, field, value) => {
+    const updatedBanners = formData.standardBanners.map(banner => {
+      if (banner.id === bannerId) {
+        return { 
+          ...banner, 
+          link: {
+            ...banner.link,
+            [field]: value
+          }
+        };
       }
       return banner;
     });
@@ -689,23 +718,49 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
     handleFormDataUpdate({ standardBanners: updatedBanners });
   };
 
-  // Check if standard banner is expired or not yet started
+  // FIXED: Check if standard banner has valid date range
+  const isStandardBannerDateValid = (banner) => {
+    const today = new Date().toISOString().split('T')[0]; // Get YYYY-MM-DD format
+    
+    // Both start date and expiry date must be provided
+    if (!banner.startDate || !banner.expiryDate) {
+      return false;
+    }
+    
+    // Start date must be <= today <= expiry date
+    return banner.startDate <= today && today <= banner.expiryDate;
+  };
+
+  // FIXED: Check if standard banner is expired or not yet started
   const isStandardBannerExpired = (banner) => {
-    const today = new Date();
+    return !isStandardBannerDateValid(banner);
+  };
 
-    // Check if banner has not started yet
-    if (banner.startDate) {
-      const start = new Date(banner.startDate);
-      if (today < start) return true; // Not yet started
+  // Get banner status message for standard banners
+  const getStandardBannerStatusMessage = (banner) => {
+    const today = new Date().toISOString().split('T')[0];
+    
+    if (!banner.startDate && !banner.expiryDate) {
+      return { message: "No dates set", color: "#666" };
     }
-
-    // Check if banner has expired
-    if (banner.expiryDate) {
-      const expiry = new Date(banner.expiryDate);
-      if (today > expiry) return true; // Expired
+    
+    if (!banner.startDate) {
+      return { message: "Start date required", color: "#dc3545" };
     }
-
-    return false; // Banner is active
+    
+    if (!banner.expiryDate) {
+      return { message: "Expiry date required", color: "#dc3545" };
+    }
+    
+    if (today < banner.startDate) {
+      return { message: `Starts on: ${new Date(banner.startDate).toLocaleDateString()}`, color: "#ffc107" };
+    }
+    
+    if (today > banner.expiryDate) {
+      return { message: "Expired", color: "#dc3545" };
+    }
+    
+    return { message: `Active until: ${new Date(banner.expiryDate).toLocaleDateString()}`, color: "#28a745" };
   };
 
   // Initialize standard banners on component mount
@@ -738,16 +793,36 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
   };
 
   const handleCampaignExpiryChange = (id, value) => {
-    const updatedCampaigns = formData.campaigns.map((campaign) =>
-      campaign.id === id ? { ...campaign, expiryDate: value } : campaign
-    );
+    const updatedCampaigns = formData.campaigns.map((campaign) => {
+      if (campaign.id === id) {
+        const updatedCampaign = { ...campaign, expiryDate: value };
+        
+        // Auto-deactivate if dates are invalid after change
+        if (!isCampaignDateValid(updatedCampaign)) {
+          updatedCampaign.active = false;
+        }
+        
+        return updatedCampaign;
+      }
+      return campaign;
+    });
     handleFormDataUpdate({ campaigns: updatedCampaigns });
   };
 
   const handleCampaignStartDateChange = (id, value) => {
-    const updatedCampaigns = formData.campaigns.map((campaign) =>
-      campaign.id === id ? { ...campaign, startDate: value } : campaign
-    );
+    const updatedCampaigns = formData.campaigns.map((campaign) => {
+      if (campaign.id === id) {
+        const updatedCampaign = { ...campaign, startDate: value };
+        
+        // Auto-deactivate if dates are invalid after change
+        if (!isCampaignDateValid(updatedCampaign)) {
+          updatedCampaign.active = false;
+        }
+        
+        return updatedCampaign;
+      }
+      return campaign;
+    });
     handleFormDataUpdate({ campaigns: updatedCampaigns });
   };
 
@@ -780,7 +855,7 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
     if (
       !campaign ||
       !campaign.image ||
-      isCampaignExpired(campaign.expiryDate, campaign.startDate)
+      !isCampaignDateValid(campaign)
     ) {
       return;
     }
@@ -792,23 +867,49 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
     handleFormDataUpdate({ campaigns: updatedCampaigns });
   };
 
-  // Check if campaign is expired or not yet started
-  const isCampaignExpired = (expiryDate, startDate) => {
-    const today = new Date();
-
-    // Check if campaign has not started yet
-    if (startDate) {
-      const start = new Date(startDate);
-      if (today < start) return true; // Not yet started
+  // FIXED: Check if campaign has valid date range
+  const isCampaignDateValid = (campaign) => {
+    const today = new Date().toISOString().split('T')[0]; // Get YYYY-MM-DD format
+    
+    // Both start date and expiry date must be provided
+    if (!campaign.startDate || !campaign.expiryDate) {
+      return false;
     }
+    
+    // Start date must be <= today <= expiry date
+    return campaign.startDate <= today && today <= campaign.expiryDate;
+  };
 
-    // Check if campaign has expired
-    if (expiryDate) {
-      const expiry = new Date(expiryDate);
-      if (today > expiry) return true; // Expired
+  // FIXED: Check if campaign is expired or not yet started
+  const isCampaignExpired = (campaign) => {
+    return !isCampaignDateValid(campaign);
+  };
+
+  // Get banner status message for campaigns
+  const getCampaignStatusMessage = (campaign) => {
+    const today = new Date().toISOString().split('T')[0];
+    
+    if (!campaign.startDate && !campaign.expiryDate) {
+      return { message: "No dates set", color: "#666" };
     }
-
-    return false; // Campaign is active
+    
+    if (!campaign.startDate) {
+      return { message: "Start date required", color: "#dc3545" };
+    }
+    
+    if (!campaign.expiryDate) {
+      return { message: "Expiry date required", color: "#dc3545" };
+    }
+    
+    if (today < campaign.startDate) {
+      return { message: `Starts on: ${new Date(campaign.startDate).toLocaleDateString()}`, color: "#ffc107" };
+    }
+    
+    if (today > campaign.expiryDate) {
+      return { message: "Expired", color: "#dc3545" };
+    }
+    
+    return { message: `Active until: ${new Date(campaign.expiryDate).toLocaleDateString()}`, color: "#28a745" };
   };
 
   // Get active campaigns
@@ -817,7 +918,7 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
       (campaign) =>
         campaign.active &&
         campaign.image &&
-        !isCampaignExpired(campaign.expiryDate, campaign.startDate)
+        isCampaignDateValid(campaign)
     );
     return activeCampaigns;
   };
@@ -884,61 +985,177 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
                 }}
               />
 
+              {/* Banner Link Section */}
+              <div className="banner-tab-links-section" style={{ marginTop: '20px' }}>
+                <label className="banner-tab-links-header" style={{ 
+                  display: 'block', 
+                  marginBottom: '12px', 
+                  fontWeight: 'bold', 
+                  color: '#333',
+                  fontSize: '14px'
+                }}>
+                  Banner Links (Clickable Areas)
+                </label>
+                
+                <div className="banner-tab-link-item" style={{ marginBottom: '15px' }}>
+                  <div className="banner-tab-link-content" style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '12px',
+                    marginBottom: '8px'
+                  }}>
+                    <div className="banner-tab-link-number" style={{ 
+                      width: '30px', 
+                      height: '30px', 
+                      borderRadius: '50%', 
+                      backgroundColor: '#4285F4', 
+                      color: 'white', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      fontWeight: 'bold',
+                      fontSize: '14px',
+                      flexShrink: 0
+                    }}>
+                      1
+                    </div>
+                    
+                    <div className="banner-tab-link-text-input" style={{ flex: '1' }}>
+                      <input
+                        type="text"
+                        placeholder="Link Text (e.g., Learn More)"
+                        value={banner.link?.text || ''}
+                        onChange={(e) => handleStandardBannerLinkChange(banner.id, 'text', e.target.value)}
+                        style={{
+                          width: '100%',
+                          padding: '8px 12px',
+                          border: '1px solid #ddd',
+                          borderRadius: '4px',
+                          fontSize: '14px'
+                        }}
+                      />
+                    </div>
+                    
+                    <div className="banner-tab-link-url-input" style={{ flex: '1.5' }}>
+                      <input
+                        type="url"
+                        placeholder="https://example.com"
+                        value={banner.link?.url || ''}
+                        onChange={(e) => handleStandardBannerLinkChange(banner.id, 'url', e.target.value)}
+                        style={{
+                          width: '100%',
+                          padding: '8px 12px',
+                          border: '1px solid #ddd',
+                          borderRadius: '4px',
+                          fontSize: '14px'
+                        }}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="banner-tab-link-area-label" style={{ 
+                    marginLeft: '42px', // Align with text input
+                    fontSize: '12px', 
+                    color: '#666',
+                    fontStyle: 'italic'
+                  }}>
+                    This link will make the entire banner clickable
+                  </div>
+                </div>
+              </div>
+
               {/* Date Configuration */}
-              <div className="banner-tab-campaign-header" style={{ marginTop: "20px" }}>
-                <div className="banner-tab-form-group">
-                  <label htmlFor={`standard-banner-start-${banner.id}`}>Start Date</label>
+              <div className="banner-tab-campaign-header" style={{ 
+                marginTop: "20px",
+                display: 'flex',
+                gap: '15px',
+                flexWrap: 'wrap'
+              }}>
+                <div className="banner-tab-form-group" style={{ flex: '1', minWidth: '200px' }}>
+                  <label htmlFor={`standard-banner-start-${banner.id}`} style={{ 
+                    display: 'block', 
+                    marginBottom: '5px', 
+                    fontWeight: 'bold',
+                    fontSize: '14px'
+                  }}>
+                    Start Date *
+                  </label>
                   <input
                     type="date"
                     id={`standard-banner-start-${banner.id}`}
                     value={banner.startDate || ''}
                     onChange={(e) => handleStandardBannerDateChange(banner.id, 'startDate', e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '8px 12px',
+                      border: '1px solid #ddd',
+                      borderRadius: '4px',
+                      fontSize: '14px'
+                    }}
+                    required
                   />
                 </div>
 
-                <div className="banner-tab-form-group">
-                  <label htmlFor={`standard-banner-expiry-${banner.id}`}>Expiry Date</label>
+                <div className="banner-tab-form-group" style={{ flex: '1', minWidth: '200px' }}>
+                  <label htmlFor={`standard-banner-expiry-${banner.id}`} style={{ 
+                    display: 'block', 
+                    marginBottom: '5px', 
+                    fontWeight: 'bold',
+                    fontSize: '14px'
+                  }}>
+                    Expiry Date *
+                  </label>
                   <input
                     type="date"
                     id={`standard-banner-expiry-${banner.id}`}
                     value={banner.expiryDate || ''}
                     onChange={(e) => handleStandardBannerDateChange(banner.id, 'expiryDate', e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '8px 12px',
+                      border: '1px solid #ddd',
+                      borderRadius: '4px',
+                      fontSize: '14px'
+                    }}
+                    required
                   />
                 </div>
               </div>
 
               {/* Banner Status and Activation */}
-              <div className="banner-tab-footer" style={{ marginTop: "15px", display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div className="banner-tab-footer" style={{ 
+                marginTop: "15px", 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '10px'
+              }}>
                 <div className="banner-tab-status">
-                  {isStandardBannerExpired(banner) ? (
-                    <span className="banner-tab-status-expired">
-                      {banner.startDate && new Date() < new Date(banner.startDate)
-                        ? "Not started yet"
-                        : "Expired"}
-                    </span>
-                  ) : banner.expiryDate ? (
-                    <span>
-                      Active until: {new Date(banner.expiryDate).toLocaleDateString()}
-                    </span>
-                  ) : (
-                    <span>No expiry date set</span>
-                  )}
+                  {(() => {
+                    const status = getStandardBannerStatusMessage(banner);
+                    return (
+                      <span style={{ color: status.color }}>
+                        {status.message}
+                      </span>
+                    );
+                  })()}
                 </div>
                 
                 <button
                   className={`banner-tab-toggle-btn ${banner.active ? "active" : ""} ${
-                    isStandardBannerExpired(banner) ? "disabled" : ""
+                    !isStandardBannerDateValid(banner) ? "disabled" : ""
                   }`}
                   onClick={() => handleStandardBannerActivation(banner.id)}
-                  disabled={isStandardBannerExpired(banner)}
+                  disabled={!isStandardBannerDateValid(banner)}
                   style={{
                     padding: '8px 16px',
                     borderRadius: '4px',
                     border: 'none',
                     backgroundColor: banner.active ? '#dc3545' : '#28a745',
                     color: 'white',
-                    cursor: isStandardBannerExpired(banner) ? 'not-allowed' : 'pointer',
-                    opacity: isStandardBannerExpired(banner) ? 0.5 : 1
+                    cursor: !isStandardBannerDateValid(banner) ? 'not-allowed' : 'pointer',
+                    opacity: !isStandardBannerDateValid(banner) ? 0.5 : 1
                   }}
                 >
                   {banner.active ? "Deactivate" : "Activate"}
@@ -976,7 +1193,7 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
 
               <div className="banner-tab-form-group">
                 <label htmlFor={`campaign-start-${campaign.id}`}>
-                  Start Date
+                  Start Date *
                 </label>
                 <input
                   type="date"
@@ -985,12 +1202,13 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
                   onChange={(e) =>
                     handleCampaignStartDateChange(campaign.id, e.target.value)
                   }
+                  required
                 />
               </div>
 
               <div className="banner-tab-form-group">
                 <label htmlFor={`campaign-expiry-${campaign.id}`}>
-                  Expiry Date
+                  Expiry Date *
                 </label>
                 <input
                   type="date"
@@ -999,6 +1217,7 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
                   onChange={(e) =>
                     handleCampaignExpiryChange(campaign.id, e.target.value)
                   }
+                  required
                 />
               </div>
             </div>
@@ -1097,35 +1316,26 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
 
             <div className="banner-tab-footer">
               <div className="banner-tab-status">
-                {isCampaignExpired(campaign.expiryDate, campaign.startDate) ? (
-                  <span className="banner-tab-status-expired">
-                    {campaign.startDate &&
-                    new Date() < new Date(campaign.startDate)
-                      ? "Not started yet"
-                      : "Expired"}
-                  </span>
-                ) : campaign.expiryDate ? (
-                  <span>
-                    Active until:{" "}
-                    {new Date(campaign.expiryDate).toLocaleDateString()}
-                  </span>
-                ) : (
-                  <span>No expiry date set</span>
-                )}
+                {(() => {
+                  const status = getCampaignStatusMessage(campaign);
+                  return (
+                    <span style={{ color: status.color, fontWeight: 'bold' }}>
+                      {status.message}
+                    </span>
+                  );
+                })()}
               </div>
               <button
                 className={`banner-tab-toggle-btn ${
                   campaign.active ? "active" : ""
                 } ${
-                  !campaign.image ||
-                  isCampaignExpired(campaign.expiryDate, campaign.startDate)
+                  !campaign.image || !isCampaignDateValid(campaign)
                     ? "disabled"
                     : ""
                 }`}
                 onClick={() => toggleCampaignActive(campaign.id)}
                 disabled={
-                  !campaign.image ||
-                  isCampaignExpired(campaign.expiryDate, campaign.startDate)
+                  !campaign.image || !isCampaignDateValid(campaign)
                 }
               >
                 {campaign.active ? "Deactivate" : "Activate"}
