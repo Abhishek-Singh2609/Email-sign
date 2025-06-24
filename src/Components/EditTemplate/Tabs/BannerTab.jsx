@@ -255,6 +255,7 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
             <StandardBanner
               key={banner.id}
               banner={banner}
+               formData={formData}
               companyName={formData.companyName}
               onContentChange={handleStandardBannerContentChange}
               onDateChange={handleStandardBannerDateChange}

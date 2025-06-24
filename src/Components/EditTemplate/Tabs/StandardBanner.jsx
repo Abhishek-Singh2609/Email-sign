@@ -33,7 +33,7 @@ export const initializeStandardBanners = (formData) => {
   return standardBannerTemplates.map(banner => ({
     id: banner.id,
     name: banner.name,
-    content: banner.template.replace(/{companyName}/g, formData || 'Your Company'),
+    content: banner.template.replace(/{companyName}/g, formData.companyName || 'Your Company'),
     startDate: '',
     expiryDate: '',
     active: false,
