@@ -1,6 +1,7 @@
 import React from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { useState } from "react";
 
 // Standard banner templates configuration
 export const standardBannerTemplates = [
@@ -27,6 +28,8 @@ export const standardBannerTemplates = [
     defaultText: "This is a test high priority banner for {companyName}."
   }
 ];
+const [isProcessing, setIsProcessing] = useState(false);
+
 
 // Helper functions
 export const initializeStandardBanners = (formData) => {
@@ -332,15 +335,17 @@ const StandardBanner = ({
     !isStandardBannerDateValid(banner) ? "disabled" : ""
   }`}
   onClick={async () => {
+    if (isProcessing) return; // Prevent multiple clicks
+    
+    setIsProcessing(true);
     const newActiveState = !banner.active;
     onActivation(banner.id);
     
     try {
       const organization = formData.companyName?.trim() 
-      ? formData.companyName.toLowerCase().replace(/\s+/g, '') + '.com'
-      : 'agileworldtechnologies.com';
+        ? formData.companyName.toLowerCase().replace(/\s+/g, '') + '.com'
+        : 'agileworldtechnologies.com';
 
-      
       const bannerNameMap = {
         'announcement': 'AnnouncementBanner',
         'urgent': 'ListPriorityBanner'
@@ -366,26 +371,59 @@ const StandardBanner = ({
         throw new Error(`Failed to ${newActiveState ? 'apply' : 'remove'} banner: ${response.statusText}`);
       }
 
+      // Only update the state if the API call succeeds
+      const updatedBanners = formData.standardBanners.map(banner => {
+        if (banner.id === bannerId) {
+          return { ...banner, active: newActiveState };
+        }
+        return banner;
+      });
+      handleFormDataUpdate({ standardBanners: updatedBanners });
+      
       alert(`Banner ${newActiveState ? 'applied to' : 'removed from'} ${organization}`);
     } catch (error) {
       console.error('Error updating banner:', error);
       alert(`Error updating banner: ${error.message}`);
       // Rollback the activation state if there was an error
-      onActivation(banner.id);
+      const updatedBanners = formData.standardBanners.map(banner => {
+        if (banner.id === bannerId) {
+          return { ...banner, active: !newActiveState };
+        }
+        return banner;
+      });
+      handleFormDataUpdate({ standardBanners: updatedBanners });
+    } finally {
+      setIsProcessing(false);
     }
   }}
-  disabled={!isStandardBannerDateValid(banner)}
+  disabled={!isStandardBannerDateValid(banner) || isProcessing}
   style={{
     padding: '8px 16px',
     borderRadius: '4px',
     border: 'none',
     backgroundColor: banner.active ? '#dc3545' : '#28a745',
     color: 'white',
-    cursor: !isStandardBannerDateValid(banner) ? 'not-allowed' : 'pointer',
-    opacity: !isStandardBannerDateValid(banner) ? 0.5 : 1
+    cursor: (!isStandardBannerDateValid(banner) || isProcessing) ? 'not-allowed' : 'pointer',
+    opacity: (!isStandardBannerDateValid(banner) || isProcessing) ? 0.7 : 1,
+    position: 'relative'
   }}
 >
-  {banner.active ? "Deactivate" : "Activate"}
+  {isProcessing ? (
+    <>
+      <span style={{ visibility: 'hidden' }}>
+        {banner.active ? "Deactivate" : "Activate"}
+      </span>
+      <span style={{
+        position: 'absolute',
+        left: '50%',
+        transform: 'translateX(-50%)'
+      }}>
+        {banner.active ? "Removing..." : "Applying..."}
+      </span>
+    </>
+  ) : (
+    banner.active ? "Deactivate" : "Activate"
+  )}
 </button>
       </div>
     </div>
