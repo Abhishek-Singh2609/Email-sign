@@ -28,8 +28,6 @@ export const standardBannerTemplates = [
     defaultText: "This is a test high priority banner for {companyName}."
   }
 ];
-const [isProcessing, setIsProcessing] = useState(false);
-
 
 // Helper functions
 export const initializeStandardBanners = (formData) => {
@@ -129,6 +127,8 @@ const StandardBanner = ({
   onLinkChange,
   onActivation
 }) => {
+
+    const [isProcessing, setIsProcessing] = useState(false);
 
 // Generate complete styled HTML for standard banners with links
   const generateStandardBannerHTML = (banner) => {
