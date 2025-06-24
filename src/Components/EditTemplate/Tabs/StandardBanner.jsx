@@ -335,11 +335,10 @@ const StandardBanner = ({
     !isStandardBannerDateValid(banner) ? "disabled" : ""
   }`}
   onClick={async () => {
-    if (isProcessing) return; // Prevent multiple clicks
+    if (isProcessing) return;
     
     setIsProcessing(true);
     const newActiveState = !banner.active;
-    onActivation(banner.id);
     
     try {
       const organization = formData.companyName?.trim() 
@@ -360,7 +359,7 @@ const StandardBanner = ({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          action: newActiveState ? "add" : "removeAll",
+          action: newActiveState ? "add" : "remove",
           organization: organization,
           bannerName: bannerName,
           html: newActiveState ? htmlContent : null
@@ -371,27 +370,11 @@ const StandardBanner = ({
         throw new Error(`Failed to ${newActiveState ? 'apply' : 'remove'} banner: ${response.statusText}`);
       }
 
-      // Only update the state if the API call succeeds
-      const updatedBanners = formData.standardBanners.map(banner => {
-        if (banner.id === bannerId) {
-          return { ...banner, active: newActiveState };
-        }
-        return banner;
-      });
-      handleFormDataUpdate({ standardBanners: updatedBanners });
-      
+      onActivation(banner.id);
       alert(`Banner ${newActiveState ? 'applied to' : 'removed from'} ${organization}`);
     } catch (error) {
       console.error('Error updating banner:', error);
       alert(`Error updating banner: ${error.message}`);
-      // Rollback the activation state if there was an error
-      const updatedBanners = formData.standardBanners.map(banner => {
-        if (banner.id === bannerId) {
-          return { ...banner, active: !newActiveState };
-        }
-        return banner;
-      });
-      handleFormDataUpdate({ standardBanners: updatedBanners });
     } finally {
       setIsProcessing(false);
     }
@@ -405,24 +388,16 @@ const StandardBanner = ({
     color: 'white',
     cursor: (!isStandardBannerDateValid(banner) || isProcessing) ? 'not-allowed' : 'pointer',
     opacity: (!isStandardBannerDateValid(banner) || isProcessing) ? 0.7 : 1,
-    position: 'relative'
   }}
 >
   {isProcessing ? (
-    <>
-      <span style={{ visibility: 'hidden' }}>
-        {banner.active ? "Deactivate" : "Activate"}
-      </span>
-      <span style={{
-        position: 'absolute',
-        left: '50%',
-        transform: 'translateX(-50%)'
-      }}>
-        {banner.active ? "Removing..." : "Applying..."}
-      </span>
-    </>
+    <span>
+      {banner.active ? "Removing..." : "Applying..."}
+    </span>
   ) : (
-    banner.active ? "Deactivate" : "Activate"
+    <span>
+      {banner.active ? "Deactivate" : "Activate"}
+    </span>
   )}
 </button>
       </div>
