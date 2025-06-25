@@ -201,7 +201,7 @@ const EmployeeSignatureGenerator = () => {
         Apply Email <span className="h1-subtitle">Signature</span>
       </h1>
       <Row className="justify-content-center">
-        <Col md={8} lg={6}>
+        <Col md={8} lg={7}>
           <Card className="shadow-sm">
             <Card.Header className="card-bg text-white">
               <h3 className="mb-0">Email Signature Generator</h3>
