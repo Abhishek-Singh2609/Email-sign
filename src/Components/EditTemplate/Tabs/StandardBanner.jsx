@@ -2,7 +2,6 @@ import React from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { useState } from "react";
-import PopupMessage from "./../../../Common/PopupMessage/Popupmessage";
 
 // Standard banner templates configuration
 export const standardBannerTemplates = [
@@ -130,8 +129,6 @@ const StandardBanner = ({
 }) => {
 
     const [isProcessing, setIsProcessing] = useState(false);
-    const [showPopup, setShowPopup] = useState(false); 
-  const [popupMessage, setPopupMessage] = useState(""); 
 
 // Generate complete styled HTML for standard banners with links
   const generateStandardBannerHTML = (banner) => {
@@ -334,84 +331,76 @@ const StandardBanner = ({
         </div>
         
         <button
-    className={`banner-tab-toggle-btn ${banner.active ? "active" : ""} ${
-      !isStandardBannerDateValid(banner) ? "disabled" : ""
-    }`}
-    onClick={async () => {
-      if (isProcessing) return;
+  className={`banner-tab-toggle-btn ${banner.active ? "active" : ""} ${
+    !isStandardBannerDateValid(banner) ? "disabled" : ""
+  }`}
+  onClick={async () => {
+    if (isProcessing) return;
+    
+    setIsProcessing(true);
+    const newActiveState = !banner.active;
+    
+    try {
+      const organization = formData.companyName?.trim() 
+        ? formData.companyName.toLowerCase().replace(/\s+/g, '') + '.com'
+        : 'agileworldtechnologies.com';
+
+      const bannerNameMap = {
+        'announcement': 'AnnouncementBanner',
+        'urgent': 'ListPriorityBanner'
+      };
       
-      setIsProcessing(true);
-      const newActiveState = !banner.active;
-      
-      try {
-        const organization = formData.companyName?.trim() 
-          ? formData.companyName.toLowerCase().replace(/\s+/g, '') + '.com'
-          : 'agileworldtechnologies.com';
+      const bannerName = bannerNameMap[banner.id] || 'CustomBanner';
+      const htmlContent = generateStandardBannerHTML(banner);
 
-        const bannerNameMap = {
-          'announcement': 'AnnouncementBanner',
-          'urgent': 'ListPriorityBanner'
-        };
-        
-        const bannerName = bannerNameMap[banner.id] || 'CustomBanner';
-        const htmlContent = generateStandardBannerHTML(banner);
+      const response = await fetch('https://email-signature-function-app.azurewebsites.net/api/RemoveBanner', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: newActiveState ? "add" : "remove",
+          organization: organization,
+          bannerName: bannerName,
+          html: newActiveState ? htmlContent : null
+        })
+      });
 
-        const response = await fetch('https://email-signature-function-app.azurewebsites.net/api/RemoveBanner', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            action: newActiveState ? "add" : "removeAll",
-            organization: organization,
-            bannerName: bannerName,
-            html: newActiveState ? htmlContent : null
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error(`Failed to ${newActiveState ? 'apply' : 'remove'} banner: ${response.statusText}`);
-        }
-
-        onActivation(banner.id);
-        setPopupMessage(`Banner ${newActiveState ? 'applied to' : 'removed from'} ${organization}`);
-        setShowPopup(true);
-      } catch (error) {
-        console.error('Error updating banner:', error);
-        setPopupMessage(`Error updating banner: ${error.message}`);
-        setShowPopup(true);
-      } finally {
-        setIsProcessing(false);
+      if (!response.ok) {
+        throw new Error(`Failed to ${newActiveState ? 'apply' : 'remove'} banner: ${response.statusText}`);
       }
-    }}
-    disabled={!isStandardBannerDateValid(banner) || isProcessing}
-    style={{
-      padding: '8px 16px',
-      borderRadius: '4px',
-      border: 'none',
-      backgroundColor: banner.active ? '#dc3545' : '#28a745',
-      color: 'white',
-      cursor: (!isStandardBannerDateValid(banner) || isProcessing) ? 'not-allowed' : 'pointer',
-      opacity: (!isStandardBannerDateValid(banner) || isProcessing) ? 0.7 : 1,
-    }}
-  >
-    {isProcessing ? (
-      <span>
-        {banner.active ? "Removing..." : "Applying..."}
-      </span>
-    ) : (
-      <span>
-        {banner.active ? "Deactivate" : "Activate"}
-      </span>
-    )}
-  </button>
-      </div>
-       {showPopup && (
-    <PopupMessage 
-      message={popupMessage} 
-      onClose={() => setShowPopup(false)} 
-    />
+
+      onActivation(banner.id);
+      alert(`Banner ${newActiveState ? 'applied to' : 'removed from'} ${organization}`);
+    } catch (error) {
+      console.error('Error updating banner:', error);
+      alert(`Error updating banner: ${error.message}`);
+    } finally {
+      setIsProcessing(false);
+    }
+  }}
+  disabled={!isStandardBannerDateValid(banner) || isProcessing}
+  style={{
+    padding: '8px 16px',
+    borderRadius: '4px',
+    border: 'none',
+    backgroundColor: banner.active ? '#dc3545' : '#28a745',
+    color: 'white',
+    cursor: (!isStandardBannerDateValid(banner) || isProcessing) ? 'not-allowed' : 'pointer',
+    opacity: (!isStandardBannerDateValid(banner) || isProcessing) ? 0.7 : 1,
+  }}
+>
+  {isProcessing ? (
+    <span>
+      {banner.active ? "Removing..." : "Applying..."}
+    </span>
+  ) : (
+    <span>
+      {banner.active ? "Deactivate" : "Activate"}
+    </span>
   )}
+</button>
+      </div>
     </div>
   );
 };
