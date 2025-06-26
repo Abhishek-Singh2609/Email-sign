@@ -250,46 +250,41 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
   };
 
   // Helper function to generate HTML for the campaign banner
-  const generateCampaignBannerHtml = (campaign) => {
-    // Create a container div for the banner
-    let html = `<div style="width: 100%; max-width: 600px; margin: 0 auto; position: relative;">`;
-    
-    // Add the image with clickable areas
-    html += `<img src="${campaign.image}" usemap="#campaign-map-${campaign.id}" style="width: 100%; display: block;" alt="${campaign.name}">`;
-    
-    // Add the image map with clickable areas
-    html += `<map name="campaign-map-${campaign.id}">`;
-    
-    // Add clickable areas for each link
-    campaign.links.forEach((link, index) => {
-      if (link.url) {
-        // Calculate coordinates based on position (left, middle, right)
-        const width = 600; // Total width of the banner
-        const height = 200; // Approximate height of the banner
-        const sectionWidth = width / 3;
-        
-        let coords;
-        if (index === 0) {
-          // Left section
-          coords = `0,0,${sectionWidth},${height}`;
-        } else if (index === 1) {
-          // Middle section
-          coords = `${sectionWidth},0,${sectionWidth * 2},${height}`;
-        } else {
-          // Right section
-          coords = `${sectionWidth * 2},0,${width},${height}`;
-        }
-        
-        html += `<area shape="rect" coords="${coords}" href="${link.url}" alt="${link.text || 'Campaign Link'}">`;
-      }
-    });
-    
-    html += `</map>`;
-    html += `</div>`;
-    
-    return html;
-  };
+ const generateCampaignBannerHtml = (campaign) => {
+  // Create a table-based banner with clickable sections
+  let html = `
+    <div style="width: 100%; max-width: 600px; margin: 0 auto;">
+      <table border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation">
+        <tr>
+  `;
 
+  // Add each section as a table cell with background image
+  campaign.links.forEach((link, index) => {
+    const width = Math.floor(100 / campaign.links.length);
+    html += `
+      <td width="${width}%" style="background-image: url('${campaign.image}'); 
+            background-position: ${index === 0 ? 'left' : index === 1 ? 'center' : 'right'}; 
+            background-size: cover;
+            height: 200px;
+            text-align: center;
+            vertical-align: middle;">
+        <a href="${link.url || '#'}" 
+           target="_blank" 
+           style="display: block; width: 100%; height: 100%; text-decoration: none;">
+          <span style="color: transparent; font-size: 1px;">${link.text || ''}</span>
+        </a>
+      </td>
+    `;
+  });
+
+  html += `
+        </tr>
+      </table>
+    </div>
+  `;
+
+  return html;
+};
   const isCampaignDateValid = (campaign) => {
     const today = new Date().toISOString().split("T")[0];
     if (!campaign.startDate || !campaign.expiryDate) return false;
