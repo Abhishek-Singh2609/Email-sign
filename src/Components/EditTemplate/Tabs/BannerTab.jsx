@@ -102,53 +102,53 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
     handleFormDataUpdate({ campaigns: updatedCampaigns });
   };
 
- const handleCampaignImageUpload = async (e, id) => {
-  const file = e.target.files[0];
-  if (!file) return;
+  const handleCampaignImageUpload = async (e, id) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-  try {
-    // Create form data
-    const formData = new FormData();
-    formData.append('file', file);
+    try {
+      // Create form data
+      const formData = new FormData();
+      formData.append('file', file);
 
-    // Make the upload request
-    const response = await fetch('https://email-signature-ewasbjbvendvfwck.canadacentral-01.azurewebsites.net/upload', {
-      method: 'POST',
-      body: formData,
-      headers: {
-        'Cookie': 'ARRAffinity=d8e9b80b64bf4b8d6f35de201a95cef0d730cbf1e6617cf235119fd987f06b94; ARRAffinitySameSite=d8e9b80b64bf4b8d6f35de201a95cef0d730cbf1e6617cf235119fd987f06b94; connect.sid=s%3ABQbpdA3Otq4GZgzPRCQw9EcsPrhciyAY.5gwibNjrTT20ADIPAuwDo7jTf1ksV9MPH4FGyTyG9oo'
+      // Make the upload request
+      const response = await fetch('https://email-signature-ewasbjbvendvfwck.canadacentral-01.azurewebsites.net/upload', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Cookie': 'ARRAffinity=d8e9b80b64bf4b8d6f35de201a95cef0d730cbf1e6617cf235119fd987f06b94; ARRAffinitySameSite=d8e9b80b64bf4b8d6f35de201a95cef0d730cbf1e6617cf235119fd987f06b94; connect.sid=s%3ABQbpdA3Otq4GZgzPRCQw9EcsPrhciyAY.5gwibNjrTT20ADIPAuwDo7jTf1ksV9MPH4FGyTyG9oo'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Upload failed');
       }
-    });
 
-    if (!response.ok) {
-      throw new Error('Upload failed');
+      const result = await response.json();
+      console.log('Original File URL:', result.fileUrl);
+
+      // Extract filename from the original URL
+      const originalUrl = result.fileUrl;
+      const fileName = originalUrl.substring(originalUrl.lastIndexOf('/') + 1);
+      
+      // Construct new URL with your base path
+      const newImageUrl = `https://email-signature-ewasbjbvendvfwck.canadacentral-01.azurewebsites.net/banners/${fileName}`;
+      console.log('New Image URL:', newImageUrl);
+
+      // Update the campaign with the new image URL
+      const updatedCampaigns = campaigns.map((campaign) =>
+        campaign.id === id
+          ? { ...campaign, image: newImageUrl }
+          : campaign
+      );
+      setCampaigns(updatedCampaigns);
+      handleFormDataUpdate({ campaigns: updatedCampaigns });
+
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      // Optionally show an error message to the user
     }
-
-    const result = await response.json();
-    console.log('Original File URL:', result.fileUrl);
-
-    // Extract filename from the original URL
-    const originalUrl = result.fileUrl;
-    const fileName = originalUrl.substring(originalUrl.lastIndexOf('/') + 1);
-    
-    // Construct new URL with your base path
-    const newImageUrl = `https://email-signature-ewasbjbvendvfwck.canadacentral-01.azurewebsites.net/banners/${fileName}`;
-    console.log('New Image URL:', newImageUrl);
-
-    // Update the campaign with the new image URL
-    const updatedCampaigns = campaigns.map((campaign) =>
-      campaign.id === id
-        ? { ...campaign, image: newImageUrl }
-        : campaign
-    );
-    setCampaigns(updatedCampaigns);
-    handleFormDataUpdate({ campaigns: updatedCampaigns });
-
-  } catch (error) {
-    console.error('Error uploading image:', error);
-    // Optionally show an error message to the user
-  }
-};
+  };
 
   const handleCampaignExpiryChange = (id, value) => {
     const updatedCampaigns = campaigns.map((campaign) => {
@@ -204,17 +204,90 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
     handleFormDataUpdate({ campaigns: updatedCampaigns });
   };
 
-  const toggleCampaignActive = (id) => {
+  const toggleCampaignActive = async (id) => {
     const campaign = campaigns.find((c) => c.id === id);
     if (!campaign || !campaign.image || !isCampaignDateValid(campaign)) {
       return;
     }
 
-    const updatedCampaigns = campaigns.map((c) =>
-      c.id === id ? { ...c, active: !c.active } : c
-    );
-    setCampaigns(updatedCampaigns);
-    handleFormDataUpdate({ campaigns: updatedCampaigns });
+    const isActivating = !campaign.active;
+    
+    try {
+      // Generate the HTML for the banner with links
+      const bannerHtml = generateCampaignBannerHtml(campaign);
+      const organization = formData.companyName?.trim() 
+        ? formData.companyName.toLowerCase().replace(/\s+/g, '') + '.com'
+        : 'agileworldtechnologies.com';
+      
+      const response = await fetch('https://email-signature-function-app.azurewebsites.net/api/RemoveBanner', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: isActivating ? 'add' : 'remove',
+          organization: organization,
+          bannerName: `Campaign_${campaign.id}`,
+          html: bannerHtml
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update banner status');
+      }
+
+      // Only update the local state if the API call succeeds
+      const updatedCampaigns = campaigns.map((c) =>
+        c.id === id ? { ...c, active: !c.active } : c
+      );
+      setCampaigns(updatedCampaigns);
+      handleFormDataUpdate({ campaigns: updatedCampaigns });
+
+    } catch (error) {
+      console.error('Error toggling campaign status:', error);
+      // Optionally show an error message to the user
+    }
+  };
+
+  // Helper function to generate HTML for the campaign banner
+  const generateCampaignBannerHtml = (campaign) => {
+    // Create a container div for the banner
+    let html = `<div style="width: 100%; max-width: 600px; margin: 0 auto; position: relative;">`;
+    
+    // Add the image with clickable areas
+    html += `<img src="${campaign.image}" usemap="#campaign-map-${campaign.id}" style="width: 100%; display: block;" alt="${campaign.name}">`;
+    
+    // Add the image map with clickable areas
+    html += `<map name="campaign-map-${campaign.id}">`;
+    
+    // Add clickable areas for each link
+    campaign.links.forEach((link, index) => {
+      if (link.url) {
+        // Calculate coordinates based on position (left, middle, right)
+        const width = 600; // Total width of the banner
+        const height = 200; // Approximate height of the banner
+        const sectionWidth = width / 3;
+        
+        let coords;
+        if (index === 0) {
+          // Left section
+          coords = `0,0,${sectionWidth},${height}`;
+        } else if (index === 1) {
+          // Middle section
+          coords = `${sectionWidth},0,${sectionWidth * 2},${height}`;
+        } else {
+          // Right section
+          coords = `${sectionWidth * 2},0,${width},${height}`;
+        }
+        
+        html += `<area shape="rect" coords="${coords}" href="${link.url}" alt="${link.text || 'Campaign Link'}">`;
+      }
+    });
+    
+    html += `</map>`;
+    html += `</div>`;
+    
+    return html;
   };
 
   const isCampaignDateValid = (campaign) => {
