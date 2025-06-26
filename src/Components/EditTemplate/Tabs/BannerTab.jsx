@@ -4,7 +4,7 @@ import StandardBanner, {
   standardBannerTemplates,
   initializeStandardBanners,
   isStandardBannerDateValid,
-  getStandardBannerStatusMessage
+  getStandardBannerStatusMessage,
 } from "./StandardBanner";
 import "./BannerTab.css";
 
@@ -12,7 +12,10 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
   // Initialize standardBanners in formData if not exists
   const initializeStandardBannersInForm = () => {
     if (!formData.standardBanners) {
-      const initialized = initializeStandardBanners(formData, formData.companyName);
+      const initialized = initializeStandardBanners(
+        formData,
+        formData.companyName
+      );
       handleFormDataUpdate({ standardBanners: initialized });
     }
   };
@@ -20,23 +23,23 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
   // Handle selecting/deselecting a standard banner
   const handleStandardBannerSelect = (bannerId) => {
     initializeStandardBannersInForm();
-    
-    const updatedBanners = (formData.standardBanners || []).map(banner => {
+
+    const updatedBanners = (formData.standardBanners || []).map((banner) => {
       if (banner.id === bannerId) {
         return { ...banner, selected: !banner.selected };
       }
       return { ...banner, selected: false };
     });
-    
-    handleFormDataUpdate({ 
+
+    handleFormDataUpdate({
       standardBanners: updatedBanners,
-      bannerType: 'standard'
+      bannerType: "standard",
     });
   };
 
   // Handle standard banner content change
   const handleStandardBannerContentChange = (bannerId, editor) => {
-    const updatedBanners = formData.standardBanners.map(banner => {
+    const updatedBanners = formData.standardBanners.map((banner) => {
       if (banner.id === bannerId) {
         return { ...banner, content: editor.getData() };
       }
@@ -47,7 +50,7 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
 
   // Handle standard banner date changes
   const handleStandardBannerDateChange = (bannerId, field, value) => {
-    const updatedBanners = formData.standardBanners.map(banner => {
+    const updatedBanners = formData.standardBanners.map((banner) => {
       if (banner.id === bannerId) {
         const updatedBanner = { ...banner, [field]: value };
         if (!isStandardBannerDateValid(updatedBanner)) {
@@ -62,14 +65,14 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
 
   // Handle standard banner link changes
   const handleStandardBannerLinkChange = (bannerId, field, value) => {
-    const updatedBanners = formData.standardBanners.map(banner => {
+    const updatedBanners = formData.standardBanners.map((banner) => {
       if (banner.id === bannerId) {
-        return { 
-          ...banner, 
+        return {
+          ...banner,
           link: {
             ...banner.link,
-            [field]: value
-          }
+            [field]: value,
+          },
         };
       }
       return banner;
@@ -79,7 +82,7 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
 
   // Handle standard banner activation
   const handleStandardBannerActivation = (bannerId) => {
-    const updatedBanners = formData.standardBanners.map(banner => {
+    const updatedBanners = formData.standardBanners.map((banner) => {
       if (banner.id === bannerId) {
         return { ...banner, active: !banner.active };
       }
@@ -92,32 +95,55 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
   const [campaigns, setCampaigns] = useState(formData.campaigns || []);
 
   const handleCampaignNameChange = (id, value) => {
-    const updatedCampaigns = campaigns.map(campaign =>
+    const updatedCampaigns = campaigns.map((campaign) =>
       campaign.id === id ? { ...campaign, name: value } : campaign
     );
     setCampaigns(updatedCampaigns);
     handleFormDataUpdate({ campaigns: updatedCampaigns });
   };
 
-  const handleCampaignImageUpload = (e, id) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const updatedCampaigns = campaigns.map(campaign =>
-          campaign.id === id
-            ? { ...campaign, image: event.target.result }
-            : campaign
-        );
-        setCampaigns(updatedCampaigns);
-        handleFormDataUpdate({ campaigns: updatedCampaigns });
-      };
-      reader.readAsDataURL(file);
+  const handleCampaignImageUpload = async (e, id) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  try {
+    // Create form data
+    const formData = new FormData();
+    formData.append('file', file);
+
+    // Make the upload request
+    const response = await fetch('https://email-signature-ewasbjbvendvfwck.canadacentral-01.azurewebsites.net/upload', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'Cookie': 'ARRAffinity=d8e9b80b64bf4b8d6f35de201a95cef0d730cbf1e6617cf235119fd987f06b94; ARRAffinitySameSite=d8e9b80b64bf4b8d6f35de201a95cef0d730cbf1e6617cf235119fd987f06b94; connect.sid=s%3ABQbpdA3Otq4GZgzPRCQw9EcsPrhciyAY.5gwibNjrTT20ADIPAuwDo7jTf1ksV9MPH4FGyTyG9oo'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Upload failed');
     }
-  };
+
+    const result = await response.json();
+    console.log('File URL:', result.fileUrl); // Log the file URL
+
+    // Update the campaign with the new image URL
+    const updatedCampaigns = campaigns.map((campaign) =>
+      campaign.id === id
+        ? { ...campaign, image: result.fileUrl } // Use the URL from the response
+        : campaign
+    );
+    setCampaigns(updatedCampaigns);
+    handleFormDataUpdate({ campaigns: updatedCampaigns });
+
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    // Optionally show an error message to the user
+  }
+};
 
   const handleCampaignExpiryChange = (id, value) => {
-    const updatedCampaigns = campaigns.map(campaign => {
+    const updatedCampaigns = campaigns.map((campaign) => {
       if (campaign.id === id) {
         const updatedCampaign = { ...campaign, expiryDate: value };
         if (!isCampaignDateValid(updatedCampaign)) {
@@ -132,7 +158,7 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
   };
 
   const handleCampaignStartDateChange = (id, value) => {
-    const updatedCampaigns = campaigns.map(campaign => {
+    const updatedCampaigns = campaigns.map((campaign) => {
       if (campaign.id === id) {
         const updatedCampaign = { ...campaign, startDate: value };
         if (!isCampaignDateValid(updatedCampaign)) {
@@ -147,7 +173,7 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
   };
 
   const handleCampaignLinkChange = (campaignId, linkIndex, field, value) => {
-    const updatedCampaigns = campaigns.map(campaign => {
+    const updatedCampaigns = campaigns.map((campaign) => {
       if (campaign.id === campaignId) {
         const updatedLinks = [...campaign.links];
         updatedLinks[linkIndex] = {
@@ -163,7 +189,7 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
   };
 
   const removeCampaignImage = (id) => {
-    const updatedCampaigns = campaigns.map(campaign =>
+    const updatedCampaigns = campaigns.map((campaign) =>
       campaign.id === id ? { ...campaign, image: null } : campaign
     );
     setCampaigns(updatedCampaigns);
@@ -171,12 +197,12 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
   };
 
   const toggleCampaignActive = (id) => {
-    const campaign = campaigns.find(c => c.id === id);
+    const campaign = campaigns.find((c) => c.id === id);
     if (!campaign || !campaign.image || !isCampaignDateValid(campaign)) {
       return;
     }
 
-    const updatedCampaigns = campaigns.map(c =>
+    const updatedCampaigns = campaigns.map((c) =>
       c.id === id ? { ...c, active: !c.active } : c
     );
     setCampaigns(updatedCampaigns);
@@ -184,40 +210,51 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
   };
 
   const isCampaignDateValid = (campaign) => {
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toISOString().split("T")[0];
     if (!campaign.startDate || !campaign.expiryDate) return false;
     return campaign.startDate <= today && today <= campaign.expiryDate;
   };
 
   const getCampaignStatusMessage = (campaign) => {
-    const today = new Date().toISOString().split('T')[0];
-    
+    const today = new Date().toISOString().split("T")[0];
+
     if (!campaign.startDate && !campaign.expiryDate) {
       return { message: "No dates set", color: "#666" };
     }
-    
+
     if (!campaign.startDate) {
       return { message: "Start date required", color: "#dc3545" };
     }
-    
+
     if (!campaign.expiryDate) {
       return { message: "Expiry date required", color: "#dc3545" };
     }
-    
+
     if (today < campaign.startDate) {
-      return { message: `Starts on: ${new Date(campaign.startDate).toLocaleDateString()}`, color: "#ffc107" };
+      return {
+        message: `Starts on: ${new Date(
+          campaign.startDate
+        ).toLocaleDateString()}`,
+        color: "#ffc107",
+      };
     }
-    
+
     if (today > campaign.expiryDate) {
       return { message: "Expired", color: "#dc3545" };
     }
-    
-    return { message: `Active until: ${new Date(campaign.expiryDate).toLocaleDateString()}`, color: "#28a745" };
+
+    return {
+      message: `Active until: ${new Date(
+        campaign.expiryDate
+      ).toLocaleDateString()}`,
+      color: "#28a745",
+    };
   };
 
   const getActiveCampaigns = () => {
-    return campaigns.filter(campaign =>
-      campaign.active && campaign.image && isCampaignDateValid(campaign)
+    return campaigns.filter(
+      (campaign) =>
+        campaign.active && campaign.image && isCampaignDateValid(campaign)
     );
   };
 
@@ -229,40 +266,44 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
   return (
     <div className="banner-tab-form">
       <div className="banner-tab-section">
-        <h3 className="banner-tab-heading">Standard Banner Templates</h3> 
-        
+        <h3 className="banner-tab-heading">Standard Banner Templates</h3>
+
         <div className="standard-banners-container">
           <h4>Select Standard Banners</h4>
           <div className="standard-banners-grid">
-           {standardBannerTemplates.map((banner) => {
-  const isSelected = formData.standardBanners?.some(b => b.id === banner.id && b.selected);
-  return (
-    <StandardBanner 
-      key={banner.id}
-      banner={banner}
-      formData={formData}
-      companyName={formData.companyName}
-      isPreview={true}
-      isSelected={isSelected}
-      onSelect={handleStandardBannerSelect}
-    />
-  );
-})}
+            {standardBannerTemplates.map((banner) => {
+              const isSelected = formData.standardBanners?.some(
+                (b) => b.id === banner.id && b.selected
+              );
+              return (
+                <StandardBanner
+                  key={banner.id}
+                  banner={banner}
+                  formData={formData}
+                  companyName={formData.companyName}
+                  isPreview={true}
+                  isSelected={isSelected}
+                  onSelect={handleStandardBannerSelect}
+                />
+              );
+            })}
           </div>
 
           {/* Show editors for selected banners */}
-          {formData.standardBanners?.filter(b => b.selected).map((banner) => (
-            <StandardBanner
-              key={banner.id}
-              banner={banner}
-               formData={formData}
-              companyName={formData.companyName}
-              onContentChange={handleStandardBannerContentChange}
-              onDateChange={handleStandardBannerDateChange}
-              onLinkChange={handleStandardBannerLinkChange}
-              onActivation={handleStandardBannerActivation}
-            />
-          ))}
+          {formData.standardBanners
+            ?.filter((b) => b.selected)
+            .map((banner) => (
+              <StandardBanner
+                key={banner.id}
+                banner={banner}
+                formData={formData}
+                companyName={formData.companyName}
+                onContentChange={handleStandardBannerContentChange}
+                onDateChange={handleStandardBannerDateChange}
+                onLinkChange={handleStandardBannerLinkChange}
+                onActivation={handleStandardBannerActivation}
+              />
+            ))}
         </div>
       </div>
 
@@ -419,7 +460,7 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
                 {(() => {
                   const status = getCampaignStatusMessage(campaign);
                   return (
-                    <span style={{ color: status.color, fontWeight: 'bold' }}>
+                    <span style={{ color: status.color, fontWeight: "bold" }}>
                       {status.message}
                     </span>
                   );
@@ -434,9 +475,7 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
                     : ""
                 }`}
                 onClick={() => toggleCampaignActive(campaign.id)}
-                disabled={
-                  !campaign.image || !isCampaignDateValid(campaign)
-                }
+                disabled={!campaign.image || !isCampaignDateValid(campaign)}
               >
                 {campaign.active ? "Deactivate" : "Activate"}
               </button>
