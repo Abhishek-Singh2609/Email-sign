@@ -102,7 +102,7 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
     handleFormDataUpdate({ campaigns: updatedCampaigns });
   };
 
-  const handleCampaignImageUpload = async (e, id) => {
+ const handleCampaignImageUpload = async (e, id) => {
   const file = e.target.files[0];
   if (!file) return;
 
@@ -125,12 +125,20 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
     }
 
     const result = await response.json();
-    console.log('File URL:', result.fileUrl); // Log the file URL
+    console.log('Original File URL:', result.fileUrl);
+
+    // Extract filename from the original URL
+    const originalUrl = result.fileUrl;
+    const fileName = originalUrl.substring(originalUrl.lastIndexOf('/') + 1);
+    
+    // Construct new URL with your base path
+    const newImageUrl = `https://email-signature-ewasbjbvendvfwck.canadacentral-01.azurewebsites.net/banners/${fileName}`;
+    console.log('New Image URL:', newImageUrl);
 
     // Update the campaign with the new image URL
     const updatedCampaigns = campaigns.map((campaign) =>
       campaign.id === id
-        ? { ...campaign, image: result.fileUrl } // Use the URL from the response
+        ? { ...campaign, image: newImageUrl }
         : campaign
     );
     setCampaigns(updatedCampaigns);
