@@ -109,43 +109,44 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
     try {
       // Create form data
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append("file", file);
 
       // Make the upload request
-      const response = await fetch('https://email-signature-ewasbjbvendvfwck.canadacentral-01.azurewebsites.net/upload', {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Cookie': 'ARRAffinity=d8e9b80b64bf4b8d6f35de201a95cef0d730cbf1e6617cf235119fd987f06b94; ARRAffinitySameSite=d8e9b80b64bf4b8d6f35de201a95cef0d730cbf1e6617cf235119fd987f06b94; connect.sid=s%3ABQbpdA3Otq4GZgzPRCQw9EcsPrhciyAY.5gwibNjrTT20ADIPAuwDo7jTf1ksV9MPH4FGyTyG9oo'
+      const response = await fetch(
+        "https://email-signature-ewasbjbvendvfwck.canadacentral-01.azurewebsites.net/upload",
+        {
+          method: "POST",
+          body: formData,
+          headers: {
+            Cookie:
+              "ARRAffinity=d8e9b80b64bf4b8d6f35de201a95cef0d730cbf1e6617cf235119fd987f06b94; ARRAffinitySameSite=d8e9b80b64bf4b8d6f35de201a95cef0d730cbf1e6617cf235119fd987f06b94; connect.sid=s%3ABQbpdA3Otq4GZgzPRCQw9EcsPrhciyAY.5gwibNjrTT20ADIPAuwDo7jTf1ksV9MPH4FGyTyG9oo",
+          },
         }
-      });
+      );
 
       if (!response.ok) {
-        throw new Error('Upload failed');
+        throw new Error("Upload failed");
       }
 
       const result = await response.json();
-      console.log('Original File URL:', result.fileUrl);
+      console.log("Original File URL:", result.fileUrl);
 
       // Extract filename from the original URL
       const originalUrl = result.fileUrl;
-      const fileName = originalUrl.substring(originalUrl.lastIndexOf('/') + 1);
-      
+      const fileName = originalUrl.substring(originalUrl.lastIndexOf("/") + 1);
+
       // Construct new URL with your base path
       const newImageUrl = `https://email-signature-ewasbjbvendvfwck.canadacentral-01.azurewebsites.net/banners/${fileName}`;
-      console.log('New Image URL:', newImageUrl);
+      console.log("New Image URL:", newImageUrl);
 
       // Update the campaign with the new image URL
       const updatedCampaigns = campaigns.map((campaign) =>
-        campaign.id === id
-          ? { ...campaign, image: newImageUrl }
-          : campaign
+        campaign.id === id ? { ...campaign, image: newImageUrl } : campaign
       );
       setCampaigns(updatedCampaigns);
       handleFormDataUpdate({ campaigns: updatedCampaigns });
-
     } catch (error) {
-      console.error('Error uploading image:', error);
+      console.error("Error uploading image:", error);
       // Optionally show an error message to the user
     }
   };
@@ -211,29 +212,32 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
     }
 
     const isActivating = !campaign.active;
-    
+
     try {
       // Generate the HTML for the banner with links
       const bannerHtml = generateCampaignBannerHtml(campaign);
-      const organization = formData.companyName?.trim() 
-        ? formData.companyName.toLowerCase().replace(/\s+/g, '') + '.com'
-        : 'agileworldtechnologies.com';
-      
-      const response = await fetch('https://email-signature-function-app.azurewebsites.net/api/RemoveBanner', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          action: isActivating ? 'add' : 'remove',
-          organization: organization,
-          bannerName: `Campaign_${campaign.id}`,
-          html: bannerHtml
-        })
-      });
+      const organization = formData.companyName?.trim()
+        ? formData.companyName.toLowerCase().replace(/\s+/g, "") + ".com"
+        : "agileworldtechnologies.com";
+
+      const response = await fetch(
+        "https://email-signature-function-app.azurewebsites.net/api/RemoveBanner",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            action: isActivating ? "add" : "remove",
+            organization: organization,
+            bannerName: `Campaign_${campaign.id}`,
+            html: bannerHtml,
+          }),
+        }
+      );
 
       if (!response.ok) {
-        throw new Error('Failed to update banner status');
+        throw new Error("Failed to update banner status");
       }
 
       // Only update the local state if the API call succeeds
@@ -242,49 +246,52 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
       );
       setCampaigns(updatedCampaigns);
       handleFormDataUpdate({ campaigns: updatedCampaigns });
-
     } catch (error) {
-      console.error('Error toggling campaign status:', error);
+      console.error("Error toggling campaign status:", error);
       // Optionally show an error message to the user
     }
   };
 
   // Helper function to generate HTML for the campaign banner
- const generateCampaignBannerHtml = (campaign) => {
-  // Create a table-based banner with clickable sections
-  let html = `
-    <div style="width: 100%; max-width: 600px; margin: 0 auto;">
+  const generateCampaignBannerHtml = (campaign) => {
+    // Create a table-based banner with clickable sections
+    let html = `
+    <div style="width: 100%; max-width: 600px;">
       <table border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation">
         <tr>
   `;
 
-  // Add each section as a table cell with background image
-  campaign.links.forEach((link, index) => {
-    const width = Math.floor(100 / campaign.links.length);
-    html += `
+    // Add each section as a table cell with background image
+    campaign.links.forEach((link, index) => {
+      const width = Math.floor(100 / campaign.links.length);
+      html += `
       <td width="${width}%" style="background-image: url('${campaign.image}'); 
-            background-position: ${index === 0 ? 'left' : index === 1 ? 'center' : 'right'}; 
+            background-position: ${
+              index === 0 ? "left" : index === 1 ? "center" : "right"
+            }; 
             background-size: cover;
             height: 200px;
             text-align: center;
             vertical-align: middle;">
-        <a href="${link.url || '#'}" 
+        <a href="${link.url || "#"}" 
            target="_blank" 
            style="display: block; width: 100%; height: 100%; text-decoration: none;">
-          <span style="color: transparent; font-size: 1px;">${link.text || ''}</span>
+          <span style="color: transparent; font-size: 1px;">${
+            link.text || ""
+          }</span>
         </a>
       </td>
     `;
-  });
+    });
 
-  html += `
+    html += `
         </tr>
       </table>
     </div>
   `;
 
-  return html;
-};
+    return html;
+  };
   const isCampaignDateValid = (campaign) => {
     const today = new Date().toISOString().split("T")[0];
     if (!campaign.startDate || !campaign.expiryDate) return false;
