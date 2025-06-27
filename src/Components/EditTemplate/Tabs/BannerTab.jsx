@@ -206,51 +206,76 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
   };
 
   const toggleCampaignActive = async (id) => {
-    const campaign = campaigns.find((c) => c.id === id);
-    if (!campaign || !campaign.image || !isCampaignDateValid(campaign)) {
-      return;
+  const campaign = campaigns.find((c) => c.id === id);
+  if (!campaign || !campaign.image || !isCampaignDateValid(campaign)) {
+    return;
+  }
+
+  const isActivating = !campaign.active;
+
+  try {
+    // Generate the HTML for the banner with links (for the existing API)
+    const bannerHtml = generateCampaignBannerHtml(campaign);
+    const organization = formData.companyName?.trim()
+      ? formData.companyName.toLowerCase().replace(/\s+/g, "") + ".com"
+      : "agileworldtechnologies.com";
+
+    // Prepare the banner data for the new API
+    const bannerData = {
+      organization_name: formData.companyName || "Agile World Technologies LLC",
+      banner_index: campaigns.findIndex(c => c.id === id) + 1,
+      banner_priority: 10,
+      banner_name: campaign.name || `Campaign_${campaign.id}`,
+      banner_image_url: campaign.image,
+      banner_type: "campaign",
+      banner_link: campaign.links.map(link => link.url).filter(url => url),
+      start_time: `${campaign.startDate}T00:00:00Z`,
+      end_time: `${campaign.expiryDate}T23:59:59Z`
+    };
+
+    // Call both APIs in parallel
+    const [existingApiResponse, newApiResponse] = await Promise.all([
+      // Existing API call
+      fetch("https://email-signature-function-app.azurewebsites.net/api/RemoveBanner", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: isActivating ? "add" : "remove",
+          organization: organization,
+          bannerName: `Campaign_${campaign.id}`,
+          html: bannerHtml,
+        }),
+      }),
+      
+      // New API call
+      fetch("https://email-signature-ewasbjbvendvfwck.canadacentral-01.azurewebsites.net/api/banners", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Cookie": "ARRAffinity=d8e9b80b64bf4b8d6f35de201a95cef0d730cbf1e6617cf235119fd987f06b94; ARRAffinitySameSite=d8e9b80b64bf4b8d6f35de201a95cef0d730cbf1e6617cf235119fd987f06b94"
+        },
+        body: JSON.stringify(bannerData)
+      })
+    ]);
+
+    if (!existingApiResponse.ok || !newApiResponse.ok) {
+      throw new Error("Failed to update banner status on one or more services");
     }
 
-    const isActivating = !campaign.active;
+    // Only update the local state if both API calls succeed
+    const updatedCampaigns = campaigns.map((c) =>
+      c.id === id ? { ...c, active: !c.active } : c
+    );
+    setCampaigns(updatedCampaigns);
+    handleFormDataUpdate({ campaigns: updatedCampaigns });
 
-    try {
-      // Generate the HTML for the banner with links
-      const bannerHtml = generateCampaignBannerHtml(campaign);
-      const organization = formData.companyName?.trim()
-        ? formData.companyName.toLowerCase().replace(/\s+/g, "") + ".com"
-        : "agileworldtechnologies.com";
-
-      const response = await fetch(
-        "https://email-signature-function-app.azurewebsites.net/api/RemoveBanner",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            action: isActivating ? "add" : "remove",
-            organization: organization,
-            bannerName: `Campaign_${campaign.id}`,
-            html: bannerHtml,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to update banner status");
-      }
-
-      // Only update the local state if the API call succeeds
-      const updatedCampaigns = campaigns.map((c) =>
-        c.id === id ? { ...c, active: !c.active } : c
-      );
-      setCampaigns(updatedCampaigns);
-      handleFormDataUpdate({ campaigns: updatedCampaigns });
-    } catch (error) {
-      console.error("Error toggling campaign status:", error);
-      // Optionally show an error message to the user
-    }
-  };
+  } catch (error) {
+    console.error("Error toggling campaign status:", error);
+    // Optionally show an error message to the user
+  }
+};
 
   // Helper function to generate HTML for the campaign banner
   const generateCampaignBannerHtml = (campaign) => {
