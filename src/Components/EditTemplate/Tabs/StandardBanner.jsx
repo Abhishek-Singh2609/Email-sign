@@ -564,7 +564,7 @@ const StandardBanner = ({
     };
 
     return {
-      organization_name: formData.companyName || "TrustKeeper",
+      organization_name: formData.companyName || "Agile World Technologies LLC",
       banner_index: standardBannerTemplates.findIndex(t => t.id === banner.id) + 1,
       banner_priority: 10,
       banner_name: banner.name,
@@ -619,10 +619,7 @@ const StandardBanner = ({
             'Content-Type': 'application/json',
             'Cookie': 'ARRAffinity=d8e9b80b64bf4b8d6f35de201a95cef0d730cbf1e6617cf235119fd987f06b94; ARRAffinitySameSite=d8e9b80b64bf4b8d6f35de201a95cef0d730cbf1e6617cf235119fd987f06b94'
           },
-          body: newActiveState ? JSON.stringify(bannerData) : JSON.stringify({
-            organization_name: bannerData.organization_name,
-            banner_name: bannerData.banner_name
-          })
+          body: JSON.stringify(bannerData)
         })
       ]);
 
