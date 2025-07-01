@@ -280,63 +280,6 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
   }
 };
 
-  // Handle scheduling a campaign for later
-const handleScheduleForLater = async (campaignId) => {
-  const campaign = campaigns.find((c) => c.id === campaignId);
-  if (!campaign || !campaign.image || !campaign.startDate || !campaign.expiryDate) {
-    return;
-  }
-
-  try {
-    // Generate the HTML content for the banner
-    const htmlContent = generateCampaignBannerHtml(campaign);
-    
-    // Prepare the banner data for the API
-    const bannerData = {
-      organization_name: formData.companyName || "Agile World Technologies LLC",
-      banner_index: campaigns.findIndex(c => c.id === campaignId) + 1,
-      banner_priority: 10,
-      banner_name: campaign.name || `Campaign_${campaign.id}`,
-      banner_image_url: campaign.image,
-      banner_type: "later",
-      banner_link: campaign.links.map(link => link.url).filter(url => url),
-      start_time: `${campaign.startDate}T00:00:00Z`,
-      end_time: `${campaign.expiryDate}T23:59:59Z`
-    };
-
-    // Make the API call with the combined payload
-    const response = await fetch(
-      "https://email-signature-ewasbjbvendvfwck.canadacentral-01.azurewebsites.net/api/banners",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Cookie": "ARRAffinity=d8e9b80b64bf4b8d6f35de201a95cef0d730cbf1e6617cf235119fd987f06b94; ARRAffinitySameSite=d8e9b80b64bf4b8d6f35de201a95cef0d730cbf1e6617cf235119fd987f06b94"
-        },
-        body: JSON.stringify({
-          ...bannerData,
-          api_payload: htmlContent  // Including the generated HTML content
-        })
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error("Failed to schedule banner");
-    }
-
-    // Update the campaign to show it's scheduled
-    const updatedCampaigns = campaigns.map((c) =>
-      c.id === campaignId ? { ...c, scheduled: true } : c
-    );
-    setCampaigns(updatedCampaigns);
-    handleFormDataUpdate({ campaigns: updatedCampaigns });
-
-  } catch (error) {
-    console.error("Error scheduling banner:", error);
-    alert("Failed to schedule banner. Please try again.");
-  }
-};
-
   // Helper function to generate HTML for the campaign banner
   const generateCampaignBannerHtml = (campaign) => {
     // Create a table-based banner with clickable sections
@@ -634,37 +577,19 @@ const handleScheduleForLater = async (campaignId) => {
                   );
                 })()}
               </div>
-              <div className="banner-tab-footer-buttons">
-    <button
-      className={`banner-tab-toggle-btn ${
-        campaign.active ? "active" : ""
-      } ${
-        !campaign.image || !isCampaignDateValid(campaign)
-          ? "disabled"
-          : ""
-      }`}
-      onClick={() => toggleCampaignActive(campaign.id)}
-      disabled={!campaign.image || !isCampaignDateValid(campaign)}
-    >
-      {campaign.active ? "Deactivate" : "Activate"}
-    </button>
-    <button
-      className={`banner-tab-schedule-btn ${
-        campaign.scheduled ? "scheduled" : ""
-      } ${
-        !campaign.image || !campaign.startDate || !campaign.expiryDate
-          ? "disabled"
-          : ""
-      }`}
-      onClick={() => handleScheduleForLater(campaign.id)}
-      disabled={
-        !campaign.image || !campaign.startDate || !campaign.expiryDate || campaign.scheduled
-      }
-    >
-      {campaign.scheduled ? "Scheduled" : "Schedule for Later"}
-    </button>
-  </div>
-             
+              <button
+                className={`banner-tab-toggle-btn ${
+                  campaign.active ? "active" : ""
+                } ${
+                  !campaign.image || !isCampaignDateValid(campaign)
+                    ? "disabled"
+                    : ""
+                }`}
+                onClick={() => toggleCampaignActive(campaign.id)}
+                disabled={!campaign.image || !isCampaignDateValid(campaign)}
+              >
+                {campaign.active ? "Deactivate" : "Activate"}
+              </button>
             </div>
           </div>
         ))}
