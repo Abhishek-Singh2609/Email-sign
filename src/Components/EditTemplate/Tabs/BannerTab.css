@@ -405,3 +405,34 @@
 .standard-banner-preview-container:hover {
   border-color: #ddd;
 }
+
+/* schedule later button */
+
+.banner-tab-footer-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.banner-tab-schedule-btn {
+  padding: 8px 16px;
+  background-color: #4a6fa5;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.banner-tab-schedule-btn:hover:not(.scheduled):not(:disabled) {
+  background-color: #3a5a8a;
+}
+
+.banner-tab-schedule-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.banner-tab-schedule-btn.scheduled {
+  background-color: #28a745;
+  cursor: default;
+}
