@@ -258,7 +258,7 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
         },
         body: JSON.stringify({
   ...bannerData,
-  api_payload: htmlContent
+  api_payload: bannerHtml
 })
       })
     ]);
