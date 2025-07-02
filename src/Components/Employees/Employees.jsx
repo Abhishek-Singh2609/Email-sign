@@ -26,16 +26,17 @@ const EmployeeSignatureGenerator = () => {
   const [loadingEmployees, setLoadingEmployees] = useState(true);
   const [removingAll, setRemovingAll] = useState(false);
   const [removingEmployee, setRemovingEmployee] = useState(null);
+  const [removingAllBanners, setRemovingAllBanners] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchEmployees = async () => {
       const token = localStorage.getItem("accessToken");
-      if (!token) {
-        alert("No token found. Please login.");
-        window.location.href = "/login";
-        return;
-      }
+      // if (!token) {
+      //   alert("No token found. Please login.");
+      //   window.location.href = "/login";
+      //   return;
+      // }
 
       try {
         const response = await axios.get(
@@ -185,6 +186,37 @@ const EmployeeSignatureGenerator = () => {
     }
   };
 
+  const removeAllBanners = async () => {
+  setRemovingAllBanners(true);
+  try {
+    const response = await fetch(
+      "https://email-signature-function-app.azurewebsites.net/api/RemoveBanner",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: "removeAll",
+          organization: "agileworldtechnologies.com",
+        }),
+      }
+    );
+
+    if (response.ok) {
+      alert("All banners removed successfully!");
+    } else {
+      throw new Error("Failed to remove banners.");
+    }
+  } catch (error) {
+    console.error("Error removing all banners:", error);
+    setError("Failed to remove all banners. Please try again later.");
+  } finally {
+    setRemovingAllBanners(false);
+  }
+};
+
+
   if (loadingEmployees) {
     return (
       <Container className="py-5 text-center">
@@ -253,7 +285,7 @@ const EmployeeSignatureGenerator = () => {
                     variant="danger"
                     onClick={removeAllSignatures}
                     disabled={removingAll}
-                    className="mb-2"
+                    className="mb-2 me-2"
                   >
                     {removingAll ? (
                       <>
@@ -271,6 +303,21 @@ const EmployeeSignatureGenerator = () => {
                       'Remove All'
                     )}
                   </Button>
+                   <Button
+      variant="warning"
+      onClick={removeAllBanners}
+      disabled={removingAllBanners}
+      className="mb-2"
+    >
+      {removingAllBanners ? (
+        <>
+          <Spinner as="span" animation="border" size="sm" role="status" className="me-2" />
+          Removing...
+        </>
+      ) : (
+        'Remove All Banner'
+      )}
+    </Button>
                 </div>
                 {selectedEmployees.length > 0 && (
                   <div className="small text-muted">
