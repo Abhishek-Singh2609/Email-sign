@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import axios from "axios";
 
 // Standard banner templates configuration
 export const standardBannerTemplates = [
@@ -122,6 +123,36 @@ const StandardBanner = ({
   onActivation
 }) => {
   const [isProcessing, setIsProcessing] = useState(false);
+    const [organizationDomain, setOrganizationDomain] = useState(null);
+
+    useEffect(() => {
+    const fetchOrganization = async () => {
+      const token = localStorage.getItem("accessToken");
+      try {
+        const response = await axios.get(
+          "https://email-signature-ewasbjbvendvfwck.canadacentral-01.azurewebsites.net/organization",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        
+        // Find the default domain
+        const defaultDomain = response.data[0]?.verifiedDomains?.find(
+          domain => domain.isDefault
+        )?.name;
+        
+        if (defaultDomain) {
+          setOrganizationDomain(defaultDomain);
+        } else {
+          console.error("Could not determine organization domain");
+        }
+      } catch (err) {
+        console.error("Error fetching organization:", err);
+      }
+    };
+
+    fetchOrganization();
+  }, []);
 
   const generateStandardBannerHTML = (banner) => {
     const cleanContent = banner.content.replace(/<[^>]*>/g, '').replace(/Announcement:|URGENT:/g, '').trim();
@@ -155,7 +186,7 @@ const StandardBanner = ({
     };
 
     return {
-      organization_name: formData.companyName || "Agile World Technologies LLC",
+      organization_name: organizationDomain,
       banner_index: standardBannerTemplates.findIndex(t => t.id === banner.id) + 1,
       banner_priority: 10,
       banner_name: banner.name,
@@ -174,11 +205,9 @@ const StandardBanner = ({
     const newActiveState = !banner.active;
     
     try {
-      const organization = formData.companyName?.trim() 
-        ? formData.companyName.toLowerCase().replace(/\s+/g, '') + '.com'
-        : 'agileworldtechnologies.com';
+      const organization = organizationDomain
 
-      const bannerNameMap = {
+     const bannerNameMap = {
         'announcement': 'AnnouncementBanner',
         'urgent': 'ListPriorityBanner'
       };

@@ -27,16 +27,17 @@ const EmployeeSignatureGenerator = () => {
   const [removingAll, setRemovingAll] = useState(false);
   const [removingEmployee, setRemovingEmployee] = useState(null);
   const [removingAllBanners, setRemovingAllBanners] = useState(false);
+  const [organizationDomain, setOrganizationDomain] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchEmployees = async () => {
       const token = localStorage.getItem("accessToken");
-      // if (!token) {
-      //   alert("No token found. Please login.");
-      //   window.location.href = "/login";
-      //   return;
-      // }
+      if (!token) {
+        alert("No token found. Please login.");
+        window.location.href = "/login";
+        return;
+      }
 
       try {
         const response = await axios.get(
@@ -63,6 +64,37 @@ const EmployeeSignatureGenerator = () => {
     };
 
     fetchEmployees();
+     
+    // Fetch organization name
+
+     const fetchOrganization = async () => {
+      const token = localStorage.getItem("accessToken");
+      try {
+        const response = await axios.get(
+          "https://email-signature-ewasbjbvendvfwck.canadacentral-01.azurewebsites.net/organization",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        
+        // Find the default domain
+        const defaultDomain = response.data[0]?.verifiedDomains?.find(
+          domain => domain.isDefault
+        )?.name;
+        
+        if (defaultDomain) {
+          setOrganizationDomain(defaultDomain);
+        } else {
+          setError("Could not determine organization domain");
+        }
+      } catch (err) {
+        console.error("Error fetching organization:", err);
+        setError("Failed to fetch organization details");
+      }
+    };
+
+    fetchOrganization();
+
   }, []);
 
   useEffect(() => {
@@ -140,12 +172,16 @@ const EmployeeSignatureGenerator = () => {
   };
 
   const removeAllSignatures = async () => {
+     if (!organizationDomain) {
+      setError("Organization domain not available");
+      return;
+    }
     setRemovingAll(true);
     try {
       const response = await axios.post(
         'https://email-signature-function-app.azurewebsites.net/api/RemoveSignature',
         {
-          organization: "agileworldtechnologies.com"
+          organization: organizationDomain
         },
         {
           headers: { 'Content-Type': 'application/json' }
@@ -163,12 +199,16 @@ const EmployeeSignatureGenerator = () => {
   };
 
   const removeSignature = async (employee) => {
+     if (!organizationDomain) {
+      setError("Organization domain not available");
+      return;
+    }
     setRemovingEmployee(employee.id);
     try {
       const response = await axios.post(
         'https://email-signature-function-app.azurewebsites.net/api/RemoveSignature',
         {
-          organization: "agileworldtechnologies.com",
+          organization: organizationDomain,
           email: employee.mail
         },
         {
@@ -187,6 +227,10 @@ const EmployeeSignatureGenerator = () => {
   };
 
   const removeAllBanners = async () => {
+       if (!organizationDomain) {
+      setError("Organization domain not available");
+      return;
+    }
   setRemovingAllBanners(true);
   try {
     const response = await fetch(
@@ -198,7 +242,7 @@ const EmployeeSignatureGenerator = () => {
         },
         body: JSON.stringify({
           action: "removeAll",
-          organization: "agileworldtechnologies.com",
+          organization: organizationDomain,
         }),
       }
     );

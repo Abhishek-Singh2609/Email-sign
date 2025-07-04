@@ -6,9 +6,11 @@ import StandardBanner, {
   isStandardBannerDateValid,
   getStandardBannerStatusMessage,
 } from "./StandardBanner";
+import axios from "axios";
 import "./BannerTab.css";
 
 const BannerTab = ({ formData, handleFormDataUpdate }) => {
+  const [organizationDomain, setOrganizationDomain] = useState(null);
   // Initialize standardBanners in formData if not exists
   const initializeStandardBannersInForm = () => {
     if (!formData.standardBanners) {
@@ -19,6 +21,35 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
       handleFormDataUpdate({ standardBanners: initialized });
     }
   };
+
+  useEffect(() => {
+  const fetchOrganization = async () => {
+    const token = localStorage.getItem("accessToken");
+    try {
+      const response = await axios.get(
+        "https://email-signature-ewasbjbvendvfwck.canadacentral-01.azurewebsites.net/organization",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      
+      // Find the default domain
+      const defaultDomain = response.data[0]?.verifiedDomains?.find(
+        domain => domain.isDefault
+      )?.name;
+      
+      if (defaultDomain) {
+        setOrganizationDomain(defaultDomain);
+      } else {
+        console.error("Could not determine organization domain");
+      }
+    } catch (err) {
+      console.error("Error fetching organization:", err);
+    }
+  };
+
+  fetchOrganization();
+}, []);
 
   // Handle selecting/deselecting a standard banner
   const handleStandardBannerSelect = (bannerId) => {
@@ -206,6 +237,10 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
   };
 
   const toggleCampaignActive = async (id) => {
+     if (!organizationDomain) {
+    console.error("Organization domain not available");
+    return;
+  }
     const campaign = campaigns.find((c) => c.id === id);
     if (!campaign || !campaign.image || !isCampaignDateValid(campaign)) {
       return;
@@ -216,14 +251,10 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
     try {
       // Generate the HTML for the banner with links (for the existing API)
       const bannerHtml = generateCampaignBannerHtml(campaign);
-      const organization = formData.companyName?.trim()
-        ? formData.companyName.toLowerCase().replace(/\s+/g, "") + ".com"
-        : "agileworldtechnologies.com";
-
+    
       // Prepare the banner data for the new API
       const bannerData = {
-        organization_name:
-          formData.companyName || "Agile World Technologies LLC",
+        organization_name: organizationDomain,
         banner_index: campaigns.findIndex((c) => c.id === id) + 1,
         banner_priority: 10,
         banner_name: campaign.name || `Campaign_${campaign.id}`,
@@ -248,7 +279,7 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
             },
             body: JSON.stringify({
               action: isActivating ? "add" : "remove",
-              organization: organization,
+              organization: organizationDomain,
               bannerName: `Campaign_${campaign.id}`,
               html: bannerHtml,
             }),
@@ -292,6 +323,10 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
   };
 
   const handleScheduleForLater = async (campaignId) => {
+     if (!organizationDomain) {
+    console.error("Organization domain not available");
+    return;
+  }
     const campaign = campaigns.find((c) => c.id === campaignId);
     if (
       !campaign ||
@@ -308,8 +343,7 @@ const BannerTab = ({ formData, handleFormDataUpdate }) => {
 
       // Prepare the banner data for the API
       const bannerData = {
-        organization_name:
-          formData.companyName || "Agile World Technologies LLC",
+        organization_name: organizationDomain,
         banner_index: campaigns.findIndex((c) => c.id === campaignId) + 1,
         banner_priority: 10,
         banner_name: campaign.name || `Campaign_${campaign.id}`,

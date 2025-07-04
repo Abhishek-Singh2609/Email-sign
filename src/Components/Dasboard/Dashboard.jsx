@@ -17,6 +17,7 @@ const userGrowthData = [
   { name: 'Apr', users: 2800, signatures: 2000 },
   { name: 'May', users: 3500, signatures: 2500 },
   { name: 'Jun', users: 4200, signatures: 3100 },
+  { name: 'July', users: 4200, signatures: 3100 },
 ];
 
 const planDistribution = [
@@ -70,6 +71,13 @@ const Dashboard = () => {
             <span>Signatures</span>
           </button>
           <button 
+            className={`menu-item ${activeTab === 'banners' ? 'active' : ''}`}
+            onClick={() => setActiveTab('banners')}
+          >
+            <FiMail className="icon" />
+            <span>Banners</span>
+          </button>
+          <button 
             className={`menu-item ${activeTab === 'users' ? 'active' : ''}`}
             onClick={() => setActiveTab('users')}
           >
@@ -89,6 +97,13 @@ const Dashboard = () => {
           >
             <FiSettings className="icon" />
             <span>Settings</span>
+          </button>
+          <button 
+            className={`menu-item ${activeTab === 'admin' ? 'active' : ''}`}
+            onClick={() => setActiveTab('admin')}
+          >
+            {/* <FiSettings className="icon" /> */}
+            <span>Admin</span>
           </button>
         </div>
         
