@@ -13,6 +13,8 @@ import OrangeLayout from "./OrangeLayout";
 import OrangeText from "./OrangeText";
 import OrangeCenter from "./OrangeCenter";
 import OrangeRight from "./OrangeRight";
+import NewBlueLayout from "./NewBlueLayout";
+import NewTextLayout from "./NewTextlayout";
 
 const SignatureLayout = ({ formData, selectedDesign, designStyle }) => {
   const design = designTemplates.find((d) => d.id === selectedDesign);
@@ -42,6 +44,10 @@ const SignatureLayout = ({ formData, selectedDesign, designStyle }) => {
       return <OrangeCenter formData={formData} designStyle={designStyle} />;
     case "orangeright":
       return <OrangeRight formData={formData} designStyle={designStyle} />;
+    case "NewBlueLayout":
+      return <NewBlueLayout formData={formData} designStyle={designStyle} />;
+    case "NewTextLayout":
+      return <NewTextLayout formData={formData} designStyle={designStyle} />;
     default:
       return (
         <StandardLayout

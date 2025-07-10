@@ -18,6 +18,7 @@ import Employees from "./Components/Employees/Employees";
 import OAuthCallback from "./Common/Login/OAuthCallback";
 import UserGuide from "./Components/UserGuide/UserGuide";
 import Dashboard from "./Components/Dasboard/Dashboard";
+import SignatureAction from "./Components/SignatureActions/SignatureAction";
 function App() {
   const location = useLocation();
   const hideLayout =
@@ -41,6 +42,7 @@ function App() {
         <Route path="/userguide" element={<UserGuide />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/oauth/callback" element={<OAuthCallback />} />
+        <Route path="/signatureaction" element={<SignatureAction />} />
       </Routes>
 
       {!hideLayout && <Footer />}

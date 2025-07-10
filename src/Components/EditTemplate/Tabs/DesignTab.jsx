@@ -117,7 +117,19 @@ const designTemplates = [
   name: "Orange right",
   color: "#f31f04",
   layout: "orangeright", // This maps to the orange layout function
-   }
+   },
+   {
+    id: "NewBlueLayout",
+  name: "NewBlueLayout",
+  color: "blue",
+  layout: "NewBlueLayout", 
+   },
+   {
+    id: "NewTextLayout",
+  name: "NewTextLayout",
+  color: "#6f2dbd",
+  layout: "NewTextLayout", 
+   },
 ];
 
 // Get style based on selected design
