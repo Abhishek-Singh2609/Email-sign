@@ -14,11 +14,11 @@ import EmailSignatureCreator from "./Components/EditTemplate/EmailSignature";
 import SignaturePreview from "./Components/PreviewPage/SignaturePreview";
 import SubscriptionPage from "./Components/Subscription/SubscriptionPage";
 import Payment from "./Components/Payment/Payment";
-import Employees from "./Components/Employees/Employees";
+// import Employees from "./Components/Employees/Employees";
+import Employees from "./Components/SignatureActions/Employees";
 import OAuthCallback from "./Common/Login/OAuthCallback";
 import UserGuide from "./Components/UserGuide/UserGuide";
 import Dashboard from "./Components/Dasboard/Dashboard";
-import SignatureAction from "./Components/SignatureActions/SignatureAction";
 function App() {
   const location = useLocation();
   const hideLayout =
@@ -42,7 +42,7 @@ function App() {
         <Route path="/userguide" element={<UserGuide />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/oauth/callback" element={<OAuthCallback />} />
-        <Route path="/employess" element={<SignatureAction />} />
+        <Route path="/employees" element={<Employees />} />
       </Routes>
 
       {!hideLayout && <Footer />}

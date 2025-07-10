@@ -193,7 +193,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Search, Filter, Eye, Edit, Trash2 } from "lucide-react";
-import "./SignatureAction.css";
+import "./Employees.css";
 
 const SignatureAction = () => {
   const [employees, setEmployees] = useState([]);
@@ -212,12 +212,12 @@ const SignatureAction = () => {
 
   useEffect(() => {
     const fetchEmployees = async () => {
-      // const token = localStorage.getItem("accessToken");
-      // if (!token) {
-      //   alert("No token found. Please login.");
-      //   window.location.href = "/login";
-      //   return;
-      // }
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        alert("No token found. Please login.");
+        window.location.href = "/login";
+        return;
+      }
 
       try {
         const response = await axios.get(
