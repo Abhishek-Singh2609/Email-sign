@@ -34,7 +34,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/blockspage" element={<BlocksPage />} />
         <Route path="/trial" element={<Trial />} />
-        <Route path="employees" element={<Employees />} />
+        {/* <Route path="employees" element={<Employees />} /> */}
         <Route path="/edittemplate" element={<EmailSignatureCreator />} />
         <Route path="/preview" element={<SignaturePreview />} />
         <Route path="/subscription" element={<SubscriptionPage />} />
@@ -42,7 +42,7 @@ function App() {
         <Route path="/userguide" element={<UserGuide />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/oauth/callback" element={<OAuthCallback />} />
-        <Route path="/signatureaction" element={<SignatureAction />} />
+        <Route path="/employess" element={<SignatureAction />} />
       </Routes>
 
       {!hideLayout && <Footer />}

@@ -11,7 +11,7 @@ function OAuthCallback() {
 
     // Skip if already authenticated
     if (localStorage.getItem("accessToken")) {
-      navigate("/signatureaction");
+      navigate("/employees");
       return;
     }
 
