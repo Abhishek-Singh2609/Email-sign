@@ -454,12 +454,12 @@ const SignatureAction = () => {
 
   const fetchEmployees = async () => {
     setLoadingEmployees(true);
-    // const token = localStorage.getItem("accessToken");
-    // if (!token) {
-    //   alert("No token found. Please login.");
-    //   window.location.href = "/login";
-    //   return;
-    // }
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      alert("No token found. Please login.");
+      window.location.href = "/login";
+      return;
+    }
 
     try {
       const response = await axios.get(
