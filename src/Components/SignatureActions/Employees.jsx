@@ -953,7 +953,6 @@ const SignatureAction = () => {
 
   useEffect(() => {
     fetchOrganization();
-    // Fetch employees immediately but don't show the list until "Apply to Individual" is clicked
     fetchEmployees();
   }, []);
 
@@ -1017,7 +1016,7 @@ const SignatureAction = () => {
 
   const handleShowIndividual = () => {
     if (!showEmployeeList && employees.length === 0) {
-      fetchEmployees(); // Only fetch if not already loaded
+      fetchEmployees(); 
     } else {
       setShowEmployeeList(true);
     }
@@ -1162,7 +1161,12 @@ const SignatureAction = () => {
         </button>
         <button 
           className="btn btn-remove"
-          onClick={handleShowIndividual}
+          onClick={() => {
+    if (employees.length === 0) {
+      fetchEmployees();
+    }
+    setShowEmployeeList(true);
+  }}
         >
           Apply to Individual
         </button>
