@@ -10,10 +10,10 @@ function OAuthCallback() {
     effectRan.current = true;
 
     // Skip if already authenticated
-    if (localStorage.getItem("accessToken")) {
-      navigate("/employees");
-      return;
-    }
+    // if (localStorage.getItem("accessToken")) {
+    //   navigate("/employees");
+    //   return;
+    // }
 
     // Parse token only if on the callback route
     if (window.location.pathname.includes("/oauth/callback")) {

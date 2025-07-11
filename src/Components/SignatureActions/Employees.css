@@ -1,4 +1,3 @@
-/* 
 .action-header {
   max-width: 1145px;
   margin: 0 auto;
@@ -6,25 +5,24 @@
 }
 
 .action-header h1 {
- text-align: center;
- font-size: 45px;
+  text-align: center;
+  font-size: 45px;
 }
-.action-header-line{
-background: linear-gradient(90deg, #E4552B 0%, #8C2506 100%);
+.action-header-line {
+  background: linear-gradient(90deg, #e4552b 0%, #8c2506 100%);
   -webkit-background-clip: text;
-
 
   color: transparent;
 }
 
 .action-subtitle {
- max-width: 1145px;
+  max-width: 1145px;
   margin: 0 auto;
   font-weight: 400;
   font-size: 24px;
   text-align: center;
   line-height: 30px;
-  color: #5F5F5F;
+  color: #5f5f5f;
 }
 
 .actionbutton-group {
@@ -57,15 +55,14 @@ background: linear-gradient(90deg, #E4552B 0%, #8C2506 100%);
 }
 
 .btn-apply {
- background: linear-gradient(90deg, #E4552B 0%, #8C2506 100%);
-color: white;
+  background: linear-gradient(90deg, #e4552b 0%, #8c2506 100%);
+  color: white;
 }
 
 .btn-apply:hover {
   background-color: #3a5ce4;
-} */
- .employee-table-container {
-
+}
+.employee-table-container {
   background: #ffffff;
 
   border-radius: 12px;
@@ -78,12 +75,10 @@ color: white;
 
   margin: 0 auto;
 
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
- 
-.table-header {
 
+.table-header {
   display: flex;
 
   align-items: center;
@@ -91,21 +86,17 @@ color: white;
   gap: 16px;
 
   margin-bottom: 24px;
-
 }
- 
+
 .search-container {
-
   position: relative;
-
+  display: flex;
   flex: 1;
 
   max-width: 320px;
-
 }
- 
-.search-icon {
 
+.search-icon {
   position: absolute;
 
   left: 12px;
@@ -115,11 +106,9 @@ color: white;
   transform: translateY(-50%);
 
   color: #6b7280;
-
 }
- 
-.search-input {
 
+.search-input {
   width: 100%;
 
   padding: 12px 12px 12px 40px;
@@ -133,11 +122,9 @@ color: white;
   background: #f9fafb;
 
   transition: all 0.2s ease;
-
 }
- 
-.search-input:focus {
 
+.search-input:focus {
   outline: none;
 
   border-color: #3b82f6;
@@ -145,19 +132,15 @@ color: white;
   background: #ffffff;
 
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-
 }
- 
-.filter-container {
 
+.filter-container {
   display: flex;
 
   align-items: center;
-
 }
- 
-.filter-button {
 
+.filter-button {
   padding: 12px;
 
   border: 1px solid #e5e7eb;
@@ -169,29 +152,23 @@ color: white;
   cursor: pointer;
 
   transition: all 0.2s ease;
-
 }
- 
-.filter-button:hover {
 
+.filter-button:hover {
   background: #f3f4f6;
 
   border-color: #d1d5db;
-
 }
- 
-.action-buttons {
 
+.action-buttons {
   display: flex;
 
   gap: 8px;
 
   margin-left: auto;
-
 }
- 
-.remove-all-btn {
 
+.remove-all-btn {
   padding: 12px 20px;
 
   border: 1px solid #e5e7eb;
@@ -209,19 +186,15 @@ color: white;
   cursor: pointer;
 
   transition: all 0.2s ease;
-
 }
- 
-.remove-all-btn:hover {
 
+.remove-all-btn:hover {
   background: #f9fafb;
 
   border-color: #d1d5db;
-
 }
- 
-.apply-all-btn {
 
+.apply-all-btn {
   padding: 12px 20px;
 
   border: none;
@@ -239,177 +212,123 @@ color: white;
   cursor: pointer;
 
   transition: all 0.2s ease;
-
 }
- 
+
 .apply-all-btn:hover {
-
   background: #b91c1c;
-
 }
- 
+
 .table-wrapper {
-
   overflow-x: auto;
-
 }
- 
-.employee-table {
 
+.employee-table {
   width: 100%;
 
   border-collapse: collapse;
-
 }
- 
+
 .employee-table th {
-
   padding: 12px 16px;
-
-  text-align: left;
-
-  font-weight: 600;
-
-  color: #374151;
-
-  border-bottom: 1px solid #e5e7eb;
-
-  background: #f9fafb;
+ text-align: left;
+ font-size: 18px;
+   font-weight: 400;
+ color: #4E4343;
+  border-bottom: 1px solid #A6A2A2;
 
 }
- 
-.employee-table td {
 
+.employee-table td {
   padding: 16px;
 
   border-bottom: 1px solid #f3f4f6;
-
 }
- 
+
 .employee-row:hover {
-
   background: #f9fafb;
-
 }
- 
+
 .checkbox-col {
-
   width: 40px;
-
 }
- 
-.checkbox {
 
+.checkbox {
   width: 16px;
 
   height: 16px;
 
   cursor: pointer;
-
 }
- 
+
 .name-col {
-
   min-width: 200px;
-
 }
- 
-.employee-info {
 
+.employee-info {
   display: flex;
 
   align-items: center;
 
   gap: 12px;
-
 }
- 
+
 .avatar {
-
   width: 40px;
-
   height: 40px;
-
   border-radius: 50%;
-
   overflow: hidden;
-
   background: #f3f4f6;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
 }
- 
+
 .avatar img {
-
   width: 100%;
-
   height: 100%;
-
-  object-fit: cover;
-
+object-fit: cover;
 }
- 
+
 .employee-name {
-
-  font-weight: 500;
-
-  color: #111827;
-
+  font-weight: 600;
+  color: #4E4343;
 }
- 
+
 .position-col {
-
   min-width: 150px;
-
 }
- 
+
 .position {
-
   color: #6b7280;
-
 }
- 
+
 .tags-col {
-
   min-width: 200px;
-
 }
- 
-.tags-header {
 
+.tags-header {
   display: flex;
 
   align-items: center;
 
   gap: 8px;
-
 }
- 
-.tags-filter {
 
+.tags-filter {
   color: #6b7280;
 
   cursor: pointer;
-
 }
- 
-.tags-container {
 
+.tags-container {
   display: flex;
 
   flex-wrap: wrap;
 
   gap: 8px;
-
 }
- 
-.tag {
 
+.tag {
   padding: 4px 8px;
 
   background: #f3f4f6;
@@ -421,116 +340,82 @@ color: white;
   color: #6b7280;
 
   white-space: nowrap;
-
 }
- 
+
 .preview-col,
-
 .apply-col,
-
 .remove-col {
-
   width: 60px;
 
   text-align: center;
-
 }
- 
+
 .action-btn {
-
-  width: 36px;
-
-  height: 36px;
-
+  width: 40px;
+  height: 40px;
   border: none;
-
-  border-radius: 6px;
-
+  border-radius: 8px;
   cursor: pointer;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
   transition: all 0.2s ease;
-
 }
- 
+
 .preview-btn {
-
-  background: #422006;
-
+  background: #2a0c04;
   color: #ffffff;
-
 }
- 
+
 .preview-btn:hover {
-
   background: #292524;
-
 }
- 
-.apply-btn {
 
+.apply-btn {
   background: #92400e;
 
   color: #ffffff;
-
 }
- 
+
 .apply-btn:hover {
-
   background: #78350f;
-
 }
- 
-.remove-btn {
 
+.remove-btn {
   background: #1f2937;
 
   color: #ffffff;
-
 }
- 
+
 .remove-btn:hover {
-
   background: #111827;
-
 }
- 
+
 @media (max-width: 768px) {
-
   .employee-table-container {
-
     padding: 16px;
-
   }
- 
-  .table-header {
 
+  .table-header {
     flex-direction: column;
 
     align-items: stretch;
 
     gap: 12px;
-
   }
- 
+
   .search-container {
-
     max-width: none;
-
   }
- 
-  .action-buttons {
 
+  .action-buttons {
     margin-left: 0;
 
     justify-content: flex-end;
-
   }
-
 }
- 
+.search-bar {
+  display: flex;
+  gap: 10px;
+  margin: 20px auto;
+}

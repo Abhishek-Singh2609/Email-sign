@@ -390,144 +390,7 @@ withoutProfile: (designStyle, sections, formData) => {
 },
 
 
-// Orange Layout - Email Compatible with FontAwesome SVG Icons
-// orange: (designStyle, sections, formData) => {
-//   const defaultData = {
-//     name: "Employee Name", 
-//     jobTitle: "Job Title", 
-//     company: "Company Name", 
-//     location: "Location",
-//     phone: "", 
-//     mobilePhone: "", 
-//     email: "", 
-//     website: "", 
-//     logo: null, 
-//     profileImage: null,
-//     linkedin: "", 
-//     youtube: "", 
-//     instagram: "", 
-//     facebook: "", 
-//     twitter: "", 
-//     github: "", 
-//     ...formData // This ensures formData overrides defaults
-//   };
-
-//   // Profile image section - email compatible with fallback to initials
-//   const profileImageSection = defaultData.profileImage ? 
-//     '<img src="' + defaultData.profileImage + '" alt="' + (defaultData.name || 'Profile') + '" width="110" height="110" style="border-radius: 55px; border: 3px solid #FF6B35; display: block; object-fit: cover;">' :
-//     '<table cellpadding="0" cellspacing="0" border="0"><tr><td width="110" height="110" style="background-color: #FF6B35; color: white; font-weight: bold; font-size: 36px; border-radius: 55px; text-align: center; line-height: 110px; display: block;">' + getUserInitials(defaultData.name) + '</td></tr></table>';
-
-//   // Contact details
-//   const contactDetails = [];
-  
-//   // Mobile Phone
-//   if (defaultData.mobilePhone) {
-//     contactDetails.push(
-//       '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
-//       '<td style="font-size: 12px; color: #333333; vertical-align: middle;">' + defaultData.mobilePhone + '</td>' +
-//       '</tr></table></td></tr>'
-//     );
-//   }
-  
-//   // Phone (only show if different from mobile)
-//   if (defaultData.phone && defaultData.phone !== defaultData.mobilePhone) {
-//     contactDetails.push(
-//       '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
-//       '<td style="font-size: 12px; color: #333333; vertical-align: middle;">' + defaultData.phone + '</td>' +
-//       '</tr></table></td></tr>'
-//     );
-//   }
-  
-//   // Email
-//   if (defaultData.email) {
-//     contactDetails.push(
-//       '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
-//       '<td style="font-size: 12px; color: #333333; vertical-align: middle;"><a href="mailto:' + defaultData.email + '" style="color: #333333; text-decoration: none;">' + defaultData.email + '</a></td>' +
-//       '</tr></table></td></tr>'
-//     );
-//   }
-  
-//   // Website
-//   if (defaultData.website) {
-//     const websiteUrl = defaultData.website.startsWith('http') ? defaultData.website : 'https://' + defaultData.website;
-//     const displayUrl = defaultData.website.replace(/^https?:\/\//, '');
-//     contactDetails.push(
-//       '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
-//       '<td style="font-size: 12px; color: #333333; vertical-align: middle;"><a href="' + websiteUrl + '" target="_blank" style="color: #333333; text-decoration: none;">' + displayUrl + '</a></td>' +
-//       '</tr></table></td></tr>'
-//     );
-//   }
-  
-//   // Company (with margin-top equivalent)
-//   if (defaultData.company) {
-//     contactDetails.push(
-//       '<tr><td style="padding-bottom: 8px; padding-top: 10px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
-//       '<td style="font-size: 12px; color: #333333; vertical-align: middle;">' + defaultData.company + '</td>' +
-//       '</tr></table></td></tr>'
-//     );
-//   }
-  
-//   // Location
-//   if (defaultData.location) {
-//     contactDetails.push(
-//       '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
-//       '<td style="font-size: 12px; color: #333333; vertical-align: middle;">' + defaultData.location + '</td>' +
-//       '</tr></table></td></tr>'
-//     );
-//   }
-
-//   // EMAIL-COMPATIBLE TABLE STRUCTURE - Exact Layout Match
-//   return '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: \'Segoe UI\', Tahoma, Geneva, Verdana, sans-serif; border-collapse: collapse; border: none; margin: 0; padding: 0;">' +
-//     '<tr>' +
-//       '<td colspan="3" style="height: 4px; background-color: #FF6B35;; width: 100%;"></td>' +
-//     '</tr>' +
-//     '<tr>' +
-      
-//       '<td width="113" style="padding: 10px 3px 10px 0px; text-align: left; vertical-align: middle;">' +
-//         profileImageSection +
-//       '</td>' +
-      
-//       // Name & Title Section 
-//       '<td width="108" style="padding: 10px 0px; text-align: center; vertical-align: middle;">' +
-//         '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
-         
-//           '<tr>' +
-//             '<td style="font-size: 17px; font-weight: 700; color: #333333; padding-bottom: 2px; line-height: 1.2; text-align: center;">' +
-//               (defaultData.name || "Your Name") +
-//             '</td>' +
-//           '</tr>' +
-//           // Job Title
-//           '<tr>' +
-//             '<td style="font-size: 14px; font-weight: 600; color: #FF6B35; padding-bottom: 15px; letter-spacing: 0.5px; text-align: center;">' +
-//               (defaultData.jobTitle || "YOUR JOB TITLE") +
-//             '</td>' +
-//           '</tr>' +
-//         '</table>' +
-//       '</td>' +
-      
-//       // Contact Information Section (remaining width)
-//       '<td style="padding: 10px 0px; padding-left: 1px; vertical-align: middle;">' +
-//         '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
-//           contactDetails.join('') +
-//         '</table>' +
-//       '</td>' +
-//     '</tr>' +
-    
-//     // Social icons section - Fixed padding to match JSX
-//     '<tr>' +
-//       '<td colspan="3" style="padding: 0px 0px 5px 0px;">' +
-//         '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
-//           '<tr>' +
-//             '<td style="padding: 5px;">' +
-//              renderSocialIcons(defaultData) +
-//             '</td>' +
-//           '</tr>' +
-//         '</table>' +
-//       '</td>' +
-//     '</tr>' +
-//   '</table>';
-// }, 
-
+// Orange Layout
 orange: (designStyle, sections, formData) => {
   const defaultData = {
     name: "Employee Name", 
@@ -614,12 +477,12 @@ orange: (designStyle, sections, formData) => {
     '</tr>' +
     '<tr>' +
       // Profile image column - added explicit width
-      '<td width="120" style="padding: 10px 10px 10px 0; text-align: left; vertical-align: middle;">' +
+      '<td width="113" style="padding: 10px 3px 10px 0; text-align: left; vertical-align: middle;">' +
         profileImageSection +
       '</td>' +
       
       // Name & Title Section - added explicit width
-      '<td width="150" style="padding: 10px 10px; text-align: center; vertical-align: middle;">' +
+      '<td width="108" style="padding: 10px 0px; text-align: center; vertical-align: middle;">' +
         '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
           '<tr>' +
             '<td style="font-size: 17px; font-weight: 700; color: #333333; padding-bottom: 2px; line-height: 1.2; text-align: center;">' +
@@ -936,129 +799,7 @@ orangecenter: (designStyle, sections, formData) => {
   '</table>';
 },
 
-  //   orangetext: (designStyle, sections, formData) => {
-//   const defaultData = {
-//     name: "Employee Name", 
-//     jobTitle: "Job Title", 
-//     company: "Company Name", 
-//     location: "Location",
-//     phone: "", 
-//     mobilePhone: "", 
-//     email: "", 
-//     website: "", 
-//     logo: null, 
-//     profileImage: null,
-//     linkedin: "", 
-//     youtube: "", 
-//     instagram: "", 
-//     facebook: "", 
-//     twitter: "", 
-//     github: "", 
-//     ...formData // This ensures formData overrides defaults
-//   };
-
-//   // Contact details 
-//   const contactDetails = [];
-  
-//   // Mobile Phone
-//   if (defaultData.mobilePhone) {
-//     contactDetails.push(
-//       '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
-//       '<td style="padding-left: 8px; font-size: 12px; color: #333333; vertical-align: middle;">' + defaultData.mobilePhone + '</td>' +
-//       '</tr></table></td></tr>'
-//     );
-//   }
-  
-//   // Phone (only show if different from mobile)
-//   if (defaultData.phone && defaultData.phone !== defaultData.mobilePhone) {
-//     contactDetails.push(
-//       '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
-//       '<td style="padding-left: 8px; font-size: 12px; color: #333333; vertical-align: middle;">' + defaultData.phone + '</td>' +
-//       '</tr></table></td></tr>'
-//     );
-//   }
-  
-//   // Email
-//   if (defaultData.email) {
-//     contactDetails.push(
-//       '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
-//       '<td style="padding-left: 8px; font-size: 12px; color: #333333; vertical-align: middle;"><a href="mailto:' + defaultData.email + '" style="color: #333333; text-decoration: none;">' + defaultData.email + '</a></td>' +
-//       '</tr></table></td></tr>'
-//     );
-//   }
-  
-//   // Website
-//   if (defaultData.website) {
-//     const websiteUrl = defaultData.website.startsWith('http') ? defaultData.website : 'https://' + defaultData.website;
-//     const displayUrl = defaultData.website.replace(/^https?:\/\//, '');
-//     contactDetails.push(
-//       '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
-//       '<td style="padding-left: 8px; font-size: 12px; color: #333333; vertical-align: middle;"><a href="' + websiteUrl + '" target="_blank" style="color: #333333; text-decoration: none;">' + displayUrl + '</a></td>' +
-//       '</tr></table></td></tr>'
-//     );
-//   }
-  
-//   // Company (with margin-top equivalent)
-//   if (defaultData.company) {
-//     contactDetails.push(
-//       '<tr><td style="padding-bottom: 8px; padding-top: 10px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
-//       '<td style="padding-left: 8px; font-size: 12px; color: #333333; vertical-align: middle;">' + defaultData.company + '</td>' +
-//       '</tr></table></td></tr>'
-//     );
-//   }
-  
-//   // Location
-//   if (defaultData.location) {
-//     contactDetails.push(
-//       '<tr><td style="padding-bottom: 8px;"><table cellpadding="0" cellspacing="0" border="0"><tr>' +
-//       '<td style="padding-left: 8px; font-size: 12px; color: #333333; vertical-align: middle;">' + defaultData.location + '</td>' +
-//       '</tr></table></td></tr>'
-//     );
-//   }
-
-//   // EMAIL-COMPATIBLE TABLE STRUCTURE - OrangeText Layout
-//   return '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: \'Segoe UI\', Tahoma, Geneva, Verdana, sans-serif; border-collapse: collapse; border: none; margin: 0; padding: 0;">' +
-//     // Orange gradient top border (4px height)
-//     '<tr>' +
-//       '<td colspan="2" style="height: 4px; background-color: #FF6B35; width: 100%;"></td>' +
-//     '</tr>' +
-    
-//     // Main content row with exact spacing
-//     '<tr>' +
-      
-//       '<td width="180" style="padding: 10px; padding-right: 20px; vertical-align: top;">' +
-//         '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
-      
-//           '<tr>' +
-//             '<td style="font-size: 24px; font-weight: 700; color: #333333; padding-bottom: 8px; line-height: 1.2;">' +
-//               (defaultData.name || "Your Name") +
-//             '</td>' +
-//           '</tr>' +
-//           // Job Title
-//           '<tr>' +
-//             '<td style="font-size: 14px; font-weight: 600; color: #FF6B35; padding-bottom: 15px; letter-spacing: 0.5px;">' +
-//               (defaultData.jobTitle || "YOUR JOB TITLE") +
-//             '</td>' +
-//           '</tr>' +
-        
-//           '<tr>' +
-//             '<td>' +
-//               renderSocialIcons(defaultData) +
-//             '</td>' +
-//           '</tr>' +
-//         '</table>' +
-//       '</td>' +
-      
-//       // Right Section - Contact Information (remaining width, flex: 1 equivalent)
-//       '<td style="padding: 10px; vertical-align: top;">' +
-//         '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
-//           contactDetails.join('') +
-//         '</table>' +
-//       '</td>' +
-//     '</tr>' +
-//   '</table>';
-// },
-
+//  Orangetext loyout
  orangetext: (designStyle, sections, formData) => {
   const defaultData = {
     name: "Employee Name", 
@@ -1139,14 +880,13 @@ orangecenter: (designStyle, sections, formData) => {
     );
   }
 
-  // EMAIL-COMPATIBLE TABLE STRUCTURE - OrangeText Layout
   return '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: \'Segoe UI\', Tahoma, Geneva, Verdana, sans-serif; border-collapse: collapse; margin: 0; padding: 0; table-layout: fixed;">' +
     // Orange top border
     '<tr>' +
       '<td colspan="2" style="height: 4px; background-color: #FF6B35;"></td>' +
     '</tr>' +
     
-    // Main content row
+
     '<tr>' +
       // Left Section - Name, Title, Social Icons
       '<td width="180" style="width: 180px; min-width: 180px; max-width: 180px; padding: 10px 20px 10px 10px; vertical-align: top; box-sizing: border-box;">' +
@@ -1205,7 +945,7 @@ orangeright: (designStyle, sections, formData) => {
     ...formData
   };
 
-  // Profile image section - kept your exact implementation
+  // Profile image section
   const profileImageSection = defaultData.profileImage ? 
     '<img src="' + defaultData.profileImage + '" alt="' + (defaultData.name || 'Profile') + '" width="110" height="110" style="border-radius: 55px; border: 3px solid #FF6B35; display: block; object-fit: cover;">' :
     '<table cellpadding="0" cellspacing="0" border="0"><tr><td width="110" height="110" style="background-color: #FF6B35; color: white; font-weight: bold; font-size: 36px; border-radius: 55px; text-align: center; line-height: 110px; display: block;">' + getUserInitials(defaultData.name) + '</td></tr></table>';
@@ -1269,14 +1009,13 @@ orangeright: (designStyle, sections, formData) => {
     );
   }
 
-  // EMAIL-COMPATIBLE TABLE STRUCTURE - Orange Right Layout
   return '<table width="600" cellpadding="0" cellspacing="0" border="0" style="font-family: \'Segoe UI\', Tahoma, Geneva, Verdana, sans-serif; border-collapse: collapse; margin: 0; padding: 0; table-layout: fixed;">' +
     // Orange top border
     '<tr>' +
       '<td colspan="3" style="height: 4px; background-color: #FF6B35;"></td>' +
     '</tr>' +
     
-    // Main content row
+   
     '<tr>' +
       // LEFT SECTION - Contact Info
       '<td width="325" style="width: 325px; min-width: 325px; max-width: 325px; padding: 10px 20px 10px 10px; vertical-align: top; box-sizing: border-box;">' +
