@@ -577,7 +577,7 @@
 //     if (!showEmployeeList && employees.length === 0) {
 //       fetchEmployees(); // Only fetch if not already loaded
 //     } else {
-//       setShowEmployeeList(true);
+//       setShowEmployeeList(true); // Just show the list if already loaded
 //     }
 //   };
 
@@ -911,7 +911,6 @@ const SignatureAction = () => {
       );
       setEmployees(response.data);
       setFilteredEmployees(response.data);
-      setShowEmployeeList(true);
     } catch (err) {
       if (err.response && err.response.status === 401) {
         alert("Session expired. Please login again.");
@@ -953,7 +952,7 @@ const SignatureAction = () => {
 
   useEffect(() => {
     fetchOrganization();
-    fetchEmployees();
+    fetchEmployees(); 
   }, []);
 
   useEffect(() => {
@@ -1016,9 +1015,9 @@ const SignatureAction = () => {
 
   const handleShowIndividual = () => {
     if (!showEmployeeList && employees.length === 0) {
-      fetchEmployees(); 
+      fetchEmployees(); // Only fetch if not already loaded
     } else {
-      setShowEmployeeList(true);
+      setShowEmployeeList(true); // Just show the list if already loaded
     }
   };
 
@@ -1139,6 +1138,7 @@ const SignatureAction = () => {
     );
   }
 
+
   return (
     <>
       <div className="action-header">
@@ -1155,18 +1155,18 @@ const SignatureAction = () => {
         <button 
           className="btn btn-apply" 
           onClick={applyAllSignatures}
-          disabled={isLoading || employees.length === 0} // Changed to check employees instead of filteredEmployees
+          disabled={isLoading || employees.length === 0} // Check employees.length instead of filteredEmployees
         >
           {isLoading ? "Applying..." : "Apply For All"}
         </button>
         <button 
           className="btn btn-remove"
           onClick={() => {
-    if (employees.length === 0) {
-      fetchEmployees();
-    }
-    setShowEmployeeList(true);
-  }}
+            if (employees.length === 0) {
+              fetchEmployees(); // Fetch if not already loaded
+            }
+            setShowEmployeeList(true); // Always show the list when clicked
+          }}
         >
           Apply to Individual
         </button>
